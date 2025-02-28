@@ -1,10 +1,11 @@
-export default async function Detail({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+import Loading from '@/app/loading';
+import Detail from '@/app/ui/Detail';
+import { Suspense } from 'react';
 
-  return <div>{id}</div>;
-  // ...
+export default async function DetailPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Detail />
+    </Suspense>
+  );
 }
