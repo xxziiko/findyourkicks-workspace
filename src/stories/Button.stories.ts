@@ -1,4 +1,4 @@
-import { DefaultButton } from '@/components/DefaultButton';
+import { DefaultButton } from '@/components';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
