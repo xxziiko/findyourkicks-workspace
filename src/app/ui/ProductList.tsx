@@ -18,10 +18,8 @@ export default function ProductList({
     useFetchProducts({ initialProducts });
   const setProductItem = useSetAtom(productItem);
 
-  const action = useCallback(
-    (item: ProductItem) => {
-      setProductItem(item);
-    },
+  const selectProduct = useCallback(
+    (item: ProductItem) => setProductItem(item),
     [setProductItem],
   );
 
@@ -50,7 +48,7 @@ export default function ProductList({
               brand={item.brand}
               title={item.title}
               price={item.lprice}
-              onClick={() => action(item)}
+              onClick={() => selectProduct(item)}
             />
           </Link>
         ))}
