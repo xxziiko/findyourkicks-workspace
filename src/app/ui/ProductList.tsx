@@ -19,7 +19,7 @@ export default function ProductList({
   const setProductItem = useSetAtom(productItem);
 
   const selectProduct = useCallback(
-    (item: ProductItem) => setProductItem(item),
+    (item: ProductItem) => () => setProductItem(item),
     [setProductItem],
   );
 
@@ -48,7 +48,7 @@ export default function ProductList({
               brand={item.brand}
               title={item.title}
               price={item.lprice}
-              onClick={() => selectProduct(item)}
+              onClick={selectProduct(item)}
             />
           </Link>
         ))}
