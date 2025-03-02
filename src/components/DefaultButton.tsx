@@ -1,9 +1,24 @@
 import { Button } from '@headlessui/react';
 
-export function DefaultButton() {
+interface IButton {
+  color: string;
+  bgColor: string;
+  command: string;
+  onClick: () => void;
+}
+
+export default function DefaultButton({
+  color,
+  bgColor,
+  command,
+  onClick,
+}: IButton) {
   return (
-    <Button className="rounded bg-yellow-200 py-2 px-4 text-sm text-white data-[hover]:bg-yellow-100 data-[active]:bg-yellow-400">
-      안녕
+    <Button
+      className={`rounded ${color} ${bgColor} py-3 text-sm text-white data-[hover]:opacity-65 w-full font-semibold border rounded-3xl`}
+      onClick={onClick}
+    >
+      {command}
     </Button>
   );
 }
