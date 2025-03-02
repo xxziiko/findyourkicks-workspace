@@ -17,7 +17,7 @@ export const fetchNaverData = async (start = 1) => {
     },
   });
 
-  assert(!response.ok, 'Failed to fetch data');
+  assert(response.ok, 'Failed to fetch data');
 
   return response.json();
 };
