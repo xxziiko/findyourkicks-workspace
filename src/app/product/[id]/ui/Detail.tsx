@@ -1,78 +1,30 @@
 'use client';
 
-import { SIZE_INVENTORY } from '@/app/lib/constants';
 import { cartItems, productItem } from '@/app/lib/store';
 import Loading from '@/app/loading';
 import { DefaultButton } from '@/components';
 import type { CartItem, ProductItem } from '@/types/product';
 import { Button } from '@headlessui/react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import Image from 'next/image';
-import { useCallback, useMemo, useState } from 'react';
+import { useSelectedOptions } from '../hooks';
 import Option from './Option';
 
 export default function Detail() {
   const item = useAtomValue<ProductItem | null>(productItem);
-  const [cart, setCart] = useAtom<CartItem[]>(cartItems);
-  const [selectedOptions, setSelectedOptions] = useState<
-    { size: number; quantity: number }[]
-  >([]);
+  const setCart = useSetAtom(cartItems);
+
+  const { data, func } = useSelectedOptions();
+  const { selectedOptions, inventory, totalQuantity } = data;
+  const {
+    selectSize,
+    deleteOption,
+    incrementQuantity,
+    decrementQuantity,
+    resetSelectedOptions,
+  } = func;
 
   const price = Number(item?.lprice);
-  const totalQuantity = selectedOptions.reduce(
-    (acc, cur) => acc + cur.quantity,
-    0,
-  );
-
-  const inventory = useMemo(
-    () =>
-      SIZE_INVENTORY.map((inv) => {
-        const selected = selectedOptions.find((opt) => opt.size === inv.size);
-        return selected
-          ? { ...inv, stock: inv.stock - selected.quantity }
-          : inv;
-      }),
-    [selectedOptions],
-  );
-
-  const selectSize = (size: number) => {
-    setSelectedOptions((prev) => {
-      const index = prev.findIndex((option) => option.size === size);
-      if (index !== -1) {
-        return prev.map((option, i) =>
-          i === index ? { ...option, quantity: option.quantity + 1 } : option,
-        );
-      }
-      return [...prev, { size, quantity: 1 }];
-    });
-  };
-
-  const deleteOption = useCallback((size: number) => {
-    setSelectedOptions((prev) => prev.filter((option) => option.size !== size));
-  }, []);
-
-  const incrementQuantity = useCallback((size: number) => {
-    const initialStock =
-      SIZE_INVENTORY.find((item) => item.size === size)?.stock ?? 0;
-
-    setSelectedOptions((prev) =>
-      prev.map((option) =>
-        option.size === size && option.quantity < initialStock
-          ? { ...option, quantity: option.quantity + 1 }
-          : option,
-      ),
-    );
-  }, []);
-
-  const decrementQuantity = useCallback((size: number) => {
-    setSelectedOptions((prev) =>
-      prev.map((option) =>
-        option.size === size && option.quantity > 1
-          ? { ...option, quantity: option.quantity - 1 }
-          : option,
-      ),
-    );
-  }, []);
 
   const mergeCartItems = (updatedCart: CartItem[]) => {
     const cartItems = selectedOptions.map(
@@ -110,7 +62,7 @@ export default function Detail() {
 
       return updatedCart;
     });
-    setSelectedOptions([]);
+    resetSelectedOptions();
   };
 
   if (!item) return <Loading />;
