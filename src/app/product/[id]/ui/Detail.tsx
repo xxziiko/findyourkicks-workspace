@@ -1,22 +1,24 @@
 'use client';
 
 import { SIZE_INVENTORY } from '@/app/lib/constants';
-import { productItem } from '@/app/lib/store';
+import { cartItems, productItem } from '@/app/lib/store';
 import Loading from '@/app/loading';
 import { DefaultButton } from '@/components';
-import type { ProductItem } from '@/types/product';
+import type { CartItem, ProductItem } from '@/types/product';
 import { Button } from '@headlessui/react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import Image from 'next/image';
 import { useCallback, useMemo, useState } from 'react';
 import Option from './Option';
 
 export default function Detail() {
   const item = useAtomValue<ProductItem | null>(productItem);
+  const [cart, setCart] = useAtom<CartItem[]>(cartItems);
   const [selectedOptions, setSelectedOptions] = useState<
     { size: number; quantity: number }[]
   >([]);
 
+  const price = Number(item?.lprice);
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
     0,
@@ -72,7 +74,45 @@ export default function Detail() {
     );
   }, []);
 
-  // TODO:
+  const mergeCartItems = (updatedCart: CartItem[]) => {
+    const cartItems = selectedOptions.map(
+      (option) =>
+        ({
+          ...option,
+          productId: item?.productId,
+          imageUrl: item?.image,
+          title: item?.title,
+          price,
+        }) as CartItem,
+    );
+
+    cartItems.forEach((newItem) => {
+      const index = updatedCart.findIndex(
+        (cartItem) => cartItem.size === newItem.size,
+      );
+
+      if (index !== -1) {
+        updatedCart[index] = {
+          ...updatedCart[index],
+          quantity: updatedCart[index].quantity + newItem.quantity,
+        };
+        return;
+      }
+
+      updatedCart.push(newItem);
+    });
+  };
+
+  const addCart = () => {
+    setCart((prev) => {
+      const updatedCart = [...prev];
+      mergeCartItems(updatedCart);
+
+      return updatedCart;
+    });
+    setSelectedOptions([]);
+  };
+
   if (!item) return <Loading />;
 
   return (
@@ -118,7 +158,7 @@ export default function Detail() {
                     size={size}
                     quantity={quantity}
                     key={size}
-                    price={Number(item.lprice)}
+                    price={price}
                     incrementQuantity={incrementQuantity}
                     decrementQuantity={decrementQuantity}
                     deleteOption={deleteOption}
@@ -130,7 +170,7 @@ export default function Detail() {
                 <div className="flex justify-between py-6">
                   <p className="font-semibold text-sm">합계</p>
                   <p className="font-bold text-2xl">
-                    {(totalQuantity * Number(item.lprice)).toLocaleString()}원
+                    {(totalQuantity * price).toLocaleString()}원
                   </p>
                 </div>
 
@@ -139,7 +179,7 @@ export default function Detail() {
                     command="장바구니"
                     bgColor="bg-gray-800"
                     color="text-white"
-                    onClick={() => {}}
+                    onClick={addCart}
                   />
 
                   <DefaultButton
