@@ -3,6 +3,18 @@ import type { fetchProducts } from '@/app/lib/api';
 export type ProductResponse = Awaited<ReturnType<typeof fetchProducts>>;
 export type ProductItem = ProductResponse['items'][0];
 
+export interface Option {
+  size: number;
+  quantity: number;
+}
+
+export interface CartItem extends Option {
+  productId: string;
+  imageUrl: string;
+  title: string;
+  price: number;
+}
+
 export interface ApiResponse {
   lastBuildDate: string;
   total: number;
