@@ -39,7 +39,7 @@ export default function ProductList({
   }, [observe]);
 
   return (
-    <div className="w-full h-full">
+    <div>
       <section className="flex flex-wrap justify-center gap-4 ">
         {data?.map((item: ProductItem) => (
           <Link href={`/product/${item.productId}`} key={item.productId}>

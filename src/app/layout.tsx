@@ -18,10 +18,10 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <Providers>
-          <div className="flex flex-col max-w-7xl ml-auto mr-auto min-h-screen gap-16 pl-8 pr-8 font-sans">
+          <div className="flex flex-col justify-between max-w-7xl ml-auto mr-auto min-h-screen gap-16 pl-8 pr-8 font-sans ">
             <Header />
 
-            <main>{children}</main>
+            <main className="w-full h-full">{children}</main>
 
             <footer className="border bg-black h-44 flex justify-center items-center">
               <div>
