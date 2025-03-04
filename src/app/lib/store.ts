@@ -7,4 +7,4 @@ export const productItem = atomWithStorage<ProductItem | null>(
   null,
 );
 
-export const cartItems = atom<CartItem[]>([]);
+export const cartItems = atomWithStorage<CartItem[]>('cart', []);
