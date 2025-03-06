@@ -3,12 +3,13 @@ import { handleError } from '@/app/lib/utils';
 import type { ProductResponse } from '@/types/product';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-export default function useFetchProducts({
+export default function useFetchProductsQuery({
   initialProducts,
 }: { initialProducts: ProductResponse }) {
   const { error, ...rest } = useInfiniteQuery({
     queryKey: ['products'],
-    queryFn: ({ pageParam = 1 }) => fetchProducts((pageParam - 1) * 100 + 1),
+    queryFn: async ({ pageParam = 1 }) =>
+      await fetchProducts((pageParam - 1) * 100 + 1),
     initialPageParam: 1,
     initialData: {
       pages: [initialProducts],

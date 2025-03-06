@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components';
-import { useFetchProducts } from '@/hooks';
+import { useFetchProductsQuery } from '@/hooks';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import type { ProductItem, ProductResponse } from '@/types/product';
 import { useSetAtom } from 'jotai';
@@ -15,7 +15,7 @@ export default function ProductList({
 }: { initialProducts: ProductResponse }) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useFetchProducts({ initialProducts });
+    useFetchProductsQuery({ initialProducts });
   const setProductItem = useSetAtom(productItem);
 
   const selectProduct = useCallback(
