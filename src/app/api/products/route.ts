@@ -7,7 +7,7 @@ export async function GET(request: Request) {
 
   try {
     const data = await fetchNaverData(start);
-    return NextResponse.json(data);
+    return NextResponse.json({ data }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: 'Internal Server Error' },
