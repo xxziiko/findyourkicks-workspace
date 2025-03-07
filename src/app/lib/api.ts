@@ -23,10 +23,13 @@ export const fetchNaverData = async (start = 1) => {
   return response.json();
 };
 
-export const fetchProducts = async (page = 1): Promise<ApiResponse> =>
-  await fetch(
+export const fetchProducts = async (page = 1): Promise<ApiResponse> => {
+  const { data } = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=${page}`,
   ).then((res) => res.json());
+
+  return data;
+};
 
 export const fetchProductById = async (productId: string) =>
   await fetch(

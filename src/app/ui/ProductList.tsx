@@ -41,7 +41,7 @@ export default function ProductList({
   return (
     <div>
       <section className="flex flex-wrap justify-center gap-4 ">
-        {data?.map((item: ProductItem) => (
+        {data.map((item: ProductItem) => (
           <Link href={`/product/${item.productId}`} key={item.productId}>
             <Card
               src={item.image}

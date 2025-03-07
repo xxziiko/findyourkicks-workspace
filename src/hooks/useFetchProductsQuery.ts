@@ -1,12 +1,12 @@
 import { fetchProducts } from '@/app/lib/api';
 import { handleError } from '@/app/lib/utils';
 import type { ProductResponse } from '@/types/product';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 
 export default function useFetchProductsQuery({
   initialProducts,
 }: { initialProducts: ProductResponse }) {
-  const { error, ...rest } = useInfiniteQuery({
+  const { error, ...rest } = useSuspenseInfiniteQuery({
     queryKey: ['products'],
     queryFn: async ({ pageParam = 1 }) =>
       await fetchProducts((pageParam - 1) * 100 + 1),
