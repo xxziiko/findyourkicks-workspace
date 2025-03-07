@@ -1,8 +1,9 @@
+import styles from '@/app/login/page.module.scss';
 import { LoginCard } from './ui';
 
 export default function Login() {
   return (
-    <div>
+    <div className={styles.layout}>
       <LoginCard />
     </div>
   );
