@@ -3,7 +3,7 @@ import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { Providers } from './providers';
-import './globals.css';
+import '@/styles/global.scss';
 import { createClient } from '@/app/lib/utils/supabase/server';
 
 export const metadata: Metadata = {
