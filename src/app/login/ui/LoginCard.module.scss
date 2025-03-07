@@ -1,7 +1,7 @@
 .card {
-    border:2px solid #000000;
-    border-radius: 2rem;
-    
+  border: 2px solid #000000;
+  border-radius: 2rem;
+
   &_layout {
     @extend .card;
     display: flex;
@@ -12,7 +12,7 @@
     height: 500px;
     padding: 1rem;
   }
-  
+
   &_title {
     font-weight: 700;
     font-size: larger;
