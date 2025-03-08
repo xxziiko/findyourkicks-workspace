@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Providers } from './providers';
 import '@/styles/global.scss';
 import { createClient } from '@/app/lib/utils/supabase/server';
+import { AuthListener, UserInitializer } from './login/auth';
 
 export const metadata: Metadata = {
   title: 'SHOP | findyourkicks',
@@ -26,8 +27,10 @@ export default async function RootLayout({
       <body>
         <Providers>
           <Provider>
+            <UserInitializer user={user} />
+            <AuthListener />
             <div className="flex flex-col justify-between max-w-7xl ml-auto mr-auto min-h-screen gap-16 pl-8 pr-8 font-sans ">
-              <Header initialSession={user} />
+              <Header />
 
               <main className="w-full h-full">{children}</main>
 

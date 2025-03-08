@@ -1,33 +1,22 @@
 'use client';
 
 import { signOutUser } from '@/app/lib/api';
-import { cartItems } from '@/app/lib/store';
-import Loading from '@/app/loading';
-import { useSessionQuery } from '@/hooks';
+import { cartItems, userAtom } from '@/app/lib/store';
 import { Tab, TabGroup, TabList } from '@headlessui/react';
-import type { User } from '@supabase/supabase-js';
 import { useAtom } from 'jotai';
 import Image from 'next/image';
 import Link from 'next/link';
 import Badge from './Badge';
 
-export default function Header({
-  initialSession,
-}: { initialSession: User | null }) {
+export default function Header() {
   const [items, setItems] = useAtom(cartItems);
-  const {
-    isLoading,
-    data: session,
-    refetch,
-  } = useSessionQuery({ initialSession });
+  const [user, setUser] = useAtom(userAtom);
 
   const handleLogout = async () => {
     await signOutUser();
-    await refetch();
+    setUser(null);
     setItems([]);
   };
-
-  if (isLoading) return <Loading />;
 
   return (
     <header className="sticky top-0 left-0 w-full bg-white z-50 h-20 flex justify-between items-center">
@@ -50,11 +39,9 @@ export default function Header({
             {!!items.length && <Badge quantity={items.length} />}
           </Tab>
 
-          {session?.email ? (
+          {user?.email ? (
             <TabGroup className="flex gap-2 text-sm">
-              <Tab className="font-medium">
-                {session.email?.split('@')[0]}님
-              </Tab>
+              <Tab className="font-medium">{user.email?.split('@')[0]}님</Tab>
               <Tab>마이페이지</Tab>
               <Tab onClick={handleLogout}>LOGOUT</Tab>
             </TabGroup>
