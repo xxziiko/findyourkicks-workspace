@@ -1,7 +1,7 @@
 'use client';
 
 import { signOutUser } from '@/app/lib/api';
-import { cartItems, userAtom } from '@/app/lib/store';
+import { cartItemsAtom, userAtom } from '@/app/lib/store';
 import { Tab, TabGroup, TabList } from '@headlessui/react';
 import { useAtom } from 'jotai';
 import Image from 'next/image';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import Badge from './Badge';
 
 export default function Header() {
-  const [items, setItems] = useAtom(cartItems);
+  const [items, setItems] = useAtom(cartItemsAtom);
   const [user, setUser] = useAtom(userAtom);
 
   const handleLogout = async () => {

@@ -8,7 +8,7 @@ import { useSetAtom } from 'jotai';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
-import { productItem } from '../lib/store';
+import { productItemAtom } from '../lib/store';
 
 export default function ProductList({
   initialProducts,
@@ -16,11 +16,11 @@ export default function ProductList({
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useFetchProductsQuery({ initialProducts });
-  const setProductItem = useSetAtom(productItem);
+  const setProductItemAtom = useSetAtom(productItemAtom);
 
   const selectProduct = useCallback(
-    (item: ProductItem) => () => setProductItem(item),
-    [setProductItem],
+    (item: ProductItem) => () => setProductItemAtom(item),
+    [setProductItemAtom],
   );
 
   const observe = useIntersectionObserver(

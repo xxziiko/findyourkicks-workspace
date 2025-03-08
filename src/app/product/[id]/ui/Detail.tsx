@@ -1,6 +1,10 @@
 'use client';
 
-import { cartItems, isAuthenticatedAtom, productItem } from '@/app/lib/store';
+import {
+  cartItemsAtom,
+  isAuthenticatedAtom,
+  productItemAtom,
+} from '@/app/lib/store';
 import Loading from '@/app/loading';
 import { DefaultButton } from '@/components';
 import type { CartItem, ProductItem } from '@/types/product';
@@ -12,9 +16,9 @@ import { useSelectedOptions } from '../hooks';
 import Option from './Option';
 
 export default function Detail() {
-  const item = useAtomValue<ProductItem | null>(productItem);
+  const item = useAtomValue<ProductItem | null>(productItemAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
-  const setCart = useSetAtom(cartItems);
+  const setCart = useSetAtom(cartItemsAtom);
   const router = useRouter();
 
   const { data, func } = useSelectedOptions();
@@ -30,7 +34,7 @@ export default function Detail() {
   const price = Number(item?.lprice);
 
   const mergeCartItems = (updatedCart: CartItem[]) => {
-    const cartItems = selectedOptions.map(
+    const cartItemsAtom = selectedOptions.map(
       (option) =>
         ({
           ...option,
@@ -41,7 +45,7 @@ export default function Detail() {
         }) as CartItem,
     );
 
-    cartItems.forEach((newItem) => {
+    cartItemsAtom.forEach((newItem) => {
       const index = updatedCart.findIndex(
         (cartItem) => cartItem.size === newItem.size,
       );
