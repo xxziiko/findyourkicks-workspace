@@ -5,13 +5,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const start = Number.parseInt(searchParams.get('page') ?? '1', 10);
 
-  try {
-    const data = await fetchNaverData(start);
-    return NextResponse.json({ data }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 },
-    );
+  const data = await fetchNaverData(start);
+
+  if (!data) {
+    throw new Error('데이터를 불러올 수 없습니다.');
   }
+  return NextResponse.json({ data }, { status: 200 });
 }
