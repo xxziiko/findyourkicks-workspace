@@ -1,18 +1,21 @@
 'use client';
 
-import { cartItems, productItem } from '@/app/lib/store';
+import { cartItems, isAuthenticatedAtom, productItem } from '@/app/lib/store';
 import Loading from '@/app/loading';
 import { DefaultButton } from '@/components';
 import type { CartItem, ProductItem } from '@/types/product';
 import { Button } from '@headlessui/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useSelectedOptions } from '../hooks';
 import Option from './Option';
 
 export default function Detail() {
   const item = useAtomValue<ProductItem | null>(productItem);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setCart = useSetAtom(cartItems);
+  const router = useRouter();
 
   const { data, func } = useSelectedOptions();
   const { selectedOptions, inventory, totalQuantity } = data;
@@ -63,6 +66,10 @@ export default function Detail() {
       return updatedCart;
     });
     resetSelectedOptions();
+  };
+
+  const goToLogin = () => {
+    router.push('/login');
   };
 
   if (!item) return <Loading />;
@@ -130,7 +137,7 @@ export default function Detail() {
                   command="장바구니"
                   bgColor="bg-gray-800"
                   color="text-white"
-                  onClick={addCart}
+                  onClick={isAuthenticated ? addCart : goToLogin}
                 />
 
                 <DefaultButton
