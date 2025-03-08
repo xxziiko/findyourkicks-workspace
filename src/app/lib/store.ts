@@ -11,3 +11,4 @@ export const productItem = atomWithStorage<ProductItem | null>(
 export const cartItems = atomWithStorage<CartItem[]>('cart', []);
 
 export const userAtom = atom<User | null>(null);
+export const isAuthenticatedAtom = atom((get) => get(userAtom) !== null);
