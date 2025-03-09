@@ -1,14 +1,14 @@
 import { fetchProducts } from '@/app/lib/api';
 import { handleError } from '@/app/lib/utils';
 import type { ProductResponse } from '@/types/product';
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 export default function useFetchProductsQuery({
   initialProducts,
 }: { initialProducts: ProductResponse }) {
-  const { error, ...rest } = useSuspenseInfiniteQuery({
+  const { error, ...rest } = useInfiniteQuery({
     queryKey: ['products'],
-    queryFn: async ({ pageParam = 2 }) => await fetchProducts(pageParam),
+    queryFn: async ({ pageParam }) => await fetchProducts(pageParam),
     initialPageParam: 1,
     initialData: {
       pages: [initialProducts],
@@ -20,6 +20,7 @@ export default function useFetchProductsQuery({
     },
     select: (data) => data.pages.flatMap((page) => page.items),
     staleTime: 1000 * 60 * 2,
+    enabled: false,
   });
 
   return handleError({ data: rest, error });
