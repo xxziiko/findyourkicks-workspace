@@ -8,14 +8,28 @@ export async function GET(request: Request) {
   const data = await fetchNaverData(start);
 
   if (!data) {
-    throw new Error('데이터를 불러올 수 없습니다.');
+    return NextResponse.json(
+      { error: '데이터를 불러올 수 없습니다.' },
+      { status: 500 },
+    );
   }
-  const response = NextResponse.json({ data }, { status: 200 });
-  response.headers.set('Access-Control-Allow-Origin', '*');
-  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  response.headers.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization',
-  );
-  return response;
+
+  const headers = new Headers({
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  });
+
+  return new NextResponse(JSON.stringify({ data }), { status: 200, headers });
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
 }
