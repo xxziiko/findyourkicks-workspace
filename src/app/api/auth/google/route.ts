@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const next = searchParams.get('next') ?? '/';
   const supabase = await createClient();
-  const redirectTo = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/callback`;
+  const redirectTo = `${process.env.NEXT_PUBLIC_API_URL}/`;
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
