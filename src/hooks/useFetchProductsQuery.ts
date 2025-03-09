@@ -8,18 +8,15 @@ export default function useFetchProductsQuery({
 }: { initialProducts: ProductResponse }) {
   const { error, ...rest } = useSuspenseInfiniteQuery({
     queryKey: ['products'],
-    queryFn: async ({ pageParam = 2 }) =>
-      await fetchProducts((pageParam - 1) * 100 + 1),
+    queryFn: async ({ pageParam = 2 }) => await fetchProducts(pageParam),
     initialPageParam: 1,
     initialData: {
       pages: [initialProducts],
       pageParams: [1],
     },
-    getNextPageParam: (lastPage, allPages) => {
-      const nextPage = allPages.length + 1;
-      const nextStart = (nextPage - 1) * 100 + 1;
-
-      return nextStart <= 1000 ? nextPage : null;
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.start + 100;
+      return nextPage <= 1000 ? nextPage : null;
     },
     select: (data) => data.pages.flatMap((page) => page.items),
     staleTime: 1000 * 60 * 2,

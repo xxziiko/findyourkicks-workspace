@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import Loading from './loading';
 import ProductList from './ui/ProductList';
 
-const fetchForSSG = async (page = 1) => await fetchNaverData(page);
+const fetchForSSG = async () => await fetchNaverData();
 
 export default async function Home() {
   const initialProducts = await fetchForSSG();
