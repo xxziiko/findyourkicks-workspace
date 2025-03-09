@@ -8,7 +8,7 @@ export default function useFetchProductsQuery({
 }: { initialProducts: ProductResponse }) {
   const { error, ...rest } = useSuspenseInfiniteQuery({
     queryKey: ['products'],
-    queryFn: async ({ pageParam = 1 }) =>
+    queryFn: async ({ pageParam = 2 }) =>
       await fetchProducts((pageParam - 1) * 100 + 1),
     initialPageParam: 1,
     initialData: {
