@@ -1,10 +1,11 @@
 import { assert } from '@/app/lib/utils';
 import type { ApiResponse } from '@/types/product';
 
+// products
 export const fetchNaverData = async (start = 1) => {
   const API_URL = `https://openapi.naver.com/v1/search/shop.json?query=${encodeURIComponent(
     '운동화',
-  )}&display=100&start=${start}&sort=sim`;
+  )}&display=99&start=${start}&sort=sim`;
 
   const response = await fetch(API_URL, {
     method: 'GET',
@@ -22,7 +23,31 @@ export const fetchNaverData = async (start = 1) => {
   return response.json();
 };
 
-export const fetchProducts = async (page = 1): Promise<ApiResponse> =>
-  await fetch(
+export const fetchProducts = async (page = 1): Promise<ApiResponse> => {
+  const { data } = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=${page}`,
   ).then((res) => res.json());
+
+  return data;
+};
+
+export const fetchProductById = async (productId: string) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`,
+  ).then((res) => res.json());
+
+// login
+export const signInWithGoogle = async (next = '/') =>
+  await fetch(`/api/auth/google?next=${encodeURIComponent(next)}`).then((res) =>
+    res.json(),
+  );
+
+export const signInWithKakao = async (next = '/') =>
+  await fetch(`/api/auth/kakao?next=${encodeURIComponent(next)}`).then((res) =>
+    res.json(),
+  );
+
+export const signOutUser = async () =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signout`, {
+    method: 'POST',
+  });

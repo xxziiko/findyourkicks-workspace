@@ -15,7 +15,7 @@ export default function DefaultButton({
 }: IButton) {
   return (
     <Button
-      className={`rounded ${color} ${bgColor} py-3 text-sm text-white data-[hover]:opacity-65 w-full font-semibold border rounded-3xl`}
+      className={`rounded ${color} ${bgColor} py-3 text-sm data-[hover]:opacity-65 w-full font-semibold border rounded-3xl`}
       onClick={onClick}
     >
       {command}

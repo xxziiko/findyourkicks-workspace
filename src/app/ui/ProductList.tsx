@@ -1,26 +1,26 @@
 'use client';
 
 import { Card } from '@/components';
-import { useFetchProducts } from '@/hooks';
+import { useFetchProductsQuery } from '@/hooks';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import type { ProductItem, ProductResponse } from '@/types/product';
 import { useSetAtom } from 'jotai';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
-import { productItem } from '../lib/store';
+import { productItemAtom } from '../lib/store';
 
 export default function ProductList({
   initialProducts,
 }: { initialProducts: ProductResponse }) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useFetchProducts({ initialProducts });
-  const setProductItem = useSetAtom(productItem);
+    useFetchProductsQuery({ initialProducts });
+  const setProductItemAtom = useSetAtom(productItemAtom);
 
   const selectProduct = useCallback(
-    (item: ProductItem) => () => setProductItem(item),
-    [setProductItem],
+    (item: ProductItem) => () => setProductItemAtom(item),
+    [setProductItemAtom],
   );
 
   const observe = useIntersectionObserver(
@@ -39,7 +39,7 @@ export default function ProductList({
   }, [observe]);
 
   return (
-    <div className="w-full h-full">
+    <div>
       <section className="flex flex-wrap justify-center gap-4 ">
         {data?.map((item: ProductItem) => (
           <Link href={`/product/${item.productId}`} key={item.productId}>

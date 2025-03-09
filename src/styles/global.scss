@@ -1,3 +1,7 @@
+@use '@/styles/variables';
+@use '@/styles/mixins';
+@use '@/styles/layout';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
