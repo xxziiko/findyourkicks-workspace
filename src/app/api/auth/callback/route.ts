@@ -18,7 +18,7 @@ export async function GET(request: Request) {
       const forwardedHost = request.headers.get('x-forwarded-host');
 
       const finalRedirectUrl = forwardedHost
-        ? `http://${forwardedHost}${next}`
+        ? `https://${forwardedHost}${next}`
         : `${origin}${next}`;
 
       return NextResponse.redirect(finalRedirectUrl);
