@@ -10,5 +10,12 @@ export async function GET(request: Request) {
   if (!data) {
     throw new Error('데이터를 불러올 수 없습니다.');
   }
-  return NextResponse.json({ data }, { status: 200 });
+  const response = NextResponse.json({ data }, { status: 200 });
+  response.headers.set('Access-Control-Allow-Origin', '*');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  response.headers.set(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization',
+  );
+  return response;
 }
