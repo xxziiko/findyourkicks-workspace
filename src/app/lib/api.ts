@@ -5,7 +5,7 @@ import type { ApiResponse } from '@/types/product';
 export const fetchNaverData = async (start = 1) => {
   const API_URL = `https://openapi.naver.com/v1/search/shop.json?query=${encodeURIComponent(
     '운동화',
-  )}&display=100&start=${start}&sort=sim`;
+  )}&display=99&start=${start}&sort=sim`;
 
   const response = await fetch(API_URL, {
     method: 'GET',
