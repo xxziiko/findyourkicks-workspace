@@ -1,31 +1,17 @@
 import { SIZE_INVENTORY } from '@/app/lib/constants';
+import type { OptionProps } from '@/types/product';
 import { Button } from '@headlessui/react';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
-
-interface BaseOption {
-  size: number;
-  quantity: number;
-  price: number;
-}
-
-type SizeHandler = (size: number) => void;
-type OptionHandlers = {
-  [K in
-    | 'decrementQuantity'
-    | 'incrementQuantity'
-    | 'deleteOption']: SizeHandler;
-};
-type IOption = BaseOption & OptionHandlers;
 
 const Option = ({
   size,
   quantity,
   price,
-  decrementQuantity,
-  incrementQuantity,
-  deleteOption,
-}: IOption) => {
+  onIncrementButtonClick,
+  onDecrementButtonClick,
+  onDeleteButtonClick,
+}: OptionProps) => {
   const maxStock = (selectedSize: number) =>
     SIZE_INVENTORY.find(({ size }) => size === selectedSize)?.stock;
 
@@ -38,7 +24,7 @@ const Option = ({
       <div className="flex gap-5 w-full justify-center">
         <Button
           className="border px-2 rounded-lg  disabled:bg-gray-200 disabled:text-gray-500"
-          onClick={() => decrementQuantity(size)}
+          onClick={() => onDecrementButtonClick(size)}
           disabled={!quantity}
         >
           -
@@ -46,7 +32,7 @@ const Option = ({
         <p>{quantity}</p>
         <Button
           className="border px-2 rounded-lg  disabled:bg-gray-200 disabled:text-gray-500"
-          onClick={() => incrementQuantity(size)}
+          onClick={() => onIncrementButtonClick(size)}
           disabled={quantity === maxStock(size)}
         >
           +
@@ -59,7 +45,7 @@ const Option = ({
         <CircleX
           className="cursor-pointer"
           width={18}
-          onClick={() => deleteOption(size)}
+          onClick={() => onDeleteButtonClick(size)}
         />
       </div>
     </li>
