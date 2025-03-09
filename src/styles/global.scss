@@ -1,6 +1,6 @@
-@import 'variables';
-@import 'mixins';
-@import 'layout';
+@use '@/styles/variables';
+@use '@/styles/mixins';
+@use '@/styles/layout';
 
 @tailwind base;
 @tailwind components;

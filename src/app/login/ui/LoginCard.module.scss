@@ -1,28 +1,32 @@
-.card {
+@use '@/styles/mixins';
+
+@mixin card-base {
   border: 2px solid #000000;
   border-radius: 2rem;
+}
 
-  &_layout {
-    @extend .card;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 50%;
-    height: 500px;
-    padding: 1rem;
-  }
+.card {
+  @include card-base();
+}
 
-  &_title {
-    font-weight: 700;
-    font-size: larger;
-    text-align: center;
-  }
+.card_layout {
+  @include card-base();
+  @include mixins.flex-col;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 50%;
+  height: 500px;
+  padding: 1rem;
+}
+
+.card_title {
+  font-weight: 700;
+  font-size: larger;
+  text-align: center;
 }
 
 .btn_box {
-  display: flex;
-  flex-direction: column;
+  @include mixins.flex-col;
   gap: 10px;
   width: 100%;
 }
