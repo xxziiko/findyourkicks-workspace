@@ -4,7 +4,7 @@ interface IButton {
   text: string;
   variant: string;
   icon: React.ReactNode;
-  onClick: () => Promise<void>;
+  onClick: () => Promise<void> | void;
 }
 
 export default function Button({
@@ -14,10 +14,12 @@ export default function Button({
   onClick,
   ...arg
 }: IButton) {
-  const buttonClass = `${styles.btn} ${styles[`btn_${variant}`] ?? ''}`;
-
   return (
-    <button {...arg} className={buttonClass} onClick={onClick}>
+    <button
+      {...arg}
+      className={styles[`btn_${variant}`] ?? styles.btn}
+      onClick={onClick}
+    >
       {icon}
       <p className={styles.text}>{text}</p>
     </button>
