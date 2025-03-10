@@ -7,6 +7,7 @@ import { useAtom } from 'jotai';
 import Image from 'next/image';
 import Link from 'next/link';
 import Badge from './Badge';
+import styles from './Header.module.scss';
 
 export default function Header() {
   const [items, setItems] = useAtom(cartItemsAtom);
@@ -19,7 +20,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full bg-white z-50 h-20 flex justify-between items-center">
+    <header className={styles.header}>
       <div>
         <Link href="/">
           <Image
@@ -33,20 +34,23 @@ export default function Header() {
       </div>
 
       <TabGroup>
-        <TabList className="flex gap-2 text-sm">
-          <Tab className="relative">
+        <TabList className={styles.tabs}>
+          {user?.email && (
+            <TabGroup className={styles.tabs}>
+              <Tab>{user.email?.split('@')[0]}님</Tab>
+              <Tab>마이페이지</Tab>
+            </TabGroup>
+          )}
+
+          <Tab className={styles.tabs__tab}>
             <p>CART</p>
             {!!items.length && <Badge quantity={items.length} />}
           </Tab>
 
           {user?.email ? (
-            <TabGroup className="flex gap-2 text-sm">
-              <Tab className="font-medium">{user.email?.split('@')[0]}님</Tab>
-              <Tab>마이페이지</Tab>
-              <Tab onClick={handleLogout}>LOGOUT</Tab>
-            </TabGroup>
+            <Tab onClick={handleLogout}>LOGOUT</Tab>
           ) : (
-            <Tab className="font-medium">
+            <Tab className={styles['tabs__tab--bold']}>
               <Link href="/login">LOGIN</Link>
             </Tab>
           )}

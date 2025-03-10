@@ -9,6 +9,7 @@ import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
 import { productItemAtom } from '../lib/store';
+import styles from './ProductList.module.scss';
 
 export default function ProductList({
   initialProducts,
@@ -40,7 +41,7 @@ export default function ProductList({
 
   return (
     <div>
-      <section className="flex flex-wrap justify-center gap-4 ">
+      <section className={styles.list}>
         {data?.map((item: ProductItem) => (
           <Link href={`/product/${item.productId}`} key={item.productId}>
             <Card
@@ -55,7 +56,7 @@ export default function ProductList({
       </section>
 
       {isFetchingNextPage && (
-        <div className="flex justify-center pt-8">
+        <div className={styles.loading}>
           <Loader />
         </div>
       )}

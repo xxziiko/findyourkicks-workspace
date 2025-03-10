@@ -1,7 +1,7 @@
-import { DefaultButton } from '@/components';
+import { Button } from '@/components';
 import type { DetailViewProps } from '@/types/product';
-import { Button } from '@headlessui/react';
 import Image from 'next/image';
+import styles from './DetailView.module.scss';
 import Option from './Option';
 
 export default function DetailView(props: DetailViewProps) {
@@ -20,82 +20,70 @@ export default function DetailView(props: DetailViewProps) {
   } = props;
 
   return (
-    <article className="flex justify-center item-center">
-      <div className="flex flex-col md:flex-row justify-center gap-8">
-        <figure className="w-96 h-96 relative overflow-hidden ">
-          <Image src={item.image} alt="product" fill sizes="100%" />
-        </figure>
+    <article className={styles.detail}>
+      <figure className={styles.detail__image}>
+        <Image src={item.image} alt="product" fill sizes="100%" />
+      </figure>
 
-        <div className="border-l" />
+      <div className={styles.detail__divider} />
 
-        <section className="flex flex-col gap-6 md:w-1/2">
-          <div>
-            <p className="font-semibold ">{item.maker}</p>
-            <p className="font-extrabold text-3xl">
-              {Number(item.lprice).toLocaleString()} 원
-            </p>
-          </div>
+      <section className={styles.detail__content}>
+        <div>
+          <p className={styles['detail__text--brand']}>{item.maker}</p>
+          <p className={styles['detail__text--price']}>
+            {Number(item.lprice).toLocaleString()} 원
+          </p>
+        </div>
 
-          <div>
-            <p className="">{item.title.replace(/(<b>|<\/b>)/g, '')}</p>
-            <p className="text-sm text-stone-400 ">{`${item.brand} > ${item.category4}`}</p>
-          </div>
+        <div>
+          <p className="">{item.title.replace(/(<b>|<\/b>)/g, '')}</p>
+          <p
+            className={styles['detail__text--subtitle']}
+          >{`${item.brand} > ${item.category4}`}</p>
+        </div>
+
+        <div className={styles.detail__options}>
+          {inventory.map(({ size, stock }) => (
+            <Button
+              key={size}
+              variant="size"
               onClick={() => handleSelectSize(size)}
+              disabled={!stock}
+              text={size}
+            />
+          ))}
+        </div>
 
-          <div className="flex flex-wrap gap-4">
-            {inventory.map(({ size, stock }) => (
-              <Button
+        <div>
+          <ul>
+            {selectedOptions.map(({ size, quantity }) => (
+              <Option
+                size={size}
+                quantity={quantity}
                 key={size}
-                className="border px-5 py-3 rounded-lg data-[hover]:opacity-50 disabled:bg-gray-200 disabled:text-gray-500"
-                disabled={!stock}
-              >
-                {size}
-              </Button>
+                price={price}
+                onIncrementButtonClick={onIncrementButtonClick}
+                onDecrementButtonClick={onDecrementButtonClick}
+                onDeleteButtonClick={onDeleteButtonClick}
+              />
             ))}
-          </div>
+          </ul>
 
           <div>
-            <ul>
-              {selectedOptions.map(({ size, quantity }) => (
-                <Option
-                  size={size}
-                  quantity={quantity}
-                  key={size}
-                  price={price}
-                  onIncrementButtonClick={onIncrementButtonClick}
-                  onDecrementButtonClick={onDecrementButtonClick}
-                  onDeleteButtonClick={onDeleteButtonClick}
-                />
-              ))}
-            </ul>
+            <div className="flex justify-between py-6">
+              <p className="font-semibold text-sm">합계</p>
+              <p className="font-bold text-2xl">
+                {(totalQuantity * price).toLocaleString()}원
+              </p>
+            </div>
 
-            <div>
-              <div className="flex justify-between py-6">
-                <p className="font-semibold text-sm">합계</p>
-                <p className="font-bold text-2xl">
-                  {(totalQuantity * price).toLocaleString()}원
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <DefaultButton
-                  command="장바구니"
-                  bgColor="bg-gray-800"
-                  color="text-white"
-                  onClick={handleCartButton}
-                />
-
-                <DefaultButton
-                  command="구매하기"
-                  bgColor="bg-white"
-                  color="text-gray"
-                  onClick={() => {}}
-                />
-              </div>
+            <div className="flex flex-col gap-3">
+              <Button text="장바구니" onClick={handleCartButton} />
+              <Button text="구매하기" onClick={() => {}} variant="white" />
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </article>
   );
 }
