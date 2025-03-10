@@ -1,65 +1,50 @@
 import { SIZE_INVENTORY } from '@/app/lib/constants';
-import { Button } from '@headlessui/react';
+import { Button } from '@/components';
+import type { OptionProps } from '@/types/product';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
-
-interface BaseOption {
-  size: number;
-  quantity: number;
-  price: number;
-}
-
-type SizeHandler = (size: number) => void;
-type OptionHandlers = {
-  [K in
-    | 'decrementQuantity'
-    | 'incrementQuantity'
-    | 'deleteOption']: SizeHandler;
-};
-type IOption = BaseOption & OptionHandlers;
+import styles from './Option.module.scss';
 
 const Option = ({
   size,
   quantity,
   price,
-  decrementQuantity,
-  incrementQuantity,
-  deleteOption,
-}: IOption) => {
+  onIncrementButtonClick,
+  onDecrementButtonClick,
+  onDeleteButtonClick,
+}: OptionProps) => {
   const maxStock = (selectedSize: number) =>
     SIZE_INVENTORY.find(({ size }) => size === selectedSize)?.stock;
 
   return (
-    <li
-      key={size}
-      className="flex justify-between py-5 item-center w-full border-b"
-    >
-      <p className="w-full">{size}</p>
-      <div className="flex gap-5 w-full justify-center">
+    <li key={size} className={styles.option}>
+      <p className={styles.option__size}>{size}</p>
+      <div className={styles.option__quantity}>
         <Button
-          className="border px-2 rounded-lg  disabled:bg-gray-200 disabled:text-gray-500"
-          onClick={() => decrementQuantity(size)}
+          onClick={() => onDecrementButtonClick(size)}
           disabled={!quantity}
-        >
-          -
-        </Button>
+          text="-"
+          variant="lined--small"
+        />
+
         <p>{quantity}</p>
         <Button
-          className="border px-2 rounded-lg  disabled:bg-gray-200 disabled:text-gray-500"
-          onClick={() => incrementQuantity(size)}
+          onClick={() => onIncrementButtonClick(size)}
           disabled={quantity === maxStock(size)}
-        >
-          +
-        </Button>
+          text="+"
+          variant="lined--small"
+        />
       </div>
 
-      <div className="flex gap-2  w-full justify-end">
-        <p className="font-bold">{(price * quantity).toLocaleString()} 원</p>
+      <div className={styles.option__price_box}>
+        <p className={styles.option__price}>
+          {(price * quantity).toLocaleString()} 원
+        </p>
 
         <CircleX
-          className="cursor-pointer"
+          className={styles['option__button--delete']}
           width={18}
-          onClick={() => deleteOption(size)}
+          onClick={() => onDeleteButtonClick(size)}
         />
       </div>
     </li>

@@ -1,0 +1,41 @@
+@mixin tab-base {
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.header {
+  @include mixins.flex-between;
+
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5rem; // h-20
+  background-color: white;
+  z-index: 50;
+
+  &__logo {
+    cursor: pointer;
+  }
+}
+
+.tabs {
+  @include tab-base;
+  display: flex;
+  gap: 0.5rem; // gap-2
+
+  &__tab {
+    @include tab-base;
+    position: relative;
+
+    &:active {
+      font-weight: bold;
+    }
+
+    &--bold {
+      @include tab-base;
+      font-weight: 600;
+    }
+  }
+}

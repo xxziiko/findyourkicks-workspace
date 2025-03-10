@@ -1,28 +1,25 @@
 import { SIZE_INVENTORY } from '@/app/lib/constants';
-import { useCallback, useMemo, useState } from 'react';
+import { productItemAtom } from '@/app/lib/store';
+import type { CartItem, ProductItem, SelectedOption } from '@/types/product';
+import { useAtomValue } from 'jotai';
+import { useCallback, useState } from 'react';
 
 export default function useSelectedOptions() {
-  const [selectedOptions, setSelectedOptions] = useState<
-    { size: number; quantity: number }[]
-  >([]);
+  const item = useAtomValue<ProductItem | null>(productItemAtom);
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
+  const price = Number(item?.lprice);
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
     0,
   );
 
-  const inventory = useMemo(
-    () =>
-      SIZE_INVENTORY.map((inv) => {
-        const selected = selectedOptions.find((opt) => opt.size === inv.size);
-        return selected
-          ? { ...inv, stock: inv.stock - selected.quantity }
-          : inv;
-      }),
-    [selectedOptions],
-  );
+  const inventory = SIZE_INVENTORY.map((inv) => {
+    const selected = selectedOptions.find((opt) => opt.size === inv.size);
+    return selected ? { ...inv, stock: inv.stock - selected.quantity } : inv;
+  });
 
-  const selectSize = (size: number) => {
+  const handleSelectSize = (size: number) => {
     setSelectedOptions((prev) => {
       const index = prev.findIndex((option) => option.size === size);
       if (index !== -1) {
@@ -34,11 +31,11 @@ export default function useSelectedOptions() {
     });
   };
 
-  const deleteOption = useCallback((size: number) => {
+  const onDeleteButtonClick = useCallback((size: number) => {
     setSelectedOptions((prev) => prev.filter((option) => option.size !== size));
   }, []);
 
-  const incrementQuantity = useCallback((size: number) => {
+  const onIncrementButtonClick = useCallback((size: number) => {
     const initialStock =
       SIZE_INVENTORY.find((item) => item.size === size)?.stock ?? 0;
 
@@ -51,7 +48,7 @@ export default function useSelectedOptions() {
     );
   }, []);
 
-  const decrementQuantity = useCallback((size: number) => {
+  const onDecrementButtonClick = useCallback((size: number) => {
     setSelectedOptions((prev) =>
       prev.map((option) =>
         option.size === size && option.quantity > 1
@@ -65,18 +62,31 @@ export default function useSelectedOptions() {
     setSelectedOptions([]);
   };
 
+  const createCart = () => {
+    return selectedOptions.map(
+      (option) =>
+        ({
+          ...option,
+          productId: item?.productId,
+          imageUrl: item?.image,
+          title: item?.title,
+          price,
+        }) as CartItem,
+    );
+  };
+
   return {
-    data: {
-      selectedOptions,
-      totalQuantity,
-      inventory,
-    },
-    func: {
-      selectSize,
-      deleteOption,
-      incrementQuantity,
-      decrementQuantity,
-      resetSelectedOptions,
-    },
+    item,
+    price,
+    selectedOptions,
+    totalQuantity,
+    inventory,
+
+    handleSelectSize,
+    onDeleteButtonClick,
+    onDecrementButtonClick,
+    onIncrementButtonClick,
+    resetSelectedOptions,
+    createCart,
   };
 }

@@ -1,40 +1,86 @@
 @use 'sass:meta';
-@use '@/styles/mixins';
 
-@mixin button-base {
+@mixin button-layout {
+  @include button-disabled;
   display: flex;
-  width: 100%;
   padding: 1rem 1.5rem;
+  font-weight: 600;
   font-size: 0.875rem;
-  cursor: pointer;
   border-radius: 26px;
+  cursor: pointer;
 }
 
-@mixin button-variant($color: white, $border: none, $shadow: none) {
+@mixin button-default {
+  padding: 0.75rem 1rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.65;
+  }
+}
+
+@mixin button-variant($color: white, $border: none, $shadow: none, $bg: none) {
   color: $color;
+  background-color: $bg;
   border: $border;
   box-shadow: $shadow;
 }
 
+@mixin button-disabled {
+  &:disabled {
+    background-color: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-border-detault {
+  @include button-disabled;
+  border: 1px solid #dedede;
+  border-radius: 0.5rem;
+
+  &:hover {
+    opacity: 50%;
+  }
+}
+
 .btn {
-  @include button-base;
-}
+  @include button-layout;
+  @include button-default;
+  @include button-variant(white, none, none, #000000);
 
-.btn_kakao {
-  @include button-base;
-  @include button-variant(#000000, none, none);
-  background-color: #ffe603;
-}
+  &--white {
+    @include button-layout;
+    @include button-default;
+    @include button-variant(#000000, 1px solid #dedede, none, white);
+  }
 
-.btn_google {
-  @include button-base;
-  @include button-variant(#888, thin solid #888, 1px 1px 1px #888);
-  white-space: nowrap;
-}
+  &--kakao {
+    @include button-layout;
+    @include button-variant(#000000, none, none);
+    background-color: #ffe603;
+  }
 
-.text {
-  @include mixins.flex-center;
-  width: 100%;
-  height: 100%;
-  font-weight: 600;
+  &--google {
+    @include button-layout;
+    @include button-variant(#000000, thin solid #888, 1px 1px 1px #888);
+    white-space: nowrap;
+  }
+
+  &--lined {
+    @include button-border-detault;
+    padding: 0.75rem 1.25rem;
+
+    &--small {
+      @include button-border-detault;
+      padding: 0.15rem 0.65rem;
+    }
+  }
+
+  &__text {
+    @include mixins.flex-center;
+    width: 100%;
+    height: 100%;
+  }
 }

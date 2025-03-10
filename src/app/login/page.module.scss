@@ -1,5 +1,3 @@
-@use '@/styles/mixins';
-
 .layout {
   @include mixins.flex-center;
 }

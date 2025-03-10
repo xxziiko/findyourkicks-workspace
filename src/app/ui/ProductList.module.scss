@@ -1,0 +1,10 @@
+.list {
+  @include mixins.flex-wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.loading {
+  @include mixins.flex-center;
+  padding-top: 2rem;
+}

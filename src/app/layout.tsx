@@ -1,11 +1,12 @@
+import '@/styles/global.scss';
+import { createClient } from '@/app/lib/utils/supabase/server';
 import { Header } from '@/components';
 import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Providers } from './providers';
-import '@/styles/global.scss';
-import { createClient } from '@/app/lib/utils/supabase/server';
+import styles from './layout.module.scss';
 import { AuthListener, UserInitializer } from './login/auth';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: 'SHOP | findyourkicks',
@@ -29,12 +30,12 @@ export default async function RootLayout({
           <Provider>
             <UserInitializer user={user} />
             <AuthListener />
-            <div className="flex flex-col justify-between max-w-7xl ml-auto mr-auto min-h-screen gap-16 pl-8 pr-8 font-sans ">
+            <div className={styles.container}>
               <Header />
 
-              <main className="w-full h-full">{children}</main>
+              <main className={styles.main}>{children}</main>
 
-              <footer className="border bg-black h-44 flex justify-center items-center">
+              <footer className={styles.footer}>
                 <div>
                   <Image
                     src="/findyourkicks-stroke.png"
