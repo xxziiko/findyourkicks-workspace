@@ -12,7 +12,7 @@ export default function Detail() {
     inventory,
     totalQuantity,
     createCart,
-    selectSize,
+    handleSelectSize,
     onDeleteButtonClick,
     onIncrementButtonClick,
     onDecrementButtonClick,
@@ -32,7 +32,7 @@ export default function Detail() {
     selectedOptions,
     price,
 
-    selectSize,
+    handleSelectSize,
     onDeleteButtonClick,
     onIncrementButtonClick,
     onDecrementButtonClick,

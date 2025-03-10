@@ -19,7 +19,7 @@ export default function useSelectedOptions() {
     return selected ? { ...inv, stock: inv.stock - selected.quantity } : inv;
   });
 
-  const selectSize = (size: number) => {
+  const handleSelectSize = (size: number) => {
     setSelectedOptions((prev) => {
       const index = prev.findIndex((option) => option.size === size);
       if (index !== -1) {
@@ -82,7 +82,7 @@ export default function useSelectedOptions() {
     totalQuantity,
     inventory,
 
-    selectSize,
+    handleSelectSize,
     onDeleteButtonClick,
     onDecrementButtonClick,
     onIncrementButtonClick,

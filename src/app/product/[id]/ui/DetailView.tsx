@@ -12,7 +12,7 @@ export default function DetailView(props: DetailViewProps) {
     totalQuantity,
     selectedOptions,
 
-    selectSize,
+    handleSelectSize,
     onDeleteButtonClick,
     onIncrementButtonClick,
     onDecrementButtonClick,
@@ -40,13 +40,13 @@ export default function DetailView(props: DetailViewProps) {
             <p className="">{item.title.replace(/(<b>|<\/b>)/g, '')}</p>
             <p className="text-sm text-stone-400 ">{`${item.brand} > ${item.category4}`}</p>
           </div>
+              onClick={() => handleSelectSize(size)}
 
           <div className="flex flex-wrap gap-4">
             {inventory.map(({ size, stock }) => (
               <Button
                 key={size}
                 className="border px-5 py-3 rounded-lg data-[hover]:opacity-50 disabled:bg-gray-200 disabled:text-gray-500"
-                onClick={() => selectSize(size)}
                 disabled={!stock}
               >
                 {size}
