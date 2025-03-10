@@ -1,6 +1,6 @@
 import { SIZE_INVENTORY } from '@/app/lib/constants';
+import { Button } from '@/components';
 import type { OptionProps } from '@/types/product';
-import { Button } from '@headlessui/react';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';
@@ -21,20 +21,19 @@ const Option = ({
       <p className={styles.option__size}>{size}</p>
       <div className={styles.option__quantity}>
         <Button
-          className={styles.option__button}
           onClick={() => onDecrementButtonClick(size)}
           disabled={!quantity}
-        >
-          -
-        </Button>
+          text="-"
+          variant="lined--small"
+        />
+
         <p>{quantity}</p>
         <Button
-          className={styles.option__button}
           onClick={() => onIncrementButtonClick(size)}
           disabled={quantity === maxStock(size)}
-        >
-          +
-        </Button>
+          text="+"
+          variant="lined--small"
+        />
       </div>
 
       <div className={styles.option__price_box}>

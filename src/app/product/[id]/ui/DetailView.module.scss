@@ -1,5 +1,3 @@
-@use '@/styles/mixins';
-
 .detail {
   @include mixins.flex-center-col;
   gap: 2rem;
@@ -41,7 +39,8 @@
     }
 
     &--subtitle {
-      font-size: 0.875rem;
+      font-size: 0.8rem;
+      line-height: 1.5rem;
       color: #a8a29e;
     }
   }
@@ -55,5 +54,24 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  &__bottom {
+    @include mixins.flex-between;
+    padding: 1rem 0;
+
+    &--total {
+      font-weight: 600;
+    }
+
+    &--price {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+  }
+
+  &__button_box {
+    @include mixins.flex-col;
+    gap: 0.75rem;
   }
 }

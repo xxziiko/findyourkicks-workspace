@@ -1,12 +1,12 @@
+import '@/styles/global.scss';
 import { createClient } from '@/app/lib/utils/supabase/server';
 import { Header } from '@/components';
 import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import styles from './layout.module.scss';
 import { AuthListener, UserInitializer } from './login/auth';
 import { Providers } from './providers';
-import '@/styles/global.scss';
-import styles from './layout.module.scss';
 
 export const metadata: Metadata = {
   title: 'SHOP | findyourkicks',

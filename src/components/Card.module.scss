@@ -1,0 +1,49 @@
+.card {
+  @include mixins.flex-col;
+  text-align: left;
+  width: 13rem;
+  cursor: pointer;
+
+  &__content {
+    @include mixins.flex-col;
+
+    gap: 0.5rem;
+    height: 100%;
+    padding-bottom: 0.25rem;
+  }
+
+  &__image {
+    width: 13rem;
+    height: 13rem;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      border-radius: 0.75rem;
+      object-fit: cover;
+    }
+  }
+
+  &__details {
+    p {
+      font-size: 0.75rem;
+      line-height: 1rem;
+    }
+
+    &--brand {
+      font-weight: 800;
+      line-height: 1.25rem;
+    }
+  }
+
+  &__price {
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+  }
+
+  &__sub {
+    font-size: 0.7rem;
+    color: #a8a29e;
+  }
+}

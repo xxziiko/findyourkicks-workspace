@@ -1,5 +1,4 @@
 @use 'sass:meta';
-@use '@/styles/mixins';
 
 @mixin button-layout {
   @include button-disabled;
@@ -32,6 +31,17 @@
   &:disabled {
     background-color: #e5e7eb;
     color: #6b7280;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-border-detault {
+  @include button-disabled;
+  border: 1px solid #dedede;
+  border-radius: 0.5rem;
+
+  &:hover {
+    opacity: 50%;
   }
 }
 
@@ -58,14 +68,13 @@
     white-space: nowrap;
   }
 
-  &--size {
-    @include button-disabled;
+  &--lined {
+    @include button-border-detault;
     padding: 0.75rem 1.25rem;
-    border: 1px solid #dedede;
-    border-radius: 0.5rem;
 
-    &:hover {
-      opacity: 50%;
+    &--small {
+      @include button-border-detault;
+      padding: 0.15rem 0.65rem;
     }
   }
 

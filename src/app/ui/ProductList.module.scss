@@ -1,5 +1,3 @@
-@use '@/styles/mixins';
-
 .list {
   @include mixins.flex-wrap;
   justify-content: center;

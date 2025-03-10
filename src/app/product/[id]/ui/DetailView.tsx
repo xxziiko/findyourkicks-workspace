@@ -46,7 +46,7 @@ export default function DetailView(props: DetailViewProps) {
           {inventory.map(({ size, stock }) => (
             <Button
               key={size}
-              variant="size"
+              variant="lined"
               onClick={() => handleSelectSize(size)}
               disabled={!stock}
               text={size}
@@ -54,34 +54,30 @@ export default function DetailView(props: DetailViewProps) {
           ))}
         </div>
 
-        <div>
-          <ul>
-            {selectedOptions.map(({ size, quantity }) => (
-              <Option
-                size={size}
-                quantity={quantity}
-                key={size}
-                price={price}
-                onIncrementButtonClick={onIncrementButtonClick}
-                onDecrementButtonClick={onDecrementButtonClick}
-                onDeleteButtonClick={onDeleteButtonClick}
-              />
-            ))}
-          </ul>
+        <ul>
+          {selectedOptions.map(({ size, quantity }) => (
+            <Option
+              size={size}
+              quantity={quantity}
+              key={size}
+              price={price}
+              onIncrementButtonClick={onIncrementButtonClick}
+              onDecrementButtonClick={onDecrementButtonClick}
+              onDeleteButtonClick={onDeleteButtonClick}
+            />
+          ))}
+        </ul>
 
-          <div>
-            <div className="flex justify-between py-6">
-              <p className="font-semibold text-sm">합계</p>
-              <p className="font-bold text-2xl">
-                {(totalQuantity * price).toLocaleString()}원
-              </p>
-            </div>
+        <div className={styles.detail__bottom}>
+          <p className={styles['detail__bottom--total']}>합계</p>
+          <p className={styles['detail__bottom--price']}>
+            {(totalQuantity * price).toLocaleString()}원
+          </p>
+        </div>
 
-            <div className="flex flex-col gap-3">
-              <Button text="장바구니" onClick={handleCartButton} />
-              <Button text="구매하기" onClick={() => {}} variant="white" />
-            </div>
-          </div>
+        <div className={styles.detail__button_box}>
+          <Button text="장바구니" onClick={handleCartButton} />
+          <Button text="구매하기" onClick={() => {}} variant="white" />
         </div>
       </section>
     </article>
