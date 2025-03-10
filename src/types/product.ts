@@ -2,6 +2,7 @@ import type { fetchProducts } from '@/app/lib/api';
 
 export type ProductResponse = Awaited<ReturnType<typeof fetchProducts>>;
 export type ProductItem = ProductResponse['items'][0];
+
 export type SizeHandler = (size: number) => void;
 
 export type OptionProps = BaseOption & OptionHandlers;
@@ -49,7 +50,7 @@ interface DetailViewBase {
   inventory: InventoryItem[];
   totalQuantity: number;
   selectedOptions: SelectedOption[];
-  selectSize: SizeHandler;
+  handleSelectSize: SizeHandler;
   handleCartButton: () => void;
 }
 
