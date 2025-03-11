@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components';
+import { CartBadge } from '@/components';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Header.module.scss';
@@ -31,7 +31,7 @@ export default function Header() {
           disabled={!userEmail}
         >
           CART
-          {!!items.length && <Badge quantity={items.length} />}
+          {!!items.length && <CartBadge quantity={items.length} />}
         </button>
 
         {userEmail && (
