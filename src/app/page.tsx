@@ -1,7 +1,7 @@
 import { fetchNaverData } from '@/app/lib/api';
 import { Suspense } from 'react';
 import Loading from './loading';
-import ProductList from './ui/ProductList';
+import ProductList from './product/ui/ProductList';
 
 const fetchForSSG = async () => await fetchNaverData();
 

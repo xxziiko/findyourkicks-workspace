@@ -1,14 +1,14 @@
 'use client';
 
+import { productItemAtom } from '@/app/lib/store';
+import { useFetchProductsQuery } from '@/app/product/hooks';
 import { Card } from '@/components';
-import { useFetchProductsQuery } from '@/hooks';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import type { ProductItem, ProductResponse } from '@/types/product';
 import { useSetAtom } from 'jotai';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef } from 'react';
-import { productItemAtom } from '../lib/store';
 import styles from './ProductList.module.scss';
 
 export default function ProductList({
