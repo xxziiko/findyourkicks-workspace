@@ -11,11 +11,11 @@ export default function DetailView(props: DetailViewProps) {
     totalQuantity,
     selectedOptions,
 
-    handleSelectSize,
-    onDeleteButtonClick,
-    onIncrementButtonClick,
-    onDecrementButtonClick,
-    handleCartButton,
+    onSelectSize,
+    onDelete,
+    onIncrement,
+    onDecrement,
+    onCartButton,
   } = props;
 
   return (
@@ -44,7 +44,7 @@ export default function DetailView(props: DetailViewProps) {
             <Button
               key={size}
               variant="lined"
-              onClick={() => handleSelectSize(size)}
+              onClick={() => onSelectSize(size)}
               disabled={!stock}
               text={size}
             />
@@ -58,9 +58,9 @@ export default function DetailView(props: DetailViewProps) {
               quantity={quantity}
               key={size}
               price={price}
-              onIncrementButtonClick={onIncrementButtonClick}
-              onDecrementButtonClick={onDecrementButtonClick}
-              onDeleteButtonClick={onDeleteButtonClick}
+              onIncrement={onIncrement}
+              onDecrement={onDecrement}
+              onDelete={onDelete}
             />
           ))}
         </ul>
@@ -73,7 +73,7 @@ export default function DetailView(props: DetailViewProps) {
         </div>
 
         <div className={styles.detail__button_box}>
-          <Button text="장바구니" onClick={handleCartButton} />
+          <Button text="장바구니" onClick={onCartButton} />
           <Button text="구매하기" onClick={() => {}} variant="white" />
         </div>
       </section>

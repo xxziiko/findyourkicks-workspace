@@ -4,13 +4,7 @@ import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';
 
-const Option = ({
-  size,
-  quantity,
-  price,
-  onDeleteButtonClick,
-  ...props
-}: OptionProps) => {
+const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
   return (
     <li key={size} className={styles.option}>
       <p className={styles.option__size}>{size}</p>
@@ -24,7 +18,7 @@ const Option = ({
         <CircleX
           className={styles['option__button--delete']}
           width={18}
-          onClick={() => onDeleteButtonClick(size)}
+          onClick={() => onDelete(size)}
         />
       </div>
     </li>

@@ -31,11 +31,11 @@ export default function useSelectedOptions() {
     });
   };
 
-  const onDeleteButtonClick = useCallback((size: number) => {
+  const handleDeleteButton = useCallback((size: number) => {
     setSelectedOptions((prev) => prev.filter((option) => option.size !== size));
   }, []);
 
-  const onIncrementButtonClick = useCallback((size: number) => {
+  const handleIncrementButton = useCallback((size: number) => {
     const initialStock =
       SIZE_INVENTORY.find((item) => item.size === size)?.stock ?? 0;
 
@@ -48,7 +48,7 @@ export default function useSelectedOptions() {
     );
   }, []);
 
-  const onDecrementButtonClick = useCallback((size: number) => {
+  const handleDecrementButton = useCallback((size: number) => {
     setSelectedOptions((prev) =>
       prev.map((option) =>
         option.size === size && option.quantity > 1
@@ -84,9 +84,9 @@ export default function useSelectedOptions() {
     inventory,
 
     handleSelectSize,
-    onDeleteButtonClick,
-    onDecrementButtonClick,
-    onIncrementButtonClick,
+    handleDeleteButton,
+    handleIncrementButton,
+    handleDecrementButton,
     resetSelectedOptions,
     createCart,
   };

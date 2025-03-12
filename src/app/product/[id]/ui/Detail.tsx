@@ -5,8 +5,19 @@ import { useCartManager, useSelectedOptions } from '../hooks';
 import DetailView from './DetailView';
 
 export default function Detail() {
-  const { createCart, resetSelectedOptions, item, ...rest } =
-    useSelectedOptions();
+  const {
+    item,
+    price,
+    selectedOptions,
+    inventory,
+    totalQuantity,
+    handleSelectSize,
+    handleDeleteButton,
+    handleIncrementButton,
+    handleDecrementButton,
+    createCart,
+    resetSelectedOptions,
+  } = useSelectedOptions();
   const { handleCartButton } = useCartManager({
     createCart,
     resetSelectedOptions,
@@ -16,8 +27,16 @@ export default function Detail() {
 
   const props = {
     item,
+    inventory,
+    totalQuantity,
+    selectedOptions,
+    price,
+
+    onSelectSize: handleSelectSize,
+    onDelete: handleDeleteButton,
+    onIncrement: handleIncrementButton,
+    onDecrement: handleDecrementButton,
     handleCartButton,
-    ...rest,
   };
 
   return <DetailView {...props} />;

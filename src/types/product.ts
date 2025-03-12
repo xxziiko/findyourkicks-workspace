@@ -9,15 +9,12 @@ export type OptionProps = BaseOption & OptionHandlers;
 export type DetailViewProps = DetailViewBase & OptionHandlers;
 
 export type OptionHandlers = {
-  [K in
-    | 'onIncrementButtonClick'
-    | 'onDecrementButtonClick'
-    | 'onDeleteButtonClick']: SizeHandler;
+  [K in 'onIncrement' | 'onDecrement' | 'onDelete']: SizeHandler;
 };
 
 export type QuantityController = {
-  onDecrementButtonClick: SizeHandler;
-  onIncrementButtonClick: SizeHandler;
+  onDecrement: SizeHandler;
+  onIncrement: SizeHandler;
 };
 
 export type QuantityControllerProps = QuantityController & SelectedOption;
@@ -62,8 +59,8 @@ interface DetailViewBase {
   inventory: InventoryItem[];
   totalQuantity: number;
   selectedOptions: SelectedOption[];
-  handleSelectSize: SizeHandler;
-  handleCartButton: () => void;
+  onSelectSize: SizeHandler;
+  onCartButton: () => void;
 }
 
 interface Item {

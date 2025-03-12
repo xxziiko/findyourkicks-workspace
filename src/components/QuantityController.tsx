@@ -6,8 +6,8 @@ import styles from './QuantityController.module.scss';
 export default function QuantityController({
   quantity,
   size,
-  onIncrementButtonClick,
-  onDecrementButtonClick,
+  onIncrement,
+  onDecrement,
 }: QuantityControllerProps) {
   const maxStock = (selectedSize: number) =>
     SIZE_INVENTORY.find(({ size }) => size === selectedSize)?.stock;
@@ -15,7 +15,7 @@ export default function QuantityController({
   return (
     <div className={styles.controller}>
       <Button
-        onClick={() => onDecrementButtonClick(size)}
+        onClick={() => onIncrement(size)}
         disabled={!quantity}
         text="-"
         variant="lined--small"
@@ -23,7 +23,7 @@ export default function QuantityController({
 
       <p>{quantity}</p>
       <Button
-        onClick={() => onIncrementButtonClick(size)}
+        onClick={() => onDecrement(size)}
         disabled={quantity === maxStock(size)}
         text="+"
         variant="lined--small"
