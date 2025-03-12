@@ -2,8 +2,8 @@ import { Card } from '@/components';
 import type { ProductItem } from '@/types/product';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
-import type { ProductListProps } from './ProductList';
-import styles from './ProductList.module.scss';
+import type { ProductListProps } from '../ProductList';
+import styles from './ProductListView.module.scss';
 
 export default function ProductListView({
   handleCardButton,

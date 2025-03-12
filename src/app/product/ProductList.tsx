@@ -2,8 +2,8 @@
 
 import type { ProductItem, ProductResponse } from '@/types/product';
 import type { Ref } from 'react';
-import useProductList from '../hooks/useProductList';
-import ProductListView from './ProductListView';
+import useProductList from './hooks/useProductList';
+import ProductListView from './ui/ProductListView';
 
 export type ProductListProps = {
   isFetchingNextPage: boolean;

@@ -4,11 +4,10 @@ import { CartBadge } from '@/components';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Header.module.scss';
-import useHeaderManager from './useHeaderManager';
+import useHeader from './useHeader';
 
 export default function Header() {
-  const { items, userEmail, handleLogout, handleCartButton } =
-    useHeaderManager();
+  const { items, userEmail, handleLogout, handleCartButton } = useHeader();
 
   return (
     <header className={styles.header}>

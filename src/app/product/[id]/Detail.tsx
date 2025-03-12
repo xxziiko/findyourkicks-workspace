@@ -1,8 +1,8 @@
 'use client';
 
 import Loading from '@/app/loading';
-import { useCartManager, useSelectedOptions } from '../hooks';
-import DetailView from './DetailView';
+import { useCartManager, useSelectedOptions } from './hooks';
+import { DetailView } from './ui';
 
 export default function Detail() {
   const {
@@ -36,7 +36,7 @@ export default function Detail() {
     onDelete: handleDeleteButton,
     onIncrement: handleIncrementButton,
     onDecrement: handleDecrementButton,
-    handleCartButton,
+    onCartButton: handleCartButton,
   };
 
   return <DetailView {...props} />;
