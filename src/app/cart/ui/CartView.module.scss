@@ -1,6 +1,11 @@
+.section {
+  @include mixins.flex-col;
+  gap: 3rem;
+}
+
 .title {
   @include mixins.flex-between;
-  padding-bottom: 5rem;
+  padding-bottom: 2rem;
 
   &__head {
     font-size: 2rem;
@@ -25,6 +30,7 @@
 
 .list {
   width: 100%;
+  border-bottom: 1px solid #dedede;
 
   &__header {
     @include mixins.flex-evenly;
@@ -46,5 +52,41 @@
     div {
       @include mixins.cell-base;
     }
+  }
+}
+
+.order {
+  @include mixins.flex-col;
+  border: 1.5px solid #000;
+  border-radius: 1.2rem;
+  padding: 0 1rem;
+
+  &__title {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #dedede;
+    font-size: 1.02rem;
+    font-weight: 600;
+  }
+
+  &__content {
+    padding: 1rem 0;
+
+    &--item {
+      @include mixins.flex-between;
+      padding: 0.2rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: #888;
+    }
+  }
+
+  &__total_price {
+    @include mixins.flex-between;
+    padding: 1.5rem 0;
+    border-top: 1px solid #dedede;
+    font-size: 1rem;
+    font-weight: 600;
   }
 }
