@@ -67,6 +67,7 @@ export default function useSelectedOptions() {
       (option) =>
         ({
           ...option,
+          cartId: crypto.randomUUID(),
           productId: item?.productId,
           imageUrl: item?.image,
           title: item?.title,

@@ -32,6 +32,11 @@ export interface CartItem extends SelectedOption {
   imageUrl: string;
   title: string;
   price: number;
+  cartId: string;
+}
+
+export interface CartListItemProps extends QuantityController {
+  item: CartItem;
 }
 
 export interface BaseOption extends SelectedOption {

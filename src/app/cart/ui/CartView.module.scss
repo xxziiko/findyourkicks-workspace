@@ -1,0 +1,50 @@
+.title {
+  @include mixins.flex-between;
+  padding-bottom: 5rem;
+
+  &__head {
+    font-size: 2rem;
+  }
+
+  &__progress {
+    @include mixins.flex-center;
+    gap: 0.4rem;
+    font-size: 1.3rem;
+    color: #888;
+
+    &--active {
+      @include mixins.flex-center;
+      gap: 0.4rem;
+      text-decoration: underline;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #000;
+    }
+  }
+}
+
+.list {
+  width: 100%;
+
+  &__header {
+    @include mixins.flex-evenly;
+    padding: 1.25rem 1rem;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    font-weight: 500;
+    font-size: 0.875rem;
+
+    p {
+      @include mixins.cell-base;
+      text-align: center;
+
+      &:nth-child(2) {
+        width: 40%;
+      }
+    }
+
+    div {
+      @include mixins.cell-base;
+    }
+  }
+}
