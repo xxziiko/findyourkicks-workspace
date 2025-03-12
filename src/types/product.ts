@@ -15,6 +15,13 @@ export type OptionHandlers = {
     | 'onDeleteButtonClick']: SizeHandler;
 };
 
+export type QuantityController = {
+  onDecrementButtonClick: SizeHandler;
+  onIncrementButtonClick: SizeHandler;
+};
+
+export type QuantityControllerProps = QuantityController & SelectedOption;
+
 export interface SelectedOption {
   size: number;
   quantity: number;

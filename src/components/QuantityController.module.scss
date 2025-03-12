@@ -1,0 +1,5 @@
+.controller {
+  @include mixins.flex-center;
+  gap: 1.25rem;
+  width: 100%;
+}
