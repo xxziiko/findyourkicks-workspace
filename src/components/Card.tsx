@@ -1,7 +1,6 @@
-import Image from 'next/image';
 import React from 'react';
-import Button from './Button';
 import styles from './Card.module.scss';
+import Image from './Image';
 
 interface Card {
   src: string;
@@ -15,9 +14,7 @@ const Card = ({ title, src, brand, price, onClick }: Card) => {
   return (
     <button type="button" className={styles.card} onClick={onClick}>
       <div className={styles.card__content}>
-        <figure className={styles.card__image}>
-          <Image src={src} alt="image" fill sizes="13rem" />
-        </figure>
+        <Image src={src} alt="product" width="13rem" height="13rem" />
 
         <div className={styles.card__details}>
           <p className={styles['card__details--brand']}>{brand}</p>

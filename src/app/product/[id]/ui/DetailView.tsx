@@ -1,6 +1,5 @@
-import { Button } from '@/components';
+import { Button, Image } from '@/components';
 import type { DetailViewProps } from '@/types/product';
-import Image from 'next/image';
 import styles from './DetailView.module.scss';
 import Option from './Option';
 
@@ -21,9 +20,7 @@ export default function DetailView(props: DetailViewProps) {
 
   return (
     <article className={styles.detail}>
-      <figure className={styles.detail__image}>
-        <Image src={item.image} alt="product" fill sizes="100%" />
-      </figure>
+      <Image src={item.image} alt="product" width="24rem" height="24rem" />
 
       <div className={styles.detail__divider} />
 
