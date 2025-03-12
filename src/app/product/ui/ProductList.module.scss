@@ -7,4 +7,8 @@
 .loading {
   @include mixins.flex-center;
   padding-top: 2rem;
+
+  &__loader {
+    @include mixins.loader-animation;
+  }
 }

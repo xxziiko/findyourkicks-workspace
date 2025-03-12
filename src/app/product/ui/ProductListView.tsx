@@ -29,7 +29,7 @@ export default function ProductListView({
 
       {isFetchingNextPage && (
         <div className={styles.loading}>
-          <Loader />
+          <Loader className={styles.loading__loader} />
         </div>
       )}
 
