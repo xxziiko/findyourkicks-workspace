@@ -3,21 +3,16 @@ import type { fetchProducts } from '@/app/lib/api';
 export type ProductResponse = Awaited<ReturnType<typeof fetchProducts>>;
 export type ProductItem = ProductResponse['items'][0];
 
-export type SizeHandler = (size: number) => void;
-
-export type OptionProps = BaseOption & OptionHandlers;
-export type DetailViewProps = DetailViewBase & OptionHandlers;
+export type SizeHandler = (size: number) => () => void;
 
 export type OptionHandlers = {
   [K in 'onIncrement' | 'onDecrement' | 'onDelete']: SizeHandler;
 };
 
-export type QuantityController = {
-  onDecrement: SizeHandler;
-  onIncrement: SizeHandler;
+export type QuantityHandler = {
+  onDecrement: () => void;
+  onIncrement: () => void;
 };
-
-export type QuantityControllerProps = QuantityController & SelectedOption;
 
 export interface SelectedOption {
   size: number;
@@ -32,12 +27,8 @@ export interface CartItem extends SelectedOption {
   cartId: string;
 }
 
-export interface CartListItemProps extends QuantityController {
+export interface CartListItemProps extends QuantityHandler {
   item: CartItem;
-}
-
-export interface BaseOption extends SelectedOption {
-  price: number;
 }
 
 export interface ApiResponse {
@@ -51,16 +42,6 @@ export interface ApiResponse {
 export interface InventoryItem {
   size: number;
   stock: number;
-}
-
-interface DetailViewBase {
-  item: ProductItem;
-  price: number;
-  inventory: InventoryItem[];
-  totalQuantity: number;
-  selectedOptions: SelectedOption[];
-  onSelectSize: SizeHandler;
-  onCartButton: () => void;
 }
 
 interface Item {

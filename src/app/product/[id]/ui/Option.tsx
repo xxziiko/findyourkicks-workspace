@@ -1,8 +1,15 @@
 import { QuantityController } from '@/components';
-import type { OptionProps } from '@/types/product';
+import type { QuantityHandler, SelectedOption } from '@/types/product';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';
+
+interface OptionBase extends SelectedOption {
+  price: number;
+  onDelete: (size: number) => void;
+}
+
+type OptionProps = OptionBase & QuantityHandler;
 
 const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
   return (
