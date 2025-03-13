@@ -9,21 +9,9 @@ interface ButtonProps {
   onClick: () => Promise<void> | void;
 }
 
-export default function Button({
-  icon,
-  text,
-  variant,
-  disabled,
-  onClick,
-  ...arg
-}: ButtonProps) {
+export default function Button({ icon, text, variant, ...props }: ButtonProps) {
   return (
-    <button
-      {...arg}
-      className={styles[`btn--${variant}`] ?? styles.btn}
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <button {...props} className={styles[`btn--${variant}`] ?? styles.btn}>
       {icon}
       <p className={styles.btn__text}>{text}</p>
     </button>
