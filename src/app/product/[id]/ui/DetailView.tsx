@@ -1,5 +1,5 @@
 import { Button, Image } from '@/components';
-import type { DetailViewProps } from '@/types/product';
+import type { DetailViewProps } from '../Detail';
 import styles from './DetailView.module.scss';
 import Option from './Option';
 
@@ -44,7 +44,7 @@ export default function DetailView(props: DetailViewProps) {
             <Button
               key={size}
               variant="lined"
-              onClick={() => onSelectSize(size)}
+              onClick={onSelectSize(size)}
               disabled={!stock}
               text={size}
             />
@@ -58,8 +58,8 @@ export default function DetailView(props: DetailViewProps) {
               quantity={quantity}
               key={size}
               price={price}
-              onIncrement={onIncrement}
-              onDecrement={onDecrement}
+              onIncrement={onIncrement(size)}
+              onDecrement={onDecrement(size)}
               onDelete={onDelete}
             />
           ))}
