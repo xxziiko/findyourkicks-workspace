@@ -1,13 +1,21 @@
 import { SIZE_INVENTORY } from '@/app/lib/constants';
-import { productItemAtom } from '@/app/lib/store';
+import {
+  cartItemsAtom,
+  isAuthenticatedAtom,
+  productItemAtom,
+} from '@/app/lib/store';
 import type { CartItem, ProductItem, SelectedOption } from '@/types/product';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 export default function useSelectedOptions() {
   const productDetail = useAtomValue<ProductItem | null>(productItemAtom);
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
-  const price = Number(item?.lprice);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
+  const setCart = useSetAtom(cartItemsAtom);
+  const router = useRouter();
+  const price = Number(productDetail?.lprice);
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
@@ -90,6 +98,45 @@ export default function useSelectedOptions() {
     );
   };
 
+  const mergeCartItems = (updatedCart: CartItem[]) => {
+    const cartItems = createCart();
+
+    cartItems.forEach((newItem) => {
+      const index = updatedCart.findIndex(
+        (cartItem) =>
+          cartItem.productId === newItem.productId &&
+          cartItem.size === newItem.size,
+      );
+
+      if (index !== -1) {
+        updatedCart[index].quantity += newItem.quantity;
+        return;
+      }
+
+      updatedCart.push(newItem);
+    });
+  };
+
+  const addCart = () => {
+    setCart((prev) => {
+      const updatedCart = [...prev];
+      mergeCartItems(updatedCart);
+
+      return updatedCart;
+    });
+    resetSelectedOptions();
+  };
+
+  const handleCartButton = () => {
+    if (isAuthenticated) {
+      addCart();
+      //TODO: modal
+      return;
+    }
+
+    router.push('/login');
+  };
+
   return {
     productDetail,
     price,
@@ -103,5 +150,6 @@ export default function useSelectedOptions() {
     handleDecrementButton,
     resetSelectedOptions,
     createCart,
+    handleCartButton,
   };
 }
