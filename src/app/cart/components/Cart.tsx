@@ -25,14 +25,14 @@ export default function Cart() {
 
   const props = {
     items,
-    handleToggleAll,
-    handleQuantityChange,
-    handleDelete,
-    handleToggle,
     totalProduct,
     checkedItems,
     totalPrice,
     totalPriceWithDeliveryFee,
+    onToggleAll: handleToggleAll,
+    onQuantityChange: handleQuantityChange,
+    onDelete: handleDelete,
+    onToggle: handleToggle,
   };
 
   return <CartView {...props} />;

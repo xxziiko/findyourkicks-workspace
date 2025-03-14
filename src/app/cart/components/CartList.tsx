@@ -2,6 +2,7 @@
 
 import { Button, CheckBox, Image, QuantityController } from '@/components';
 import type { CartItem } from '@/types/product';
+import Link from 'next/link';
 import { memo } from 'react';
 import { NoListData } from '../ui/index';
 import styles from './CartList.module.scss';
@@ -9,31 +10,31 @@ import styles from './CartList.module.scss';
 export interface CartListProps extends HandlerType {
   items: CartItem[];
   checkedItems: { [cartId: string]: boolean };
-  handleToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 interface HeaderProps {
   allChecked: boolean;
-  handleToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 interface ItemProps extends HandlerType {
   item: CartItem;
   checked: (cartId: string) => boolean;
 }
 interface HandlerType {
-  handleQuantityChange: (cartId: string, quantity: number) => () => void;
-  handleDelete: (cartId: string) => () => void;
-  handleToggle: (
+  onQuantityChange: (cartId: string, quantity: number) => () => void;
+  onDelete: (cartId: string) => () => void;
+  onToggle: (
     cartId: string,
   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function CartList(props: CartListProps) {
-  const { items, checkedItems, handleToggleAll, ...rest } = props;
+  const { items, checkedItems, onToggleAll, ...rest } = props;
 
   const allChecked = items.every((item) => checkedItems[item.cartId]);
   const checked = (cartId: string) => checkedItems[cartId] || false;
 
-  const headerProps = { allChecked, handleToggleAll };
+  const headerProps = { allChecked, onToggleAll };
   const itemProps = {
     checkedItems,
     checked,
@@ -52,10 +53,10 @@ export default function CartList(props: CartListProps) {
   );
 }
 
-function Header({ allChecked, handleToggleAll }: HeaderProps) {
+function Header({ allChecked, onToggleAll }: HeaderProps) {
   return (
     <div className={styles.list__header}>
-      <CheckBox checked={allChecked} onChange={handleToggleAll} />
+      <CheckBox checked={allChecked} onChange={onToggleAll} />
       <p>상품/옵션 정보</p>
       <p>수량</p>
       <p>주문 금액</p>
@@ -67,18 +68,21 @@ function Header({ allChecked, handleToggleAll }: HeaderProps) {
 function Item({
   item,
   checked,
-  handleToggle,
-  handleQuantityChange,
-  handleDelete,
+  onToggle,
+  onQuantityChange,
+  onDelete,
 }: ItemProps) {
   return (
     <li className={styles.item}>
       <CheckBox
         checked={checked(item.cartId)}
-        onChange={handleToggle(item.cartId)}
+        onChange={onToggle(item.cartId)}
       />
 
-      <div className={styles.item__info_box}>
+      <Link
+        href={`/product/${item.productId}`}
+        className={styles.item__info_box}
+      >
         <Image src={item.imageUrl} alt="product" width="8rem" height="7rem" />
 
         <div className={styles.item__info}>
@@ -86,14 +90,14 @@ function Item({
           <p>{item.size}</p>
           <p>{item.price.toLocaleString()}원</p>
         </div>
-      </div>
+      </Link>
 
       <div className={styles.item__quantity}>
         <QuantityController
           size={item.size}
           quantity={item.quantity}
-          onIncrement={handleQuantityChange(item.cartId, item.quantity + 1)}
-          onDecrement={handleQuantityChange(item.cartId, item.quantity - 1)}
+          onIncrement={onQuantityChange(item.cartId, item.quantity + 1)}
+          onDecrement={onQuantityChange(item.cartId, item.quantity - 1)}
         />
       </div>
 
@@ -105,7 +109,7 @@ function Item({
         <Button text="주문하기" onClick={() => {}} />
         <Button
           text="삭제하기"
-          onClick={handleDelete(item.cartId)}
+          onClick={onDelete(item.cartId)}
           variant="white"
         />
       </div>
