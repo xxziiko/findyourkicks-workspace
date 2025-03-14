@@ -15,11 +15,11 @@ export default function useProductList({
     hasNextPage,
     fetchNextPage,
   } = useFetchProductsQuery({ initialProducts });
-  const setProductItemAtom = useSetAtom(productItemAtom);
+  const setProductItem = useSetAtom(productItemAtom);
 
   const handleCardButton = useCallback(
-    (item: ProductItem) => () => setProductItemAtom(item),
-    [setProductItemAtom],
+    (item: ProductItem) => () => setProductItem(item),
+    [setProductItem],
   );
 
   const observe = useIntersectionObserver(
