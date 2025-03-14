@@ -7,13 +7,13 @@ import type {
   ProductItem,
   SelectedOption,
 } from '@/types/product';
-import { useCartManager, useSelectedOptions } from './hooks';
+import { useSelectedOptions } from './hooks';
 import { DetailView } from './ui';
 
 export type DetailViewProps = DetailViewBase & OptionHandlers;
 
 interface DetailViewBase {
-  item: ProductItem;
+  productDetail: ProductItem;
   price: number;
   inventory: InventoryItem[];
   totalQuantity: number;
@@ -24,7 +24,7 @@ interface DetailViewBase {
 
 export default function Detail() {
   const {
-    item,
+    productDetail,
     price,
     selectedOptions,
     inventory,
@@ -33,18 +33,13 @@ export default function Detail() {
     handleDeleteButton,
     handleIncrementButton,
     handleDecrementButton,
-    createCart,
-    resetSelectedOptions,
+    handleCartButton,
   } = useSelectedOptions();
-  const { handleCartButton } = useCartManager({
-    createCart,
-    resetSelectedOptions,
-  });
 
-  if (!item) return <Loading />;
+  if (!productDetail) return <Loading />;
 
   const props = {
-    item,
+    productDetail,
     inventory,
     totalQuantity,
     selectedOptions,

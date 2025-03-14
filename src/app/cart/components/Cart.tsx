@@ -14,7 +14,7 @@ export interface CartViewProps extends CartListProps {
 
 export default function Cart() {
   const {
-    items,
+    cartItems,
     checkedItems,
     totalProduct,
     totalPrice,
@@ -26,7 +26,7 @@ export default function Cart() {
   } = useCart();
 
   const props = {
-    items,
+    cartItems,
     totalProduct,
     checkedItems,
     totalPrice,

@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai';
 import { useCallback, useState } from 'react';
 
 export default function useSelectedOptions() {
-  const item = useAtomValue<ProductItem | null>(productItemAtom);
+  const productDetail = useAtomValue<ProductItem | null>(productItemAtom);
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const price = Number(item?.lprice);
 
@@ -78,20 +78,20 @@ export default function useSelectedOptions() {
 
   const createCart = () => {
     return selectedOptions.map(
-      (option) =>
+      (option, index) =>
         ({
           ...option,
           cartId: crypto.randomUUID(),
-          productId: item?.productId,
-          imageUrl: item?.image,
-          title: item?.title,
+          productId: productDetail?.productId,
+          imageUrl: productDetail?.image,
+          title: productDetail?.title,
           price,
         }) as CartItem,
     );
   };
 
   return {
-    item,
+    productDetail,
     price,
     selectedOptions,
     totalQuantity,

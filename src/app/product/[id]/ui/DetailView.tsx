@@ -4,11 +4,16 @@ import styles from './DetailView.module.scss';
 import Option from './Option';
 
 export default function DetailView(props: DetailViewProps) {
-  const { item } = props;
+  const { productDetail } = props;
 
   return (
     <article className={styles.detail}>
-      <Image src={item.image} alt="product" width="24rem" height="24rem" />
+      <Image
+        src={productDetail.image}
+        alt="product"
+        width="24rem"
+        height="24rem"
+      />
 
       <div className={styles.detail__divider} />
 
@@ -19,7 +24,7 @@ export default function DetailView(props: DetailViewProps) {
 
 function DetailContent(props: DetailViewProps) {
   const {
-    item,
+    productDetail,
     price,
     inventory,
     totalQuantity,
@@ -35,17 +40,17 @@ function DetailContent(props: DetailViewProps) {
   return (
     <section className={styles.detail__content}>
       <div>
-        <p className={styles['detail__text--brand']}>{item.maker}</p>
+        <p className={styles['detail__text--brand']}>{productDetail.maker}</p>
         <p className={styles['detail__text--price']}>
-          {Number(item.lprice).toLocaleString()} 원
+          {Number(productDetail.lprice).toLocaleString()} 원
         </p>
       </div>
 
       <div>
-        <p className="">{item.title.replace(/(<b>|<\/b>)/g, '')}</p>
+        <p>{productDetail.title.replace(/(<b>|<\/b>)/g, '')}</p>
         <p
           className={styles['detail__text--subtitle']}
-        >{`${item.brand} > ${item.category4}`}</p>
+        >{`${productDetail.brand} > ${productDetail.category4}`}</p>
       </div>
 
       <div className={styles.detail__options}>

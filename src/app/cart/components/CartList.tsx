@@ -3,12 +3,12 @@
 import { Button, CheckBox, Image, QuantityController } from '@/components';
 import type { CartItem } from '@/types/product';
 import Link from 'next/link';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { NoListData } from '../ui/index';
 import styles from './CartList.module.scss';
 
 export interface CartListProps extends HandlerType {
-  items: CartItem[];
+  cartItems: CartItem[];
   checkedItems: { [cartId: string]: boolean };
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -29,10 +29,13 @@ interface HandlerType {
 }
 
 export default function CartList(props: CartListProps) {
-  const { items, checkedItems, onToggleAll, ...rest } = props;
+  const { cartItems, checkedItems, onToggleAll, ...rest } = props;
 
-  const allChecked = items.every((item) => checkedItems[item.cartId]);
-  const checked = (cartId: string) => checkedItems[cartId] || false;
+  const allChecked = cartItems.every((item) => checkedItems[item.cartId]);
+  const checked = useCallback(
+    (cartId: string) => checkedItems[cartId] || false,
+    [checkedItems],
+  );
 
   const headerProps = { allChecked, onToggleAll };
   const itemProps = {
@@ -45,8 +48,8 @@ export default function CartList(props: CartListProps) {
     <div className={styles.list}>
       <Header {...headerProps} />
 
-      {!items.length && <NoListData />}
-      {items.map((item) => (
+      {!cartItems.length && <NoListData />}
+      {cartItems.map((item) => (
         <MemorizedItem key={item.cartId} item={item} {...itemProps} />
       ))}
     </div>
