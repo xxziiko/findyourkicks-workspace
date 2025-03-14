@@ -14,7 +14,7 @@ export default function useCart() {
 
   const totalPrice = cartItems
     .filter((item) => checkedItems[item.cartId] ?? false)
-    .reduce((acc, item) => acc + item.price * item.quantity, 0);
+    .reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
 
   const totalPriceWithDeliveryFee = totalProduct === 0 ? 0 : totalPrice + 3000;
 

@@ -42,7 +42,7 @@ function DetailContent(props: DetailViewProps) {
       <div>
         <p className={styles['detail__text--brand']}>{productDetail.maker}</p>
         <p className={styles['detail__text--price']}>
-          {Number(productDetail.lprice).toLocaleString()} 원
+          {Number(productDetail.price).toLocaleString()} 원
         </p>
       </div>
 
@@ -50,7 +50,7 @@ function DetailContent(props: DetailViewProps) {
         <p>{productDetail.title.replace(/(<b>|<\/b>)/g, '')}</p>
         <p
           className={styles['detail__text--subtitle']}
-        >{`${productDetail.brand} > ${productDetail.category4}`}</p>
+        >{`${productDetail.brand} > ${productDetail.category}`}</p>
       </div>
 
       <div className={styles.detail__options}>

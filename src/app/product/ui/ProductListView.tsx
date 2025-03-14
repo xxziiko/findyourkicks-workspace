@@ -20,7 +20,7 @@ export default function ProductListView({
               src={product.image}
               brand={product.brand}
               title={product.title}
-              price={product.lprice}
+              price={product.price}
               onClick={handleCardButton(product)}
             />
           </Link>

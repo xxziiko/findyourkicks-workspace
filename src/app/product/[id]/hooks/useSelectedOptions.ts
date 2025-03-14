@@ -15,7 +15,7 @@ export default function useSelectedOptions() {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setCart = useSetAtom(cartItemsAtom);
   const router = useRouter();
-  const price = Number(productDetail?.lprice);
+  const price = Number(productDetail?.price);
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
@@ -86,14 +86,11 @@ export default function useSelectedOptions() {
 
   const createCart = () => {
     return selectedOptions.map(
-      (option, index) =>
+      (option) =>
         ({
-          ...option,
           cartId: crypto.randomUUID(),
-          productId: productDetail?.productId,
-          imageUrl: productDetail?.image,
-          title: productDetail?.title,
-          price,
+          ...option,
+          ...productDetail,
         }) as CartItem,
     );
   };

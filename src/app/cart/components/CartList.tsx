@@ -86,7 +86,7 @@ function Item({
         href={`/product/${item.productId}`}
         className={styles.item__info_box}
       >
-        <Image src={item.imageUrl} alt="product" width="8rem" height="7rem" />
+        <Image src={item.image} alt="product" width="8rem" height="7rem" />
 
         <div className={styles.item__info}>
           <p>{item.title.replace(/(<b>|<\/b>)/g, '')}</p>
@@ -105,7 +105,7 @@ function Item({
       </div>
 
       <div className={styles.item__price}>
-        <p>{(item.price * item.quantity).toLocaleString()}원</p>
+        <p>{(Number(item.price) * item.quantity).toLocaleString()}원</p>
       </div>
 
       <div className={styles.item__buttons}>

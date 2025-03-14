@@ -1,7 +1,6 @@
 import type { fetchProducts } from '@/app/lib/api';
 
 export type ProductResponse = Awaited<ReturnType<typeof fetchProducts>>;
-export type ProductItem = ProductResponse['items'][0];
 
 export type SizeHandler = (size: number) => () => void;
 
@@ -19,11 +18,18 @@ export interface SelectedOption {
   quantity: number;
 }
 
-export interface CartItem extends SelectedOption {
+export interface ProductItem {
   productId: string;
-  imageUrl: string;
+  image: string;
   title: string;
-  price: number;
+  price: string;
+  brand: string;
+  category: string;
+  maker: string;
+}
+
+type ProductItemWithSelectedOpion = ProductItem & SelectedOption;
+export interface CartItem extends ProductItemWithSelectedOpion {
   cartId: string;
 }
 
