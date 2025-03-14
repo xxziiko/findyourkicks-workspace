@@ -1,8 +1,10 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useCart } from '../hooks';
-import { CartView } from '../ui/index';
 import type { CartListProps } from './CartList';
+
+const CartView = dynamic(() => import('../ui/CartView'), { ssr: false });
 
 export interface CartViewProps extends CartListProps {
   totalProduct: number;
