@@ -3,7 +3,7 @@ import { cartItemsAtom, userAtom } from '@/app/lib/store';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 
-export default function useHeaderManager() {
+export default function useHeader() {
   const [items, setItems] = useAtom(cartItemsAtom);
   const [user, setUser] = useAtom(userAtom);
   const userEmail = user?.email ?? '';
