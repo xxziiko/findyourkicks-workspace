@@ -6,13 +6,6 @@
     flex-direction: row;
   }
 
-  &__image {
-    position: relative;
-    width: 24rem;
-    height: 24rem;
-    overflow: hidden;
-  }
-
   &__divider {
     @media (min-width: 768px) {
       border-left: 1px solid #dedede;

@@ -1,18 +1,16 @@
 import type { fetchProducts } from '@/app/lib/api';
 
 export type ProductResponse = Awaited<ReturnType<typeof fetchProducts>>;
-export type ProductItem = ProductResponse['items'][0];
 
-export type SizeHandler = (size: number) => void;
-
-export type OptionProps = BaseOption & OptionHandlers;
-export type DetailViewProps = DetailViewBase & OptionHandlers;
+export type SizeHandler = (size: number) => () => void;
 
 export type OptionHandlers = {
-  [K in
-    | 'onIncrementButtonClick'
-    | 'onDecrementButtonClick'
-    | 'onDeleteButtonClick']: SizeHandler;
+  [K in 'onIncrement' | 'onDecrement' | 'onDelete']: SizeHandler;
+};
+
+export type QuantityHandler = {
+  onDecrement: () => void;
+  onIncrement: () => void;
 };
 
 export interface SelectedOption {
@@ -20,15 +18,23 @@ export interface SelectedOption {
   quantity: number;
 }
 
-export interface CartItem extends SelectedOption {
+export interface ProductItem {
   productId: string;
-  imageUrl: string;
+  image: string;
   title: string;
-  price: number;
+  price: string;
+  brand: string;
+  category: string;
+  maker: string;
 }
 
-export interface BaseOption extends SelectedOption {
-  price: number;
+type ProductItemWithSelectedOpion = ProductItem & SelectedOption;
+export interface CartItem extends ProductItemWithSelectedOpion {
+  cartId: string;
+}
+
+export interface CartListItemProps extends QuantityHandler {
+  item: CartItem;
 }
 
 export interface ApiResponse {
@@ -42,16 +48,6 @@ export interface ApiResponse {
 export interface InventoryItem {
   size: number;
   stock: number;
-}
-
-interface DetailViewBase {
-  item: ProductItem;
-  price: number;
-  inventory: InventoryItem[];
-  totalQuantity: number;
-  selectedOptions: SelectedOption[];
-  handleSelectSize: SizeHandler;
-  handleCartButton: () => void;
 }
 
 interface Item {

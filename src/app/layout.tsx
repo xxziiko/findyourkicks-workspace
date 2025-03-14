@@ -1,6 +1,6 @@
 import '@/styles/global.scss';
 import { createClient } from '@/app/lib/utils/supabase/server';
-import { Header } from '@/components';
+import { Header } from '@/widgets';
 import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 import Image from 'next/image';
@@ -36,14 +36,14 @@ export default async function RootLayout({
               <main className={styles.main}>{children}</main>
 
               <footer className={styles.footer}>
-                <div>
+                <figure>
                   <Image
                     src="/findyourkicks-stroke.png"
-                    width={150}
+                    width={170}
                     height={30}
                     alt="logo"
                   />
-                </div>
+                </figure>
               </footer>
             </div>
           </Provider>

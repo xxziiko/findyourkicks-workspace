@@ -29,10 +29,6 @@
     @include tab-base;
     position: relative;
 
-    &:active {
-      font-weight: bold;
-    }
-
     &--bold {
       @include tab-base;
       font-weight: 600;

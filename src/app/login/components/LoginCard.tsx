@@ -1,26 +1,13 @@
 'use client';
 
-import { signInWithGoogle, signInWithKakao } from '@/app/lib/api';
-import styles from '@/app/login/ui/LoginCard.module.scss';
 import { Button } from '@/components';
-import { useRouter } from 'next/navigation';
+import useLoginCard from '../hooks/useLoginCard';
 import { GoogleLogo } from '../icons/GoogleLogo';
 import { KakaoLogo } from '../icons/KakaoLogo';
+import styles from './LoginCard.module.scss';
 
 export default function LoginCard() {
-  const router = useRouter();
-
-  const handleLoginWithKakao = async () => {
-    const { url } = await signInWithKakao();
-
-    router.push(url);
-  };
-
-  const handleLoginWithGoogle = async () => {
-    const { url } = await signInWithGoogle();
-
-    router.push(url);
-  };
+  const { handleLoginWithKakao, handleLoginWithGoogle } = useLoginCard();
 
   return (
     <div className={styles.card_layout}>
