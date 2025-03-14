@@ -23,6 +23,7 @@ export default function Cart() {
     handleQuantityChange,
     handleDelete,
     handleToggle,
+    handleProductInfo,
   } = useCart();
 
   const props = {
@@ -35,6 +36,7 @@ export default function Cart() {
     onQuantityChange: handleQuantityChange,
     onDelete: handleDelete,
     onToggle: handleToggle,
+    onProductInfo: handleProductInfo,
   };
 
   return <CartView {...props} />;

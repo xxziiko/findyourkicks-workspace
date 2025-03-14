@@ -2,7 +2,6 @@
 
 import { Button, CheckBox, Image, QuantityController } from '@/components';
 import type { CartItem } from '@/types/product';
-import Link from 'next/link';
 import { memo, useCallback } from 'react';
 import { NoListData } from '../ui/index';
 import styles from './CartList.module.scss';
@@ -21,6 +20,7 @@ interface ItemProps extends HandlerType {
   checked: (cartId: string) => boolean;
 }
 interface HandlerType {
+  onProductInfo: (item: CartItem) => () => void;
   onQuantityChange: (cartId: string, quantity: number) => () => void;
   onDelete: (cartId: string) => () => void;
   onToggle: (
@@ -29,7 +29,8 @@ interface HandlerType {
 }
 
 export default function CartList(props: CartListProps) {
-  const { cartItems, checkedItems, onToggleAll, ...rest } = props;
+  const { cartItems, checkedItems, onToggleAll, onProductInfo, ...rest } =
+    props;
 
   const allChecked = cartItems.every((item) => checkedItems[item.cartId]);
   const checked = useCallback(
@@ -50,7 +51,12 @@ export default function CartList(props: CartListProps) {
 
       {!cartItems.length && <NoListData />}
       {cartItems.map((item) => (
-        <MemorizedItem key={item.cartId} item={item} {...itemProps} />
+        <MemorizedItem
+          key={item.cartId}
+          item={item}
+          {...itemProps}
+          onProductInfo={onProductInfo}
+        />
       ))}
     </div>
   );
@@ -74,6 +80,7 @@ function Item({
   onToggle,
   onQuantityChange,
   onDelete,
+  onProductInfo,
 }: ItemProps) {
   return (
     <li className={styles.item}>
@@ -82,8 +89,9 @@ function Item({
         onChange={onToggle(item.cartId)}
       />
 
-      <Link
-        href={`/product/${item.productId}`}
+      <button
+        type="button"
+        onClick={onProductInfo(item)}
         className={styles.item__info_box}
       >
         <Image src={item.image} alt="product" width="8rem" height="7rem" />
@@ -93,7 +101,7 @@ function Item({
           <p>{item.size}</p>
           <p>{item.price.toLocaleString()}원</p>
         </div>
-      </Link>
+      </button>
 
       <div className={styles.item__quantity}>
         <QuantityController

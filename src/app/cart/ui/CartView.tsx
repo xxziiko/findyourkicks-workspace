@@ -13,12 +13,12 @@ export default function CartView(props: CartViewProps) {
     totalPriceWithDeliveryFee,
     ...cartListProps
   } = props;
-
   return (
     <section className={styles.section}>
       <CartHeader />
       {/* progress components */}
       <CartList {...cartListProps} />
+
       <OrderCard
         totalPrice={totalPrice.toLocaleString()}
         totalPriceWithDeliveryFee={totalPriceWithDeliveryFee.toLocaleString()}
@@ -42,6 +42,7 @@ function CartHeader() {
           <p>장바구니 </p>
           <ChevronsRight />
         </div>
+
         <p className={styles.title__progress}>주문/결제</p>
         <ChevronsRight />
         <p className={styles.title__progress}>주문완료</p>
