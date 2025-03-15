@@ -9,7 +9,11 @@
     "format": "biome format --write",
     "lint": "biome lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": "biome check --write --no-errors-on-unmatched"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -23,6 +27,8 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@storybook/addon-essentials": "^8.5.8",
     "@storybook/addon-interactions": "^8.5.8",
     "@storybook/addon-onboarding": "^8.5.8",
@@ -34,6 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "biome": "^0.3.3",
+    "husky": "^9.1.7",
     "sass": "^1.85.1",
     "storybook": "^8.5.8",
     "typescript": "^5"
