@@ -74,7 +74,7 @@ function DetailContent(props: DetailViewProps) {
             price={price}
             onIncrement={onIncrement(size)}
             onDecrement={onDecrement(size)}
-            onDelete={onDelete}
+            onDelete={onDelete(size)}
           />
         ))}
       </ul>

@@ -6,7 +6,7 @@ import styles from './Option.module.scss';
 
 interface OptionBase extends SelectedOption {
   price: number;
-  onDelete: (size: number) => void;
+  onDelete: () => void;
 }
 
 type OptionProps = OptionBase & QuantityHandler;
@@ -25,7 +25,7 @@ const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
         <CircleX
           className={styles['option__button--delete']}
           width={18}
-          onClick={() => onDelete(size)}
+          onClick={onDelete}
         />
       </div>
     </li>
