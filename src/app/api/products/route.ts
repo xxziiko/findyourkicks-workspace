@@ -1,4 +1,4 @@
-import { fetchNaverData } from '@/app/lib/api';
+import { fetchNaverData } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {

@@ -1,5 +1,5 @@
 // The client you created from the Server-Side Auth instructions
-import { createClient } from '@/app/lib/utils/supabase/server';
+import { createClient } from '@/lib/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -7,7 +7,6 @@ export async function GET(request: Request) {
   const code = searchParams.get('code');
   // if "next" is in param, use it as the redirect URL
   const next = searchParams.get('next') ?? '/';
-  // console.log('Redirecting to:', next);
 
   const supabase = await createClient();
 

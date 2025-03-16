@@ -1,23 +1,28 @@
-import { SIZE_INVENTORY } from '@/app/lib/constants';
-import type { QuantityHandler, SelectedOption } from '@/types/product';
+import { SIZE_INVENTORY } from '@/lib/constants';
+import type { QuantityHandlerType } from '@/lib/types';
 import Button from './Button';
 import styles from './QuantityController.module.scss';
 
-export type QuantityControllerProps = QuantityHandler & SelectedOption;
+export type QuantityControllerProps = {
+  id: string;
+  size: string;
+  quantity: number;
+  onQuantityChange: QuantityHandlerType;
+};
 
 export default function QuantityController({
+  id,
   quantity,
   size,
-  onIncrement,
-  onDecrement,
+  onQuantityChange,
 }: QuantityControllerProps) {
-  const maxStock = (selectedSize: number) =>
+  const maxStock = (selectedSize: string) =>
     SIZE_INVENTORY.find(({ size }) => size === selectedSize)?.stock;
 
   return (
     <div className={styles.controller}>
       <Button
-        onClick={onDecrement}
+        onClick={() => onQuantityChange(id, quantity - 1)}
         disabled={!quantity}
         text="-"
         variant="lined--small"
@@ -25,8 +30,8 @@ export default function QuantityController({
 
       <p>{quantity}</p>
       <Button
-        onClick={onIncrement}
-        disabled={quantity === maxStock(size)}
+        onClick={() => onQuantityChange(id, quantity + 1)}
+        disabled={quantity === (maxStock(size) ?? 3)}
         text="+"
         variant="lined--small"
       />

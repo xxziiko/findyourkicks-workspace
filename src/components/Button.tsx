@@ -1,7 +1,7 @@
 import styles from '@/components/Button.module.scss';
 
 interface ButtonProps {
-  key?: number;
+  key?: number | string;
   text: string | number;
   variant?: string;
   icon?: React.ReactNode;
