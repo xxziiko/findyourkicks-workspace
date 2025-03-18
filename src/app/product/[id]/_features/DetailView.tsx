@@ -25,12 +25,14 @@ export default function DetailView(props: DetailViewProps) {
 
   return (
     <article className={styles.detail}>
-      <Image
-        src={productDetail.image}
-        alt="product"
-        width="24rem"
-        height="24rem"
-      />
+      <figure className={styles.image__box}>
+        <Image
+          src={productDetail.image}
+          alt="product"
+          width="24rem"
+          height="24rem"
+        />
+      </figure>
 
       <div className={styles.detail__divider} />
 
@@ -54,56 +56,62 @@ function DetailContent(props: DetailViewProps) {
   } = props;
 
   return (
-    <section className={styles.detail__content}>
-      <div>
-        <p className={styles['detail__text--brand']}>{productDetail.maker}</p>
-        <p className={styles['detail__text--price']}>
-          {Number(productDetail.price).toLocaleString()} 원
-        </p>
+    <section className={styles.content}>
+      <div className={styles.content__top}>
+        <div>
+          <p className={styles['content__top_text--brand']}>
+            {productDetail.maker}
+          </p>
+          <p className={styles['content__top_text--price']}>
+            {Number(productDetail.price).toLocaleString()} 원
+          </p>
+        </div>
+
+        <div>
+          <p>{productDetail.title.replace(/(<b>|<\/b>)/g, '')}</p>
+          <p
+            className={styles['content__top_text--subtitle']}
+          >{`${productDetail.brand} > ${productDetail.category}`}</p>
+        </div>
+
+        <div className={styles.content__top_options}>
+          {inventory.map(({ size, stock }) => (
+            <Button
+              key={size}
+              variant="lined"
+              onClick={() => onSelectSize(size)}
+              disabled={!stock}
+              text={size}
+            />
+          ))}
+        </div>
+
+        <ul>
+          {selectedOptions.map(({ size, quantity }) => (
+            <Option
+              size={size}
+              quantity={quantity}
+              key={size}
+              price={price}
+              onQuantityChange={onQuantityChange}
+              onDelete={onDelete}
+            />
+          ))}
+        </ul>
       </div>
 
-      <div>
-        <p>{productDetail.title.replace(/(<b>|<\/b>)/g, '')}</p>
-        <p
-          className={styles['detail__text--subtitle']}
-        >{`${productDetail.brand} > ${productDetail.category}`}</p>
-      </div>
+      <div className={styles.content__bottom}>
+        <div className={styles.content__bottom_wrapper}>
+          <p className={styles['content__bottom_wrapper--total']}>합계</p>
+          <p className={styles['content__bottom_wrapper--price']}>
+            {(totalQuantity * price).toLocaleString()}원
+          </p>
+        </div>
 
-      <div className={styles.detail__options}>
-        {inventory.map(({ size, stock }) => (
-          <Button
-            key={size}
-            variant="lined"
-            onClick={() => onSelectSize(size)}
-            disabled={!stock}
-            text={size}
-          />
-        ))}
-      </div>
-
-      <ul>
-        {selectedOptions.map(({ size, quantity }) => (
-          <Option
-            size={size}
-            quantity={quantity}
-            key={size}
-            price={price}
-            onQuantityChange={onQuantityChange}
-            onDelete={onDelete}
-          />
-        ))}
-      </ul>
-
-      <div className={styles.detail__bottom}>
-        <p className={styles['detail__bottom--total']}>합계</p>
-        <p className={styles['detail__bottom--price']}>
-          {(totalQuantity * price).toLocaleString()}원
-        </p>
-      </div>
-
-      <div className={styles.detail__button_box}>
-        <Button text="장바구니" onClick={onCartButton} />
-        <Button text="구매하기" onClick={() => {}} variant="white" />
+        <div className={styles.content__bottom_buttons}>
+          <Button text="장바구니" onClick={onCartButton} />
+          <Button text="구매하기" onClick={() => {}} variant="white" />
+        </div>
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 .section {
   @include mixins.flex-col;
   gap: 3rem;
+  padding-bottom: 5rem;
 }
 
 .title {

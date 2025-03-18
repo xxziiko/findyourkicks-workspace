@@ -11,7 +11,7 @@ interface ButtonProps {
 
 export default function Button({ icon, text, variant, ...props }: ButtonProps) {
   return (
-    <button {...props} className={styles[`btn--${variant}`] ?? styles.btn}>
+    <button {...props} className={styles[`btn_${variant}`] ?? styles.btn}>
       {icon}
       <p className={styles.btn__text}>{text}</p>
     </button>

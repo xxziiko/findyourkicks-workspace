@@ -50,25 +50,25 @@
   @include button-default;
   @include button-variant(white, none, none, #000000);
 
-  &--white {
+  &_white {
     @include button-layout;
     @include button-default;
     @include button-variant(#000000, 1px solid #dedede, none, white);
   }
 
-  &--kakao {
+  &_kakao {
     @include button-layout;
     @include button-variant(#000000, none, none);
     background-color: #ffe603;
   }
 
-  &--google {
+  &_google {
     @include button-layout;
     @include button-variant(#000000, thin solid #888, 1px 1px 1px #888);
     white-space: nowrap;
   }
 
-  &--lined {
+  &_lined {
     @include button-border-detault;
     padding: 0.75rem 1.25rem;
 
