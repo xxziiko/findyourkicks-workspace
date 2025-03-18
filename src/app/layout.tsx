@@ -30,22 +30,20 @@ export default async function RootLayout({
           <Provider>
             <UserInitializer user={user} />
             <AuthListener />
-            <div className={styles.container}>
-              <Header />
+            <Header />
 
-              <main className={styles.main}>{children}</main>
+            <main className={styles.main}>{children}</main>
 
-              <footer className={styles.footer}>
-                <figure>
-                  <Image
-                    src="/findyourkicks-stroke.png"
-                    width={170}
-                    height={30}
-                    alt="logo"
-                  />
-                </figure>
-              </footer>
-            </div>
+            <footer className={styles.footer}>
+              <figure>
+                <Image
+                  src="/findyourkicks-stroke.png"
+                  width={170}
+                  height={30}
+                  alt="logo"
+                />
+              </figure>
+            </footer>
           </Provider>
         </Providers>
       </body>

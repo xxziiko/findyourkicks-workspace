@@ -1,19 +1,10 @@
-.container {
-  @include mixins.flex-col;
-  justify-content: space-between;
-  gap: 4rem;
-  min-height: 100vh;
-  max-width: 1280px;
-  padding: 0 2rem;
-  margin: 0 auto;
-}
-
 .main {
-  @include mixins.full-screen;
+  @include mixins.layout-root;
+  min-height: 80vh;
 }
 
 .footer {
   @include mixins.flex-center;
-  background-color: black;
   padding: 4rem;
+  background-color: black;
 }
