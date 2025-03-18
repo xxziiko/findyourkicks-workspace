@@ -7,13 +7,8 @@
 .header {
   @include mixins.flex-between;
   @include mixins.layout-root;
-
-  position: sticky;
-  top: 0;
-  left: 0;
+  @include mixins.sticky-header;
   height: 7rem; // h-20
-  background-color: white;
-  z-index: 50;
 
   &__logo {
     cursor: pointer;

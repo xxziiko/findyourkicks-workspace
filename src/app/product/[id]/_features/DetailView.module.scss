@@ -14,9 +14,7 @@
   }
 
   .image__box {
-    position: sticky;
-    top: 10rem;
-    left: 0px;
+    @include mixins.sticky-base(10rem);
     align-self: flex-start;
   }
 

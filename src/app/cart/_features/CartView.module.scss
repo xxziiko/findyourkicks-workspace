@@ -6,6 +6,7 @@
 
 .title {
   @include mixins.flex-between;
+  @include mixins.sticky-header(7rem);
   padding-bottom: 2rem;
 
   &__head {
