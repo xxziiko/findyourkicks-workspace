@@ -2,8 +2,15 @@ import { Card } from '@/components';
 import type { ProductItem } from '@/lib/types';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
-import type { ProductListProps } from './ProductList';
+import type { Ref } from 'react';
 import styles from './ProductListView.module.scss';
+
+export type ProductListProps = {
+  isFetchingNextPage: boolean;
+  loadMoreRef: Ref<HTMLDivElement | null>;
+  handleCardButton: (item: ProductItem) => () => void;
+  products: ProductItem[];
+};
 
 export default function ProductListView({
   handleCardButton,
