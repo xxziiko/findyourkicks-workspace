@@ -1,3 +1,5 @@
+'use client';
+
 import { Button, Image } from '@/components';
 import type {
   EventHandlers,

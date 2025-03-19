@@ -1,7 +1,7 @@
 'use client';
 
-import Loading from '@/app/loading';
 import { DetailView, useDetail } from '@/app/product/[id]/_features';
+import DetailLoading from '../loading';
 
 export default function Detail() {
   const {
@@ -16,7 +16,7 @@ export default function Detail() {
     handleCartButton,
   } = useDetail();
 
-  if (!productDetail) return <Loading />;
+  if (!productDetail) return <DetailLoading />;
 
   const props = {
     productDetail,
