@@ -12,18 +12,6 @@
     padding-bottom: 0.25rem;
   }
 
-  &__image {
-    width: 13rem;
-    height: 13rem;
-    position: relative;
-    overflow: hidden;
-
-    img {
-      border-radius: 0.75rem;
-      object-fit: cover;
-    }
-  }
-
   &__details {
     p {
       font-size: 0.75rem;

@@ -13,3 +13,9 @@
 .loader {
   @include mixins.loader-animation;
 }
+
+.list {
+  @include mixins.flex-wrap;
+  justify-content: center;
+  gap: 1rem;
+}
