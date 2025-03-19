@@ -33,17 +33,17 @@ function ContentSkeleton() {
       </div>
 
       <div className={styles.content__top_options}>
-        <Skeleton width={562} height={106} />
+        <Skeleton width={608} height={106} />
       </div>
 
       <div className={styles.content__bottom}>
         <div className={styles.content__bottom_wrapper}>
-          <Skeleton width={562} height={64} />
+          <Skeleton width={608} height={64} />
         </div>
 
         <div className={styles.content__bottom_buttons}>
-          <Skeleton width={562} height={41} />
-          <Skeleton width={562} height={41} />
+          <Skeleton width={608} height={41} />
+          <Skeleton width={608} height={41} />
         </div>
       </div>
     </div>
