@@ -1,2 +1,2 @@
-export { default as 'LoginCard' } from './LoginCard';
-export { default as 'useLoginCard' } from './useLoginCard';
+export { default as 'LoginCardButtons' } from './LoginCardButtons';
+export { default as 'useLoginCardButtons' } from './useLoginCardButtons';

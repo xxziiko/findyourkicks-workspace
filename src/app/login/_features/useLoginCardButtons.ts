@@ -2,7 +2,7 @@
 import { signInWithGoogle, signInWithKakao } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
-export default function useLoginCard() {
+export default function LoginCardButtons() {
   const router = useRouter();
 
   const handleLoginWithKakao = async () => {
