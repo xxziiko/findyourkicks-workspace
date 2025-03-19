@@ -69,3 +69,21 @@
     transform: rotate(360deg);
   }
 }
+
+@mixin layout-root {
+  max-width: 1280px;
+  padding: 0 2rem;
+  margin: 0 auto;
+}
+
+@mixin sticky-base($top: 0, $left: 0) {
+  position: sticky;
+  top: $top;
+  left: $left;
+}
+
+@mixin sticky-header($top: 0, $left: 0) {
+  @include sticky-base($top, $left);
+  background-color: #fff;
+  z-index: 50;
+}

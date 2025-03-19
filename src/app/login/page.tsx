@@ -1,10 +1,5 @@
-import styles from '@/app/login/page.module.scss';
-import { LoginCard } from './components';
+import { LoginCardButtons } from './_features';
 
 export default function Login() {
-  return (
-    <div className={styles.layout}>
-      <LoginCard />
-    </div>
-  );
+  return <LoginCardButtons />;
 }

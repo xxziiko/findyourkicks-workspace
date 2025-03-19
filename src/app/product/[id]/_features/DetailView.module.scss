@@ -1,0 +1,83 @@
+@mixin layout-base {
+  @include mixins.flex-col;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.detail {
+  @include mixins.flex-col;
+  gap: 3rem;
+  padding: 10rem 0;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+
+  .image__box {
+    @include mixins.sticky-base(10rem);
+    align-self: flex-start;
+  }
+
+  &__divider {
+    @media (min-width: 768px) {
+      border-left: 1px solid #dedede;
+    }
+  }
+}
+
+.content {
+  @include layout-base;
+
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+
+  &__top {
+    @include layout-base;
+
+    &_text {
+      &--brand {
+        font-weight: 600;
+      }
+
+      &--price {
+        font-size: 1.875rem;
+        font-weight: 700;
+      }
+
+      &--subtitle {
+        font-size: 0.8rem;
+        line-height: 1.5rem;
+        color: #a8a29e;
+      }
+    }
+
+    &_options {
+      @include mixins.flex-wrap;
+      gap: 1rem;
+    }
+  }
+
+  &__bottom {
+    @include layout-base;
+
+    &_wrapper {
+      @include mixins.flex-between;
+      padding: 1rem 0;
+
+      &--total {
+        font-weight: 600;
+      }
+
+      &--price {
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+    }
+
+    &_buttons {
+      @include mixins.flex-col;
+      gap: 0.75rem;
+    }
+  }
+}
