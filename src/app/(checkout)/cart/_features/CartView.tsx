@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components';
-import { ChevronsRight } from 'lucide-react';
 import CartList, { type CartListProps } from './CartList';
 import styles from './CartView.module.scss';
 
@@ -20,8 +19,6 @@ export default function CartView(props: CartViewProps) {
   } = props;
   return (
     <section className={styles.section}>
-      <CartHeader />
-      {/* progress components */}
       <CartList {...cartListProps} />
 
       <OrderCard
@@ -34,25 +31,6 @@ export default function CartView(props: CartViewProps) {
         onClick={() => {}}
       />
     </section>
-  );
-}
-
-function CartHeader() {
-  return (
-    <div className={styles.title}>
-      <h1 className={styles.title__head}>장바구니</h1>
-
-      <div className={styles.title__progress}>
-        <div className={styles['title__progress--active']}>
-          <p>장바구니 </p>
-          <ChevronsRight />
-        </div>
-
-        <p className={styles.title__progress}>주문/결제</p>
-        <ChevronsRight />
-        <p className={styles.title__progress}>주문완료</p>
-      </div>
-    </div>
   );
 }
 

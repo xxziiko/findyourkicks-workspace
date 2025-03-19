@@ -1,11 +1,12 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import useCart from './useCart';
+import { useCart } from './_features';
 
-const CartView = dynamic(() => import('./CartView'), { ssr: false });
+// TODO: 서버 구축 시 삭제
+const CartView = dynamic(() => import('./_features/CartView'), { ssr: false });
 
-export default function Cart() {
+export default function CartPage() {
   const {
     cartItems,
     checkedItems,
