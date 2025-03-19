@@ -1,5 +1,7 @@
 import styles from './layout.module.scss';
 
+export const dynamic = 'force-static';
+
 export default function LoginLayout({
   children,
 }: { children: React.ReactNode }) {

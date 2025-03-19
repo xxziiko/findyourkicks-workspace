@@ -1,5 +1,6 @@
 .card {
   @include mixins.flex-center;
+  height: 80vh;
 
   &__layout {
     @include mixins.flex-col;
