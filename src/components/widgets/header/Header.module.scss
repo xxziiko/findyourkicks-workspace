@@ -8,6 +8,7 @@
   @include mixins.flex-between;
   @include mixins.layout-root;
   @include mixins.sticky-header;
+  align-items: center;
   height: 7rem; // h-20
 
   &__logo {

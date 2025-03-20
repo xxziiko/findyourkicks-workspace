@@ -34,7 +34,6 @@
 @mixin flex-between {
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 @mixin flex-end {
@@ -86,4 +85,15 @@
   @include sticky-base($top, $left);
   background-color: #fff;
   z-index: 50;
+}
+
+@mixin split-layout($gap, $padding, $breakpoint: 768px) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  padding: $padding;
+
+  @media (min-width: $breakpoint) {
+    flex-direction: row;
+  }
 }

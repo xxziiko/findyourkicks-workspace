@@ -5,17 +5,11 @@
 }
 
 .detail {
-  @include mixins.flex-col;
-  gap: 3rem;
-  padding: 10rem 0;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
+  @include mixins.split-layout(3rem, 10rem 0);
 
   .image__box {
-    @include mixins.sticky-base(10rem);
     align-self: flex-start;
+    @include mixins.sticky-base(10rem);
   }
 
   &__divider {
@@ -63,6 +57,8 @@
 
     &_wrapper {
       @include mixins.flex-between;
+      align-items: center;
+
       padding: 1rem 0;
 
       &--total {
