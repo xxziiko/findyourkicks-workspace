@@ -1,11 +1,11 @@
 .card {
-  @include mixins.flex-col;
+  @include flex-col;
   text-align: left;
   width: 13rem;
   cursor: pointer;
 
   &__content {
-    @include mixins.flex-col;
+    @include flex-col;
 
     gap: 0.5rem;
     height: 100%;

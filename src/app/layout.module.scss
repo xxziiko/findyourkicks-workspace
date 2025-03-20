@@ -1,10 +1,10 @@
 .main {
-  @include mixins.layout-root;
+  @include layout-root;
   min-height: 80vh;
 }
 
 .footer {
-  @include mixins.flex-center;
+  @include flex-center;
   padding: 4rem;
   background-color: black;
 }

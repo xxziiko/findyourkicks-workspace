@@ -1,7 +1,7 @@
 .title {
-  @include mixins.flex-between;
+  @include flex-between;
 
-  @include mixins.sticky-header(7rem);
+  @include sticky-header(7rem);
   padding: 1.5rem 0 3rem;
 
   &__head {
@@ -9,12 +9,12 @@
   }
 
   &__step {
-    @include mixins.flex-center;
+    @include flex-center;
     gap: 0.4rem;
     font-size: $font-xl;
     color: $gray-dark;
     &--active {
-      @include mixins.flex-center;
+      @include flex-center;
       gap: 0.4rem;
       text-decoration: underline;
       font-size: $font-xl;

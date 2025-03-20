@@ -1,5 +1,5 @@
 .background {
-  @include mixins.flex-center;
+  @include flex-center;
   background-color: #000;
   opacity: 0.3;
   z-index: 1000;
@@ -11,11 +11,11 @@
 }
 
 .loader {
-  @include mixins.loader-animation;
+  @include loader-animation;
 }
 
 .list {
-  @include mixins.flex-wrap;
+  @include flex-wrap;
   justify-content: center;
   gap: 1rem;
 }

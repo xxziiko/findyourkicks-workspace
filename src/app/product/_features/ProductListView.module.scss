@@ -1,14 +1,14 @@
 .list {
-  @include mixins.flex-wrap;
+  @include flex-wrap;
   justify-content: center;
   gap: 1rem;
 }
 
 .loading {
-  @include mixins.flex-center;
+  @include flex-center;
   padding: 2rem 0;
 
   &__loader {
-    @include mixins.loader-animation;
+    @include loader-animation;
   }
 }

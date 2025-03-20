@@ -1,9 +1,9 @@
 .card {
-  @include mixins.flex-center;
+  @include flex-center;
   height: 80vh;
 
   &__layout {
-    @include mixins.flex-col;
+    @include flex-col;
     justify-content: space-evenly;
     align-items: center;
     width: 50%;
@@ -20,7 +20,7 @@
   }
 
   &__buttons {
-    @include mixins.flex-col;
+    @include flex-col;
     gap: 1rem;
     width: 100%;
   }

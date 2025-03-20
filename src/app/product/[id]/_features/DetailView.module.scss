@@ -1,15 +1,15 @@
 @mixin layout-base {
-  @include mixins.flex-col;
+  @include flex-col;
   justify-content: space-between;
   gap: 1.5rem;
 }
 
 .detail {
-  @include mixins.split-layout(3rem, 10rem 0);
+  @include split-layout(3rem, 10rem 0);
 
   .image__box {
     align-self: flex-start;
-    @include mixins.sticky-base(10rem);
+    @include sticky-base(10rem);
   }
 
   &__divider {
@@ -47,7 +47,7 @@
     }
 
     &_options {
-      @include mixins.flex-wrap;
+      @include flex-wrap;
       gap: 1rem;
     }
   }
@@ -56,7 +56,7 @@
     @include layout-base;
 
     &_wrapper {
-      @include mixins.flex-between;
+      @include flex-between;
       align-items: center;
 
       padding: 1rem 0;
@@ -72,7 +72,7 @@
     }
 
     &_buttons {
-      @include mixins.flex-col;
+      @include flex-col;
       gap: 0.75rem;
     }
   }
