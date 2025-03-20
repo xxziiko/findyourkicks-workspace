@@ -5,14 +5,14 @@
   display: flex;
   padding: 1rem 1.5rem;
   font-weight: 600;
-  font-size: 0.875rem;
-  border-radius: 26px;
+  font-size: $font-sm;
+  border-radius: $radius-sm;
   cursor: pointer;
 }
 
 @mixin button-default {
   padding: 0.75rem 1rem;
-  border-radius: 1.5rem;
+  border-radius: $radius-sm;
   cursor: pointer;
 
   &:hover {
@@ -29,16 +29,16 @@
 
 @mixin button-disabled {
   &:disabled {
-    background-color: #e5e7eb;
-    color: #6b7280;
+    background-color: $gray-deault;
+    color: $disabled;
     cursor: not-allowed;
   }
 }
 
 @mixin button-border-detault {
   @include button-disabled;
-  border: 1px solid #dedede;
-  border-radius: 0.5rem;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
 
   &:hover {
     opacity: 50%;
@@ -48,23 +48,23 @@
 .btn {
   @include button-layout;
   @include button-default;
-  @include button-variant(white, none, none, #000000);
+  @include button-variant($secondary, none, none, $primary);
 
   &_white {
     @include button-layout;
     @include button-default;
-    @include button-variant(#000000, 1px solid #dedede, none, white);
+    @include button-variant($primary, 1px solid $gray-light, none, $secondary);
   }
 
   &_kakao {
     @include button-layout;
-    @include button-variant(#000000, none, none);
+    @include button-variant($primary, none, none);
     background-color: #ffe603;
   }
 
   &_google {
     @include button-layout;
-    @include button-variant(#000000, thin solid #888, 1px 1px 1px #888);
+    @include button-variant($primary, thin solid #888, 1px 1px 1px #888);
     white-space: nowrap;
   }
 

@@ -1,7 +1,7 @@
 @mixin button-base {
   border: 1px solid #ddd;
   padding: 0 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: $radius-xs;
   cursor: pointer;
 
   &:disabled {

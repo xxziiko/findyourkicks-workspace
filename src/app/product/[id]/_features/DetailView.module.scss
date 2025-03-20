@@ -35,12 +35,12 @@
       }
 
       &--price {
-        font-size: 1.875rem;
+        font-size: $font-3xl;
         font-weight: 700;
       }
 
       &--subtitle {
-        font-size: 0.8rem;
+        font-size: $font-s;
         line-height: 1.5rem;
         color: #a8a29e;
       }
@@ -66,7 +66,7 @@
       }
 
       &--price {
-        font-size: 1.6rem;
+        font-size: $font-2xl;
         font-weight: 700;
       }
     }

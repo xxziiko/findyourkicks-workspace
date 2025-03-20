@@ -1,25 +1,25 @@
 .title {
   @include mixins.flex-between;
+
   @include mixins.sticky-header(7rem);
   padding: 1.5rem 0 3rem;
 
   &__head {
-    font-size: 2rem;
+    font-size: $font-4xl;
   }
 
   &__step {
     @include mixins.flex-center;
     gap: 0.4rem;
-    font-size: 1.3rem;
-    color: #888;
-
+    font-size: $font-xl;
+    color: $gray-dark;
     &--active {
       @include mixins.flex-center;
       gap: 0.4rem;
       text-decoration: underline;
-      font-size: 1.3rem;
+      font-size: $font-xl;
       font-weight: 600;
-      color: #000;
+      color: $primary;
     }
   }
 }

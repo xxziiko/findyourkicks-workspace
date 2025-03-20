@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, 'src', 'styles')],
-    prependData: `@use "mixins";`,
+    prependData: `@use "variables" as *; @use "mixins";`,
   },
 };
 
