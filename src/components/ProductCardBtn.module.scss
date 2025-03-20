@@ -14,7 +14,7 @@
 
   &__details {
     p {
-      font-size: 0.75rem;
+      font-size: $font-xs;
       line-height: 1rem;
     }
 
@@ -25,13 +25,13 @@
   }
 
   &__price {
-    font-size: 0.875rem;
+    font-size: $font-sm;
     font-weight: 700;
     line-height: 1.25rem;
   }
 
   &__sub {
-    font-size: 0.7rem;
+    font-size: $font-xs;
     color: #a8a29e;
   }
 }
