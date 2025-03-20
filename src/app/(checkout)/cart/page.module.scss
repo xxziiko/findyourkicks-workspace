@@ -1,17 +1,23 @@
+.section {
+  @include flex-col;
+  gap: 3rem;
+  padding-bottom: 5rem;
+}
+
 .list {
   width: 100%;
   border-bottom: 1px solid #dedede;
 
   &__header {
-    @include mixins.flex-evenly;
+    @include flex-evenly;
     padding: 1.25rem 1rem;
     border-top: 1px solid #dedede;
     border-bottom: 1px solid #dedede;
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: $font-sm;
 
     p {
-      @include mixins.cell-base;
+      @include cell-base;
       text-align: center;
 
       &:nth-child(2) {
@@ -20,18 +26,18 @@
     }
 
     div {
-      @include mixins.cell-base;
+      @include cell-base;
     }
   }
 }
 
 .item {
-  @include mixins.flex-item;
+  @include flex-item;
   gap: 2rem;
   padding: 1.5rem 1rem;
 
   &__info_box {
-    @include mixins.flex-item;
+    @include flex-item;
     gap: 1rem;
     width: 40%;
   }
@@ -40,11 +46,11 @@
     width: 100%;
 
     p {
-      font-size: 0.875rem;
+      font-size: $font-sm;
 
       &:first-child {
         padding-bottom: 0.4rem;
-        font-size: 0.8rem;
+        font-size: $font-sm;
         font-weight: 500;
       }
 
@@ -56,18 +62,18 @@
   }
 
   &__quantity {
-    @include mixins.cell-base();
+    @include cell-base();
   }
 
   &__price {
-    @include mixins.cell-base();
-    @include mixins.flex-center;
+    @include cell-base();
+    @include flex-center;
     font-weight: 700;
   }
 
   &__buttons {
-    @include mixins.cell-base();
-    @include mixins.flex-col;
+    @include cell-base();
+    @include flex-col;
     gap: 0.5rem;
   }
 }

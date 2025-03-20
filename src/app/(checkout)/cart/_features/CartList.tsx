@@ -3,7 +3,7 @@
 import { Button, CheckBox, Image, QuantityController } from '@/components';
 import type { CartItem, QuantityHandlerType } from '@/lib/types';
 import { memo } from 'react';
-import styles from './CartList.module.scss';
+import styles from '../page.module.scss';
 import NoListData from './NoListData';
 
 export type CartListProps = {
@@ -27,6 +27,7 @@ type ItemHandlers = {
   onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
   onQuantityChange: QuantityHandlerType;
   onDelete: (id: string) => void;
+  onNextStep: () => void;
 };
 
 export default function CartList(props: CartListProps) {
@@ -71,6 +72,7 @@ function Item({
   onQuantityChange,
   onDelete,
   onProductInfo,
+  onNextStep,
 }: ItemProps) {
   return (
     <li className={styles.item}>
@@ -107,11 +109,11 @@ function Item({
       </div>
 
       <div className={styles.item__buttons}>
-        <Button text="주문하기" onClick={() => {}} />
+        <Button text="주문하기" onClick={onNextStep} />
         <Button
           text="삭제하기"
           onClick={() => onDelete(item.cartId)}
-          variant="white"
+          variant="lined--r"
         />
       </div>
     </li>

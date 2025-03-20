@@ -1,7 +1,7 @@
 .section {
-  @include mixins.flex-center-col;
+  @include flex-center-col;
   gap: 1rem;
   width: 100%;
   height: 15rem;
-  font-size: 0.875rem;
+  font-size: $font-sm;
 }
