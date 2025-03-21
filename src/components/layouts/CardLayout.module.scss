@@ -1,0 +1,33 @@
+@mixin border-variant($color: $gray-light, $width: 1px) {
+  border: $width solid $color;
+}
+
+@mixin card-default {
+  border-radius: $radius-sm;
+  padding: 1.2rem;
+}
+
+.card {
+  @include card-default();
+  @include border-variant();
+
+  &_primary {
+    @include card-default();
+    @include border-variant($primary, 1.5px);
+
+    &--bold {
+      @include card-default();
+      @include border-variant($primary, 2px);
+    }
+  }
+
+  &__title {
+    @include flex-item;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+  }
+
+  p {
+    font-size: $font-sm;
+  }
+}
