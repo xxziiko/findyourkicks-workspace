@@ -1,10 +1,10 @@
 'use client';
 
 import { CartBadge } from '@/components';
+import useHeader from '@/components/layouts/header/useHeader';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Header.module.scss';
-import useHeader from './useHeader';
 
 export default function Header() {
   const { items, userEmail, handleLogout, handleCartButton } = useHeader();
