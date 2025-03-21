@@ -88,10 +88,10 @@
 }
 
 @mixin split-layout($gap, $padding, $breakpoint: 768px) {
-  display: flex;
-  flex-direction: column;
+  @include flex-col;
   gap: $gap;
   padding: $padding;
+  width: 100%;
 
   @media (min-width: $breakpoint) {
     flex-direction: row;

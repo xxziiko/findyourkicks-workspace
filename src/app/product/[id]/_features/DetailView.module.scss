@@ -8,8 +8,14 @@
   @include split-layout(3rem, 10rem 0);
 
   .image__box {
-    align-self: flex-start;
     @include sticky-base(10rem);
+    align-self: flex-start;
+
+    @media (max-width: 768px) {
+      @include flex-center;
+      position: inherit;
+      width: 100%;
+    }
   }
 
   &__divider {
