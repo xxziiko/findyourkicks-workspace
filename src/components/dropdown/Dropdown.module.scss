@@ -1,0 +1,38 @@
+@mixin drop-down-default {
+  width: 80%;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.drop_down {
+  @include drop-down-default;
+
+  &_border {
+    @include drop-down-default;
+    border-radius: $radius-s;
+    border: 1px solid $gray-light;
+
+    li {
+      padding: 0.5rem;
+    }
+  }
+
+  &__header {
+    @include flex-between;
+    align-items: center;
+    color: $primary;
+  }
+
+  li {
+    padding: 0.5rem;
+  }
+}
+
+.item {
+  list-style: none;
+
+  &:hover {
+    background-color: #ededed;
+    border-radius: $radius-xs;
+  }
+}

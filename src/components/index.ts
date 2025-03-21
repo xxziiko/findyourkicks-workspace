@@ -4,4 +4,4 @@ export { default as Image } from './Image';
 export { default as QuantityController } from './QuantityController';
 export { default as CheckBox } from './checkbox/CheckBox';
 export { default as CheckoutSteps } from './CheckoutSteps';
-export { default as Dropdown } from './Dropdown';
+export { default as Dropdown } from './dropdown/Dropdown';
