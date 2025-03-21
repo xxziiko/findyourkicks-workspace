@@ -1,8 +1,8 @@
-import { ProductCardBtn } from '@/components';
 import type { ProductItem } from '@/lib/types';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import type { Ref } from 'react';
+import ProductCardBtn from './ProductCardBtn';
 import styles from './ProductListView.module.scss';
 
 export type ProductListProps = {

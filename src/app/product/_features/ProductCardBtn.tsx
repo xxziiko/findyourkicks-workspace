@@ -1,5 +1,5 @@
+import { Image } from '@/components';
 import React from 'react';
-import Image from './Image';
 import styles from './ProductCardBtn.module.scss';
 
 interface Card {

@@ -1,4 +1,3 @@
-export { default as ProductCardBtn } from './ProductCardBtn';
 export { default as Button } from './Button';
 export { default as CartBadge } from './CartBadge';
 export { default as Image } from './Image';
