@@ -15,7 +15,7 @@ export default function CardLayout({
   return (
     <div className={styles[`card_${type}`] ?? styles.card}>
       <div className={styles.card__title}>
-        <h4>{title}</h4>
+        {title && <h4>{title}</h4>}
         {label && <Label text="주소 변경" />}
       </div>
       {children}
