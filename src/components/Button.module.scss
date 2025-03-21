@@ -29,13 +29,13 @@
 
 @mixin button-disabled {
   &:disabled {
-    background-color: $gray-deault;
+    background-color: $gray-default;
     color: $disabled;
     cursor: not-allowed;
   }
 }
 
-@mixin button-border-detault {
+@mixin button-border-default {
   @include button-disabled;
   border: 1px solid $gray-light;
   border-radius: $radius-xs;
@@ -63,11 +63,11 @@
   }
 
   &_lined {
-    @include button-border-detault;
+    @include button-border-default;
     padding: 0.75rem 1.25rem;
 
     &--small {
-      @include button-border-detault;
+      @include button-border-default;
       padding: 0.15rem 0.65rem;
     }
 
