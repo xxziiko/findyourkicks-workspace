@@ -18,6 +18,7 @@ export default function CartPage() {
     handleDelete,
     handleToggle,
     handleProductInfo,
+    handleNextStep,
   } = useCart();
 
   const props = {
@@ -31,6 +32,7 @@ export default function CartPage() {
     onDelete: handleDelete,
     onToggle: handleToggle,
     onProductInfo: handleProductInfo,
+    onNextStep: handleNextStep,
   };
 
   return <CartView {...props} />;

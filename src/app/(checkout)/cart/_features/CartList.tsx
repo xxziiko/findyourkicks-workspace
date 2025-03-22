@@ -103,7 +103,11 @@ function Item({
       </div>
 
       <div className={styles.item__buttons}>
-        <Button text="주문하기" onClick={onNextStep} />
+        <Button
+          text="주문하기"
+          onClick={() => {}}
+          // onClick={onNextStep}
+        />
         <Button
           text="삭제하기"
           onClick={() => onDelete(item.cartId)}

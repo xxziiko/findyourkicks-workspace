@@ -31,7 +31,8 @@ export default function CartView(props: CartViewProps) {
 
       <Button
         text={`${totalPriceWithDeliveryFee.toLocaleString()}원 • 총 ${totalProduct}건 주문하기`}
-        onClick={onNextStep}
+        // onClick={onNextStep}
+        onClick={() => {}}
       />
     </section>
   );
