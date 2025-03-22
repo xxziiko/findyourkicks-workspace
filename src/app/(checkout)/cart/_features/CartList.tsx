@@ -84,15 +84,9 @@ function Item({
       <button
         type="button"
         onClick={() => onProductInfo(item)}
-        className={styles.item__info_box}
+        className={styles.item__info}
       >
-        <Image src={item.image} alt="product" width="8rem" height="7rem" />
-
-        <div className={styles.item__info}>
-          <p>{item.title.replace(/(<b>|<\/b>)/g, '')}</p>
-          <p>{item.size}</p>
-          <p>{item.price.toLocaleString()}원</p>
-        </div>
+        <ProductInfo item={item} type="cart" />
       </button>
 
       <div className={styles.item__quantity}>
