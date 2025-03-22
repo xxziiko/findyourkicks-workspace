@@ -1,7 +1,7 @@
 'use client';
 
+import { useCart } from '@/app/(checkout)/cart/_features';
 import dynamic from 'next/dynamic';
-import { useCart } from './_features';
 
 // TODO: 서버 구축 시 삭제
 const CartView = dynamic(() => import('./_features/CartView'), { ssr: false });

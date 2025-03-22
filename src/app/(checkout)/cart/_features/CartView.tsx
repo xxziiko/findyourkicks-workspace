@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, OrderCard } from '@/components';
+import { Button } from '@/components';
+import { OrderCard } from '../../_features';
 import styles from '../page.module.scss';
 import CartList, { type CartListProps } from './CartList';
 

@@ -1,10 +1,10 @@
 'use client';
 
-import { Button, CheckBox, Image, QuantityController } from '@/components';
+import { NoListData, ProductInfo } from '@/app/(checkout)/_features';
+import { Button, CheckBox, QuantityController } from '@/components';
 import type { CartItem, QuantityHandlerType } from '@/lib/types';
 import { memo } from 'react';
-import styles from '../page.module.scss';
-import NoListData from './NoListData';
+import styles from './CartList.module.scss';
 
 export type CartListProps = {
   cartItems: CartItem[];
