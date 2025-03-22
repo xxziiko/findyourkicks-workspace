@@ -1,9 +1,16 @@
 import styles from '@/components/Button.module.scss';
 
+type Variant =
+  | 'kakao'
+  | 'google'
+  | 'lined'
+  | 'lined--small'
+  | 'lined--r'
+  | 'label';
 interface ButtonProps {
   key?: number | string;
   text: string | number;
-  variant?: string;
+  variant?: Variant;
   icon?: React.ReactNode;
   disabled?: boolean;
   onClick: () => Promise<void> | void;

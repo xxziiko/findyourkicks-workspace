@@ -16,7 +16,7 @@ const DropdownContext = createContext<DropdownContextType | null>(null);
 export default function Dropdown({
   children,
   variant,
-}: { children: React.ReactNode; variant?: string }) {
+}: { children: React.ReactNode; variant?: 'border' }) {
   const {
     isOpen,
     selectedText,
