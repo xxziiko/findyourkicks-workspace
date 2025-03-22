@@ -1,17 +1,17 @@
 'use client';
-import { SIZE_INVENTORY } from '@/lib/constants';
+import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
 import { cartItemsAtom, productItemAtom } from '@/lib/store';
 import type { CartItem } from '@/lib/types';
 import { useAtom, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 export default function useCart() {
   const [cartItems, setCartItems] = useAtom(cartItemsAtom);
   const setProductItem = useSetAtom(productItemAtom);
-  const [checkedItems, setCheckedItems] = useState<{
-    [cartId: string]: boolean;
-  }>(Object.fromEntries(cartItems.map((item) => [item.cartId, true])));
+
+  const { checkedItems, handleToggleAll, handleDeleteItem, handleToggle } =
+    useCheckBoxGroup(cartItems.map((item) => item.cartId));
 
   const router = useRouter();
 
@@ -24,21 +24,6 @@ export default function useCart() {
     .reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
 
   const totalPriceWithDeliveryFee = totalProduct === 0 ? 0 : totalPrice + 3000;
-
-  const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    setCheckedItems(
-      Object.fromEntries(cartItems.map((item) => [item.cartId, checked])),
-    );
-  };
-
-  const handleToggle = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => {
-      const checked = e.target.checked;
-      setCheckedItems((prev) => ({ ...prev, [cartId]: checked }));
-    },
-    [],
-  );
 
   const handleQuantityChange = useCallback(
     (id: string, quantity: number) => {
@@ -56,9 +41,9 @@ export default function useCart() {
   const handleDelete = useCallback(
     (id: string) => {
       setCartItems((prev) => prev.filter((item) => item.cartId !== id));
-      setCheckedItems((prev) => ({ ...prev, [id]: false }));
+      handleDeleteItem(id);
     },
-    [setCartItems],
+    [setCartItems, handleDeleteItem],
   );
 
   const handleProductInfo = useCallback(
@@ -68,6 +53,10 @@ export default function useCart() {
     },
     [setProductItem, router],
   );
+
+  const handleNextStep = () => {
+    router.push('/checkout');
+  };
 
   return {
     cartItems,
@@ -80,5 +69,6 @@ export default function useCart() {
     handleQuantityChange,
     handleDelete,
     handleProductInfo,
+    handleNextStep,
   };
 }
