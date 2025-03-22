@@ -1,0 +1,54 @@
+.layout {
+  @include split-layout(3rem, 0, 1000px);
+  min-height: 80vh;
+  padding-bottom: 5rem;
+
+  &__left {
+    min-width: 55%;
+    @include flex-col;
+    gap: 1rem;
+  }
+
+  &__right {
+    @include sticky-base(14.5rem);
+    @include flex-col;
+    align-self: flex-start;
+    width: 100%;
+    gap: 2rem;
+  }
+}
+
+.products_inner {
+  @include flex-col;
+  gap: 1rem;
+}
+
+.buttons {
+  @include flex-item;
+  gap: 1.3rem;
+}
+
+.delivery {
+  &__item {
+    @include flex-item;
+    gap: 3rem;
+    padding-bottom: 0.7rem;
+
+    &:last-child {
+      padding-top: 1rem;
+    }
+  }
+
+  &__sub {
+    align-self: flex-start;
+    width: 15%;
+    color: $gray-dark;
+
+    &--last {
+      align-self: flex-start;
+      width: 15%;
+      color: $gray-dark;
+      padding-top: 1.2rem;
+    }
+  }
+}
