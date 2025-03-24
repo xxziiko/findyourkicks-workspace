@@ -50,19 +50,19 @@
   @include button-default;
   @include button-variant($secondary, none, none, $primary);
 
-  &_kakao {
+  &-kakao {
     @include button-layout;
     @include button-variant($primary, none, none);
     background-color: #ffe603;
   }
 
-  &_google {
+  &-google {
     @include button-layout;
     @include button-variant($primary, thin solid #888, 1px 1px 1px #888);
     white-space: nowrap;
   }
 
-  &_lined {
+  &-lined {
     @include button-border-default;
     padding: 0.75rem 1.25rem;
 
@@ -80,16 +80,6 @@
         none,
         $secondary
       );
-    }
-  }
-
-  &_label {
-    border: 1px solid $gray-light;
-    border-radius: $radius-s;
-    padding: 0.25rem 0.45rem;
-
-    p {
-      font-size: $font-s;
     }
   }
 

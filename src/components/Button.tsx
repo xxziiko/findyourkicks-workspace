@@ -27,7 +27,7 @@ export default function Button({
   return (
     <button
       {...props}
-      className={styles[`btn_${variant}`] ?? styles.btn}
+      className={styles[`btn-${variant}`] ?? styles.btn}
       style={{ width }}
     >
       {icon}
