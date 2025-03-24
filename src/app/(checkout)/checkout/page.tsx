@@ -60,41 +60,6 @@ export default function Checkout() {
         <Button text="결제하기" onClick={() => {}} />
       </div>
     </div>
-  );
-}
 
-function DeliveryInfo() {
-  return (
-    <>
-      <div className={styles.delivery__item}>
-        <p className={styles.delivery__sub}>배송지 명</p>
-        <p>{MOCK_ADDRESS.alias}</p>
-      </div>
-
-      <div className={styles.delivery__item}>
-        <p className={styles.delivery__sub}>주문자 명</p>
-        <p>{MOCK_ADDRESS.name}</p>
-      </div>
-
-      <div className={styles.delivery__item}>
-        <p className={styles.delivery__sub}>연락처</p>
-        <p>{MOCK_ADDRESS.phone}</p>
-      </div>
-
-      <div className={styles.delivery__item}>
-        <p className={styles.delivery__sub}>배송지</p>
-        <p>{MOCK_ADDRESS.address}</p>
-      </div>
-
-      <div className={styles.delivery__item}>
-        <p className={styles['delivery__sub--last']}>베송 메세지</p>
-
-        <Dropdown variant="border">
-          {DELIVERY_TEXT.map((item) => (
-            <Dropdown.Item key={item} text={item} />
-          ))}
-        </Dropdown>
-      </div>
-    </>
   );
 }

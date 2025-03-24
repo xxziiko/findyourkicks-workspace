@@ -27,28 +27,3 @@
   @include flex-item;
   gap: 1.3rem;
 }
-
-.delivery {
-  &__item {
-    @include flex-item;
-    gap: 3rem;
-    padding-bottom: 0.7rem;
-
-    &:last-child {
-      padding-top: 1rem;
-    }
-  }
-
-  &__sub {
-    align-self: flex-start;
-    width: 15%;
-    color: $gray-dark;
-
-    &--last {
-      align-self: flex-start;
-      width: 15%;
-      color: $gray-dark;
-      padding-top: 1.2rem;
-    }
-  }
-}
