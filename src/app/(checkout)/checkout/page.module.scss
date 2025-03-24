@@ -1,5 +1,5 @@
 .layout {
-  @include split-layout(3rem, 0, 1000px);
+  @include split-layout(3rem, 0, 1024px);
   min-height: 80vh;
   padding-bottom: 5rem;
 
