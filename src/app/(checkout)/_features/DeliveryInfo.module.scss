@@ -3,6 +3,7 @@
     @include flex-item;
     gap: 3rem;
     padding-bottom: 0.7rem;
+    font-size: $font-sm;
 
     &:last-child {
       padding-top: 1rem;
