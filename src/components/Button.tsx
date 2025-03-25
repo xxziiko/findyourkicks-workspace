@@ -14,7 +14,7 @@ interface ButtonProps {
   icon?: React.ReactNode;
   width?: string;
   disabled?: boolean;
-  onClick: () => Promise<void> | void;
+  onClick: (e: React.MouseEvent) => Promise<void> | void;
 }
 
 export default function Button({
@@ -31,7 +31,7 @@ export default function Button({
       style={{ width }}
     >
       {icon}
-      <p className={styles.btn__text}>{text}</p>
+      <p>{text}</p>
     </button>
   );
 }
