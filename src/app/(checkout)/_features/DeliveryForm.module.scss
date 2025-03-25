@@ -1,0 +1,41 @@
+// TODO: 반응형 바텀시트 만들기
+
+.form {
+  @include flex-col;
+  gap: 1.5rem;
+  width: 25rem;
+  padding: 2rem 0.5rem;
+
+  &__wrapper {
+    @include flex-col;
+    gap: 0.5rem;
+  }
+
+  &__inner {
+    @include flex-between;
+    align-items: center;
+
+    p {
+      color: $gray-dark;
+      font-size: $font-s;
+    }
+  }
+
+  &__input {
+    padding: 0.5rem;
+    border: 1px solid $gray-light;
+    border-radius: $radius-xs;
+    width: 70%;
+    font-size: $font-s;
+    &::placeholder {
+      color: $gray-light;
+      font-size: $font-s;
+    }
+  }
+
+  &__address {
+    @include flex-between;
+    align-items: center;
+    gap: 0.3rem;
+  }
+}

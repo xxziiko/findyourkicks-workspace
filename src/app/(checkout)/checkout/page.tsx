@@ -61,5 +61,10 @@ export default function Checkout() {
       </div>
     </div>
 
+      {isModalOpen && (
+        <Modal onClose={handleModal} title={conditionalTitle}>
+          <DeliveryForm />
+        </Modal>
+      )}
   );
 }
