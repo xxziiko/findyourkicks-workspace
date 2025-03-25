@@ -24,7 +24,6 @@ const DELIVERY_SUBTITLE = [
   '주문자 명',
   '연락처',
   '배송지',
-  '메세지',
 ] as const;
 
 const KEYS: (keyof AddressData)[] = ['alias', 'name', 'phone', 'address'];

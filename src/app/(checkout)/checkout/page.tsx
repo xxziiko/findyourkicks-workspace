@@ -1,9 +1,15 @@
 'use client';
-import { Button, Dropdown } from '@/components';
-import { CardLayout } from '@/components/layouts';
+import { Button } from '@/components';
+import { CardLayout, Modal } from '@/components/layouts';
 import { cartItemsAtom } from '@/lib/store';
 import { useAtomValue } from 'jotai';
-import { OrderCard, ProductInfo } from '../_features';
+import { useState } from 'react';
+import {
+  DeliveryForm,
+  DeliveryInfo,
+  OrderCard,
+  ProductInfo,
+} from '../_features';
 import styles from './page.module.scss';
 
 const MOCK_ADDRESS = {
@@ -14,22 +20,26 @@ const MOCK_ADDRESS = {
   address: '[13607] 경기도 성남시 분당구 백현로',
 };
 
-const DELIVERY_TEXT = [
-  '요청사항 없음',
-  '경비실에 보관해주세요.',
-  '문 앞에 놓아주세요.',
-  '직접 입력',
-];
+// const MOCK_ADDRESS = null;
 
 export default function Checkout() {
   const cartItems = useAtomValue(cartItemsAtom);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const conditionalTitle = !MOCK_ADDRESS ? '주소 입력' : '주소 변경';
+
+  const handleModal = () => setIsModalOpen((prev) => !prev);
 
   return (
     <div className={styles.layout}>
       <div className={styles.layout__left}>
-        {/* TODO:  배송지 정보 input modal form*/}
-        <CardLayout title="배송 정보" label>
-          <DeliveryInfo />
+        <CardLayout
+          title="배송 정보"
+          label={
+            <CardLayout.Label text={conditionalTitle} onClick={handleModal} />
+          }
+          onLabelClick={handleModal}
+        >
+          <DeliveryInfo data={MOCK_ADDRESS} />
         </CardLayout>
 
         {/* TODO: 주문상품 list */}
@@ -44,8 +54,8 @@ export default function Checkout() {
 
         <CardLayout title="결제 수단">
           <div className={styles.buttons}>
-            <Button text="카드 결제" onClick={() => {}} />
-            <Button text="무통장 입금" onClick={() => {}} />
+            <Button text="카드 결제" onClick={() => {}} width="50%" />
+            <Button text="무통장 입금" onClick={() => {}} width="50%" />
           </div>
         </CardLayout>
       </div>
@@ -59,12 +69,12 @@ export default function Checkout() {
 
         <Button text="결제하기" onClick={() => {}} />
       </div>
-    </div>
 
       {isModalOpen && (
         <Modal onClose={handleModal} title={conditionalTitle}>
           <DeliveryForm />
         </Modal>
       )}
+    </div>
   );
 }
