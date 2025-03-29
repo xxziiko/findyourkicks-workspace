@@ -1,9 +1,6 @@
 'use client';
 import { Button } from '@/components';
 import { CardLayout, Modal } from '@/components/layouts';
-import { cartItemsAtom } from '@/lib/store';
-import { useAtomValue } from 'jotai';
-import { useState } from 'react';
 import {
   DeliveryForm,
   DeliveryInfo,
@@ -11,23 +8,26 @@ import {
   ProductInfo,
 } from '../_features';
 import styles from './page.module.scss';
+import useCheckout from './useCheckout';
 
-const MOCK_ADDRESS = {
-  id: 0,
-  alias: '우리집',
-  name: '홍길동',
-  phone: '010-1234-1234',
-  address: '[13607] 경기도 성남시 분당구 백현로',
+const paymentRequestBody = {
+  orderId: 'O_evBvXO_Ge2XwXA2xPtj', // 고유 주문번호
+  orderName: '토스 티셔츠 외 2건',
+  amount: 50000,
+  customerEmail: 'customer123@gmail.com',
+  customerName: '김토스',
+  customerMobilePhone: '01012341234',
 };
 
-// const MOCK_ADDRESS = null;
-
 export default function Checkout() {
-  const cartItems = useAtomValue(cartItemsAtom);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const conditionalTitle = !MOCK_ADDRESS ? '주소 입력' : '주소 변경';
-
-  const handleModal = () => setIsModalOpen((prev) => !prev);
+  const {
+    conditionalTitle,
+    MOCK_ADDRESS,
+    cartItems,
+    isModalOpen,
+    handleModal,
+    requestPayment,
+  } = useCheckout();
 
   return (
     <div className={styles.layout}>
@@ -42,11 +42,10 @@ export default function Checkout() {
           <DeliveryInfo data={MOCK_ADDRESS} />
         </CardLayout>
 
-        {/* TODO: 주문상품 list */}
+        {/* FIXME: 데이터 */}
         <CardLayout title={`주문 상품 (총 ${cartItems.length}건)`}>
           <div className={styles['products-inner']}>
             {cartItems.map((item) => (
-              // 임시 데이터
               <ProductInfo item={item} key={item.cartId} type="checkout" />
             ))}
           </div>
@@ -55,7 +54,12 @@ export default function Checkout() {
         <CardLayout title="결제 수단">
           <div className={styles.buttons}>
             <Button text="카드 결제" onClick={() => {}} width="50%" />
-            <Button text="무통장 입금" onClick={() => {}} width="50%" />
+            <Button
+              text="무통장 입금"
+              onClick={() => {}}
+              width="50%"
+              disabled
+            />
           </div>
         </CardLayout>
       </div>
@@ -67,7 +71,10 @@ export default function Checkout() {
           type="결제"
         />
 
-        <Button text="결제하기" onClick={() => {}} />
+        <Button
+          text="결제하기"
+          onClick={() => requestPayment(paymentRequestBody)}
+        />
       </div>
 
       {isModalOpen && (

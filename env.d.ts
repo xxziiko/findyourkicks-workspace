@@ -6,5 +6,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_NAVER_CLIENT_ID: string;
     NEXT_PUBLIC_NAVER_CLIENT_SECRET: string;
     NEXT_PUBLIC_API_URL: string;
+    NEXT_PUBLIC_TOSS_SECRET_KEY: string;
+    NEXT_PUBLIC_TOSS_CUSTOMER_KEY: string;
   }
 }
