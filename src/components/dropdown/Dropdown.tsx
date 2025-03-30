@@ -34,11 +34,11 @@ export default function Dropdown({
   return (
     <DropdownContext.Provider value={value}>
       <ul
-        className={styles[`drop_down_${variant}`] ?? styles.drop_down}
+        className={styles[`drop-down_${variant}`] ?? styles['drop-down']}
         onClick={handleDropdown}
         onKeyDown={handleKeyDown}
       >
-        <li className={styles.drop_down__header}>
+        <li className={styles['drop-down__header']}>
           {selectedText === '직접 입력' ? (
             <input ref={autoFocus} />
           ) : (

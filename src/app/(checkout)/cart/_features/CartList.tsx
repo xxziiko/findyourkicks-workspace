@@ -1,8 +1,9 @@
 'use client';
 
-import { NoListData, ProductInfo } from '@/app/(checkout)/_features';
-import { Button, CheckBox, QuantityController } from '@/components';
+import { ProductInfo } from '@/app/(checkout)/_features';
+import { Button, CheckBox, NoData, QuantityController } from '@/components';
 import type { CartItem, QuantityHandlerType } from '@/lib/types';
+import { ShoppingCartIcon } from 'lucide-react';
 import { memo } from 'react';
 import styles from './CartList.module.scss';
 
@@ -45,7 +46,12 @@ export default function CartList(props: CartListProps) {
     <div className={styles.list}>
       <Header {...headerProps} />
 
-      {!cartItems.length && <NoListData />}
+      {!cartItems.length && (
+        <NoData
+          title="장바구니가 비어있어요!"
+          icon={<ShoppingCartIcon width="2rem" />}
+        />
+      )}
       {cartItems.map((item) => (
         <MemorizedItem key={item.cartId} {...itemProps} item={item} />
       ))}

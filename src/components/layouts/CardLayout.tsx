@@ -9,20 +9,23 @@ export default function CardLayout({
 }: {
   children: React.ReactNode;
   title?: string;
-  label?: boolean;
+  label?: React.ReactNode;
   type?: string;
+  onLabelClick?: () => void;
 }) {
   return (
     <div className={styles[`card_${type}`] ?? styles.card}>
       <div className={styles.card__title}>
         {title && <h4>{title}</h4>}
-        {label && <Label text="주소 변경" />}
+        {label}
       </div>
       {children}
     </div>
   );
 }
 
-function Label({ text }: { text: string }) {
-  return <Button text={text} onClick={() => {}} variant="label" />;
+function Label({ text, ...props }: { text: string; onClick: () => void }) {
+  return <Button {...props} text={text} variant="label" />;
 }
+
+CardLayout.Label = Label;
