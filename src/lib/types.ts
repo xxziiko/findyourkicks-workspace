@@ -18,10 +18,9 @@ export interface ProductItem {
   productId: string;
   image: string;
   title: string;
-  price: string;
+  price: number;
   brand: string;
   category: string;
-  maker: string;
 }
 
 type ProductItemWithSelectedOpion = ProductItem & SelectedOption;
@@ -34,11 +33,8 @@ export interface CartListItemProps extends EventHandlers {
 }
 
 export interface ApiResponse {
-  lastBuildDate: string;
-  total: number;
-  start: number;
-  display: number;
-  items: Item[];
+  pageParams: number[];
+  pages: ProductItem[][];
 }
 
 export interface InventoryItem {
@@ -46,19 +42,17 @@ export interface InventoryItem {
   stock: number;
 }
 
-interface Item {
+export type RawProduct = {
+  product_id: string;
   title: string;
-  link: string;
+  price: number;
   image: string;
-  lprice: string;
-  hprice: string;
-  mallName: string;
-  productId: string;
-  productType: string;
-  brand: string;
-  maker: string;
-  category1: string;
-  category2: string;
-  category3: string;
-  category4: string;
-}
+
+  brand: {
+    name: string;
+  } | null;
+
+  category: {
+    name: string;
+  } | null;
+};

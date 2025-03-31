@@ -6,7 +6,7 @@ interface Card {
   src: string;
   brand: string;
   title: string;
-  price: string;
+  price: number;
   onClick: () => void;
 }
 

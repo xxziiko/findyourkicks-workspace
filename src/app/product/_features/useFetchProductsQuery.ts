@@ -14,20 +14,17 @@ export default function useFetchProductsQuery({
       pages: [initialProducts],
       pageParams: [1],
     },
-    getNextPageParam: (lastPage) => {
-      const nextPage = lastPage.start + 100;
-      return nextPage <= 1000 ? nextPage : null;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.length < 30 ? null : pages.length + 1,
     select: (data) =>
       data.pages.flatMap((page) =>
-        page.items.map((item) => ({
-          productId: item.productId,
-          image: item.image,
+        page.map((item) => ({
+          productId: item.product_id,
           title: item.title,
-          price: item.lprice,
-          brand: item.brand,
-          category: item.category4,
-          maker: item.maker,
+          price: item.price,
+          image: item.image,
+          brand: item.brand?.name ?? '',
+          category: item.category?.name ?? '',
         })),
       ),
     staleTime: 1000 * 60 * 2,

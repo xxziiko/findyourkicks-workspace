@@ -62,7 +62,7 @@ function DetailContent(props: DetailViewProps) {
       <div className={styles.content__top}>
         <div>
           <p className={styles['content__top_text--brand']}>
-            {productDetail.maker}
+            {productDetail.brand}
           </p>
           <p className={styles['content__top_text--price']}>
             {Number(productDetail.price).toLocaleString()} 원
