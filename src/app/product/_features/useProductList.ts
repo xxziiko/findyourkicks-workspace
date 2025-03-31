@@ -1,9 +1,10 @@
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
-import { productItemAtom } from '@/lib/store';
-import type { ProductItem, ProductResponse } from '@/lib/types';
-import { useSetAtom } from 'jotai';
-import { useCallback, useEffect, useRef } from 'react';
+
+import type { fetchProducts } from '@/lib/api';
+import { useEffect, useRef } from 'react';
 import useFetchProductsQuery from './useFetchProductsQuery';
+
+export type ProductResponse = Awaited<ReturnType<typeof fetchProducts>>;
 
 export default function useProductList({
   initialProducts,
@@ -15,12 +16,6 @@ export default function useProductList({
     hasNextPage,
     fetchNextPage,
   } = useFetchProductsQuery({ initialProducts });
-  const setProductItem = useSetAtom(productItemAtom);
-
-  const handleCardButton = useCallback(
-    (item: ProductItem) => () => setProductItem(item),
-    [setProductItem],
-  );
 
   const observe = useIntersectionObserver(
     () => {
@@ -39,7 +34,6 @@ export default function useProductList({
 
   return {
     products,
-    handleCardButton,
     isFetchingNextPage,
     loadMoreRef,
   };

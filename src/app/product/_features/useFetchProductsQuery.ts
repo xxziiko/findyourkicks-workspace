@@ -1,7 +1,7 @@
 import { fetchProducts } from '@/lib/api';
-import type { ProductResponse } from '@/lib/types';
 import { handleError } from '@/lib/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import type { ProductResponse } from './useProductList';
 
 export default function useFetchProductsQuery({
   initialProducts,

@@ -1,12 +1,7 @@
-import type { CartItem, ProductItem } from '@/lib/types';
+import type { CartItem } from '@/lib/types';
 import type { User } from '@supabase/supabase-js';
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-
-export const productItemAtom = atomWithStorage<ProductItem | null>(
-  'selectedProduct',
-  null,
-);
 
 export const cartItemsAtom = atomWithStorage<CartItem[]>('cart', []);
 

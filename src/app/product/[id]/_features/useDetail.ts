@@ -1,32 +1,24 @@
 'use client';
-import { SIZE_INVENTORY } from '@/lib/constants';
-import {
-  cartItemsAtom,
-  isAuthenticatedAtom,
-  productItemAtom,
-} from '@/lib/store';
-import type { CartItem, ProductItem, SelectedOption } from '@/lib/types';
+import { cartItemsAtom, isAuthenticatedAtom } from '@/lib/store';
+import type { CartItem, SelectedOption } from '@/lib/types';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import type { Detail } from './Detail';
 
-export default function useDetail() {
-  const productDetail = useAtomValue<ProductItem | null>(productItemAtom);
+export default function useDetail({ data: product }: { data: Detail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setCart = useSetAtom(cartItemsAtom);
   const router = useRouter();
-  const price = Number(productDetail?.price);
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
     0,
   );
 
-  const inventory = SIZE_INVENTORY.map((inv) => {
-    const selected = selectedOptions.find((opt) => opt.size === inv.size);
-    return selected ? { ...inv, stock: inv.stock - selected.quantity } : inv;
-  });
+  const getCurrentQuantity = (selectedSize: string) =>
+    selectedOptions.find(({ size }) => size === selectedSize)?.quantity ?? 0;
 
   const handleSelectSize = useCallback((id: string) => {
     setSelectedOptions((prev) => {
@@ -44,18 +36,21 @@ export default function useDetail() {
     setSelectedOptions((prev) => prev.filter((option) => option.size !== id));
   }, []);
 
-  const handleQuantityChange = useCallback((id: string, quantity: number) => {
-    const initialStock =
-      SIZE_INVENTORY.find((item) => item.size === id)?.stock ?? 0;
+  const handleQuantityChange = useCallback(
+    (id: string, quantity: number) => {
+      const initialStock =
+        product.inventory.find((item) => item.size === id)?.stock ?? 0;
 
-    if (quantity >= 1 && quantity <= initialStock) {
-      setSelectedOptions((prev) =>
-        prev.map((option) =>
-          option.size === id ? { ...option, quantity } : option,
-        ),
-      );
-    }
-  }, []);
+      if (quantity >= 1 && quantity <= initialStock) {
+        setSelectedOptions((prev) =>
+          prev.map((option) =>
+            option.size === id ? { ...option, quantity } : option,
+          ),
+        );
+      }
+    },
+    [product],
+  );
 
   const resetSelectedOptions = () => {
     setSelectedOptions([]);
@@ -67,7 +62,7 @@ export default function useDetail() {
         ({
           cartId: crypto.randomUUID(),
           ...option,
-          ...productDetail,
+          ...product,
         }) as CartItem,
     );
   };
@@ -112,11 +107,9 @@ export default function useDetail() {
   };
 
   return {
-    productDetail,
-    price,
+    product,
     selectedOptions,
     totalQuantity,
-    inventory,
 
     handleSelectSize,
     handleDeleteButton,
@@ -124,5 +117,6 @@ export default function useDetail() {
     resetSelectedOptions,
     createCart,
     handleCartButton,
+    getCurrentQuantity,
   };
 }

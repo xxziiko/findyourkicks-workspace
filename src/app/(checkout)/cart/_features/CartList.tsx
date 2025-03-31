@@ -2,7 +2,7 @@
 
 import { ProductInfo } from '@/app/(checkout)/_features';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
-import type { CartItem, QuantityHandlerType } from '@/lib/types';
+import type { CartItem, InventoryItem, QuantityHandlerType } from '@/lib/types';
 import { ShoppingCartIcon } from 'lucide-react';
 import { memo } from 'react';
 import styles from './CartList.module.scss';
@@ -24,7 +24,6 @@ interface ItemProps extends ItemHandlers {
 }
 
 type ItemHandlers = {
-  onProductInfo: (item: CartItem) => void;
   onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
   onQuantityChange: QuantityHandlerType;
   onDelete: (id: string) => void;
@@ -77,7 +76,6 @@ function Item({
   onToggle,
   onQuantityChange,
   onDelete,
-  onProductInfo,
   onNextStep,
 }: ItemProps) {
   return (
@@ -87,11 +85,7 @@ function Item({
         onChange={(e) => onToggle(e, item.cartId)}
       />
 
-      <button
-        type="button"
-        onClick={() => onProductInfo(item)}
-        className={styles.item__info}
-      >
+      <button type="button" className={styles.item__info}>
         <ProductInfo item={item} type="cart" />
       </button>
 
@@ -100,6 +94,7 @@ function Item({
           size={item.size}
           id={item.cartId}
           quantity={item.quantity}
+          inventory={item.inventory}
           onQuantityChange={onQuantityChange}
         />
       </div>
@@ -109,11 +104,7 @@ function Item({
       </div>
 
       <div className={styles.item__buttons}>
-        <Button
-          text="주문하기"
-          onClick={() => {}}
-          // onClick={onNextStep}
-        />
+        <Button text="주문하기" onClick={onNextStep} />
         <Button
           text="삭제하기"
           onClick={() => onDelete(item.cartId)}

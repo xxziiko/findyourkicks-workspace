@@ -1,11 +1,16 @@
 import { QuantityController } from '@/components';
-import type { QuantityHandlerType, SelectedOption } from '@/lib/types';
+import type {
+  InventoryItem,
+  QuantityHandlerType,
+  SelectedOption,
+} from '@/lib/types';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';
 
 interface OptionProps extends SelectedOption {
   price: number;
+  inventory: InventoryItem[];
   onDelete: (id: string) => void;
   onQuantityChange: QuantityHandlerType;
 }

@@ -1,14 +1,12 @@
 'use client';
 import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
-import { cartItemsAtom, productItemAtom } from '@/lib/store';
-import type { CartItem } from '@/lib/types';
-import { useAtom, useSetAtom } from 'jotai';
+import { cartItemsAtom } from '@/lib/store';
+import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 export default function useCart() {
   const [cartItems, setCartItems] = useAtom(cartItemsAtom);
-  const setProductItem = useSetAtom(productItemAtom);
 
   const { checkedItems, handleToggleAll, handleDeleteItem, handleToggle } =
     useCheckBoxGroup(cartItems.map((item) => item.cartId));
@@ -46,14 +44,6 @@ export default function useCart() {
     [setCartItems, handleDeleteItem],
   );
 
-  const handleProductInfo = useCallback(
-    (item: CartItem) => {
-      setProductItem(item);
-      router.push(`/product/${item.productId}`);
-    },
-    [setProductItem, router],
-  );
-
   const handleNextStep = () => {
     router.push('/checkout');
   };
@@ -68,7 +58,6 @@ export default function useCart() {
     handleToggleAll,
     handleQuantityChange,
     handleDelete,
-    handleProductInfo,
     handleNextStep,
   };
 }

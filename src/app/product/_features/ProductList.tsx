@@ -1,8 +1,7 @@
 'use client';
 
-import type { ProductResponse } from '@/lib/types';
 import ProductListView from './ProductListView';
-import useProductList from './useProductList';
+import useProductList, { type ProductResponse } from './useProductList';
 
 export default function ProductList({
   initialProducts,

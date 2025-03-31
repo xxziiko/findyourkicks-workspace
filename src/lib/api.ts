@@ -1,4 +1,17 @@
-import type { RawProduct } from '@/lib/types';
+interface RawProduct {
+  product_id: string;
+  title: string;
+  price: number;
+  image: string;
+
+  brand: {
+    name: string;
+  } | null;
+
+  category: {
+    name: string;
+  } | null;
+}
 
 export const fetchProducts = async (page = 1): Promise<RawProduct[]> => {
   const data = await fetch(

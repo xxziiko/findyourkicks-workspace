@@ -17,7 +17,6 @@ export default function CartPage() {
     handleQuantityChange,
     handleDelete,
     handleToggle,
-    handleProductInfo,
     handleNextStep,
   } = useCart();
 
@@ -31,7 +30,6 @@ export default function CartPage() {
     onQuantityChange: handleQuantityChange,
     onDelete: handleDelete,
     onToggle: handleToggle,
-    onProductInfo: handleProductInfo,
     onNextStep: handleNextStep,
   };
 
