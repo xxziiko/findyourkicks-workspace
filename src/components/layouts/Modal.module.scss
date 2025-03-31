@@ -1,0 +1,30 @@
+.modal {
+  &__overlay {
+    @include flex-center;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 50;
+    overflow: hidden;
+  }
+
+  &__container {
+    @include flex-col;
+    gap: 1rem;
+    background: #fff;
+    padding: 1rem;
+    border-radius: $radius-s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fade-in 0.2s ease-in-out;
+  }
+}
+
+.header {
+  @include flex-center;
+}
+
+.footer {
+  @include flex-center;
+  gap: 1rem;
+  width: 100%;
+}

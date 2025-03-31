@@ -1,8 +1,8 @@
-import { Card } from '@/components';
 import type { ProductItem } from '@/lib/types';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import type { Ref } from 'react';
+import ProductCardBtn from './ProductCardBtn';
 import styles from './ProductListView.module.scss';
 
 export type ProductListProps = {
@@ -23,7 +23,7 @@ export default function ProductListView({
       <section className={styles.list}>
         {products?.map((product: ProductItem) => (
           <Link href={`/product/${product.productId}`} key={product.productId}>
-            <Card
+            <ProductCardBtn
               src={product.image}
               brand={product.brand}
               title={product.title}

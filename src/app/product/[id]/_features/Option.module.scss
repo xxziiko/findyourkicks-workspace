@@ -1,7 +1,7 @@
 @mixin button-base {
   border: 1px solid #ddd;
   padding: 0 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: $radius-xs;
   cursor: pointer;
 
   &:disabled {
@@ -12,7 +12,9 @@
 }
 
 .option {
-  @include mixins.flex-between;
+  @include flex-between;
+  align-items: center;
+
   padding: 1.25rem 0;
   width: 100%;
   border-bottom: 1px solid #ddd;
@@ -34,7 +36,7 @@
   }
 
   &__price_box {
-    @include mixins.flex-end;
+    @include flex-end;
     gap: 0.5rem;
     width: 100%;
   }

@@ -1,21 +1,21 @@
 @mixin layout-base {
-  @include mixins.flex-col;
+  @include flex-col;
   justify-content: space-between;
   gap: 1.5rem;
 }
 
 .detail {
-  @include mixins.flex-col;
-  gap: 3rem;
-  padding: 10rem 0;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
+  @include split-layout(3rem, 10rem 0);
 
   .image__box {
-    @include mixins.sticky-base(10rem);
+    @include sticky-base(10rem);
     align-self: flex-start;
+
+    @media (max-width: 768px) {
+      @include flex-center;
+      position: inherit;
+      width: 100%;
+    }
   }
 
   &__divider {
@@ -41,19 +41,19 @@
       }
 
       &--price {
-        font-size: 1.875rem;
+        font-size: $font-3xl;
         font-weight: 700;
       }
 
       &--subtitle {
-        font-size: 0.8rem;
+        font-size: $font-s;
         line-height: 1.5rem;
         color: #a8a29e;
       }
     }
 
     &_options {
-      @include mixins.flex-wrap;
+      @include flex-wrap;
       gap: 1rem;
     }
   }
@@ -62,7 +62,9 @@
     @include layout-base;
 
     &_wrapper {
-      @include mixins.flex-between;
+      @include flex-between;
+      align-items: center;
+
       padding: 1rem 0;
 
       &--total {
@@ -70,13 +72,13 @@
       }
 
       &--price {
-        font-size: 1.6rem;
+        font-size: $font-2xl;
         font-weight: 700;
       }
     }
 
     &_buttons {
-      @include mixins.flex-col;
+      @include flex-col;
       gap: 0.75rem;
     }
   }

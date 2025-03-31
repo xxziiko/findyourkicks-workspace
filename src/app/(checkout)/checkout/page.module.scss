@@ -1,0 +1,29 @@
+.layout {
+  @include split-layout(3rem, 0, 1024px);
+  min-height: 80vh;
+  padding-bottom: 5rem;
+
+  &__left {
+    min-width: 55%;
+    @include flex-col;
+    gap: 1rem;
+  }
+
+  &__right {
+    @include sticky-base(14.5rem);
+    @include flex-col;
+    align-self: flex-start;
+    width: 100%;
+    gap: 2rem;
+  }
+}
+
+.products-inner {
+  @include flex-col;
+  gap: 1rem;
+}
+
+.buttons {
+  @include flex-item;
+  gap: 1.3rem;
+}

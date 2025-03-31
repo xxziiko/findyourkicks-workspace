@@ -1,0 +1,33 @@
+@mixin tab-base {
+  font-size: $font-sm;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.header {
+  @include flex-between;
+  @include layout-root;
+  @include sticky-header;
+  align-items: center;
+  height: 7rem; // h-20
+
+  &__logo {
+    cursor: pointer;
+  }
+}
+
+.tabs {
+  @include tab-base;
+  display: flex;
+  gap: 0.5rem; // gap-2
+
+  &__tab {
+    @include tab-base;
+    position: relative;
+
+    &--bold {
+      @include tab-base;
+      font-weight: 600;
+    }
+  }
+}

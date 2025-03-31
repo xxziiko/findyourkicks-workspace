@@ -1,0 +1,25 @@
+.title {
+  @include flex-between;
+
+  @include sticky-header(7rem);
+  padding: 1.5rem 0 3rem;
+
+  &__head {
+    font-size: $font-4xl;
+  }
+
+  &__step {
+    @include flex-center;
+    gap: 0.4rem;
+    font-size: $font-xl;
+    color: $gray-dark;
+    &--active {
+      @include flex-center;
+      gap: 0.4rem;
+      text-decoration: underline;
+      font-size: $font-xl;
+      font-weight: 600;
+      color: $primary;
+    }
+  }
+}
