@@ -52,13 +52,25 @@
   &-kakao {
     @include button-layout;
     @include button-variant($primary, none, none);
+    align-items: center;
     background-color: #ffe603;
+
+    p {
+      width: 100%;
+      text-align: center;
+    }
   }
 
   &-google {
     @include button-layout;
     @include button-variant($primary, thin solid #888, 1px 1px 1px #888);
     white-space: nowrap;
+    align-items: center;
+
+    p {
+      width: 100%;
+      text-align: center;
+    }
   }
 
   &-lined {
