@@ -12,6 +12,13 @@ interface RawProduct {
     name: string;
   } | null;
 }
+export interface AddCartRequest {
+  product_id: string;
+  size: string;
+  quantity: number;
+  price: number;
+}
+[];
 
 export const fetchProducts = async (page = 1): Promise<RawProduct[]> => {
   const data = await fetch(
@@ -20,6 +27,7 @@ export const fetchProducts = async (page = 1): Promise<RawProduct[]> => {
   return data;
 };
 
+// detail
 export const fetchProductById = async (productId: string) =>
   await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`,
@@ -39,4 +47,11 @@ export const signInWithKakao = async (next = '/') =>
 export const signOutUser = async () =>
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signout`, {
     method: 'POST',
+  });
+
+// cart
+export const addToCart = async ({ body }: { body: AddCartRequest[] }) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart`, {
+    method: 'POST',
+    body: JSON.stringify(body),
   });
