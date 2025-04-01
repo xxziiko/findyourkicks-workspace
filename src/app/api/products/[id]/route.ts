@@ -2,7 +2,7 @@ import type { Detail } from '@/app/product/[id]/_features/Detail';
 import { createClient } from '@/lib/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
-type SupabaseProduct = {
+type RawProduct = {
   product_id: string;
   title: string;
   price: number;
@@ -36,7 +36,7 @@ export async function GET(
       )
     `)
     .eq('product_id', id)
-    .single<SupabaseProduct>();
+    .single<RawProduct>();
 
   if (error) return NextResponse.json({ error }, { status: 500 });
 
@@ -46,8 +46,8 @@ export async function GET(
     price: product.price,
     image: product.image,
     description: product.description,
-    brand: product.brand?.name ?? '',
-    category: product.category?.name ?? '',
+    brand: product.brand?.name ?? null,
+    category: product.category?.name ?? null,
     inventory: product.inventory ?? [],
   };
 
