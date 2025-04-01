@@ -4,22 +4,17 @@ import styles from './QuantityController.module.scss';
 
 export type QuantityControllerProps = {
   id: string;
-  size: string;
   quantity: number;
-  inventory: InventoryItem[];
+  inventory: InventoryItem;
   onQuantityChange: QuantityHandlerType;
 };
 
 export default function QuantityController({
   id,
   quantity,
-  size,
   inventory,
   onQuantityChange,
 }: QuantityControllerProps) {
-  const getCurrentStock = (id: string) =>
-    inventory.find(({ size, stock }) => id === size)?.stock;
-
   return (
     <div className={styles.controller}>
       <Button
@@ -32,7 +27,7 @@ export default function QuantityController({
       <p>{quantity}</p>
       <Button
         onClick={() => onQuantityChange(id, quantity + 1)}
-        disabled={quantity === getCurrentStock(size)}
+        disabled={quantity === inventory.stock}
         text="+"
         variant="lined--small"
       />

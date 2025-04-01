@@ -46,7 +46,7 @@ export default function Checkout() {
         <CardLayout title={`주문 상품 (총 ${cartItems.length}건)`}>
           <div className={styles['products-inner']}>
             {cartItems.map((item) => (
-              <ProductInfo item={item} key={item.cartId} type="checkout" />
+              <ProductInfo item={item} key={item.cartItemId} type="checkout" />
             ))}
           </div>
         </CardLayout>

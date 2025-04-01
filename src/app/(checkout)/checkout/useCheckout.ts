@@ -1,7 +1,6 @@
-import { cartItemsAtom } from '@/lib/store';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
-import { useAtomValue } from 'jotai';
 import { useState } from 'react';
+import { useCart } from '../cart/_features';
 
 interface RequestPaymentParams {
   orderId: string;
@@ -23,7 +22,7 @@ const MOCK_ADDRESS = {
 // const MOCK_ADDRESS = null;
 
 export default function useCheckout() {
-  const cartItems = useAtomValue(cartItemsAtom);
+  const { cartItems } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const conditionalTitle = !MOCK_ADDRESS ? '주소 입력' : '주소 변경';
 

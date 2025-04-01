@@ -2,16 +2,111 @@ import type { AddCartRequest } from '@/lib/api';
 import { createClient } from '@/lib/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
+type RawCartItem = {
+  cart_item_id: string;
+  product_id: string;
+  inventory_id: string;
+  quantity: number;
+  price: number;
+  added_at: string;
+  inventory: {
+    size: string;
+    stock: number;
+  };
+  product: {
+    title: string;
+    image: string;
+  };
+};
+
+type RawCartResponse = {
+  cart_id: string;
+  cart_items: RawCartItem[];
+};
+
+export type CartItem = {
+  cartItemId: string;
+  producId: string;
+  inventoryId: string;
+  title: string;
+  image: string;
+  inventory: {
+    size: string;
+    stock: number;
+  };
+  quantity: number;
+  price: number;
+  addedAt: string;
+};
+
+export async function GET(req: Request) {
+  const supabase = await createClient();
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get('userId');
+
+  if (!userId) {
+    return NextResponse.json(
+      { error: 'userId가 필요합니다.' },
+      { status: 400 },
+    );
+  }
+
+  const { data: cart, error: cartError } = await supabase
+    .from('cart')
+    .select(`
+      cart_id,
+      cart_items (
+        cart_item_id,
+        product_id,
+        inventory_id,
+        quantity,
+        price,
+        added_at,
+        inventory:inventory (
+          size,
+          stock
+        ),
+        product:products (
+          title,
+          image
+        )
+      )
+    `)
+    .eq('user_id', userId)
+    .single<RawCartResponse>();
+
+  if (cartError || !cart) {
+    return NextResponse.json({ error: '장바구니 조회 실패' }, { status: 500 });
+  }
+
+  const flatItems: CartItem[] =
+    cart.cart_items.map((item) => ({
+      cartItemId: item.cart_item_id,
+      producId: item.product_id,
+      inventoryId: item.inventory_id,
+      title: item.product?.title,
+      image: item.product?.image,
+      inventory: item.inventory,
+      quantity: item.quantity,
+      price: item.price,
+      addedAt: item.added_at,
+    })) ?? [];
+
+  return NextResponse.json(flatItems);
+}
+
 export async function POST(req: Request) {
   const supabase = await createClient();
   const payload: AddCartRequest[] = await req.json();
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get('userId');
 
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  if (userError || !userData?.user?.id) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!userId) {
+    return NextResponse.json(
+      { error: 'userId가 필요합니다.' },
+      { status: 400 },
+    );
   }
-
-  const userId = userData.user.id;
 
   // 1. 사용자 cart 확인 또는 생성
   const { data: existingCart } = await supabase

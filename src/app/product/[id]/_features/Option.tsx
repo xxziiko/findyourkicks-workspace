@@ -15,7 +15,14 @@ interface OptionProps extends SelectedOption {
   onQuantityChange: QuantityHandlerType;
 }
 
-const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
+const Option = ({
+  size,
+  quantity,
+  price,
+  onDelete,
+  inventory,
+  ...props
+}: OptionProps) => {
   return (
     <li key={size} className={styles.option}>
       <p className={styles.option__size}>{size}</p>
@@ -23,7 +30,7 @@ const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
         {...props}
         id={size}
         quantity={quantity}
-        size={size}
+        inventory={inventory.filter((item) => item.size === size)[0]}
       />
 
       <div className={styles.option__price_box}>

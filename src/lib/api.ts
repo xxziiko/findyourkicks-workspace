@@ -1,3 +1,5 @@
+import type { CartItem } from '@/app/api/cart/route';
+
 interface RawProduct {
   product_id: string;
   title: string;
@@ -50,8 +52,16 @@ export const signOutUser = async () =>
   });
 
 // cart
-export const addToCart = async ({ body }: { body: AddCartRequest[] }) =>
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart`, {
+export const addToCart = async ({
+  body,
+  userId,
+}: { body: AddCartRequest[]; userId: string }) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`, {
     method: 'POST',
     body: JSON.stringify(body),
   });
+
+export const fetchCartItems = async (userId: string): Promise<CartItem[]> =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`,
+  ).then((res) => res.json());

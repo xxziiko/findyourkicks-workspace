@@ -1,6 +1,6 @@
 'use client';
 import { type AddCartRequest, addToCart } from '@/lib/api';
-import { isAuthenticatedAtom } from '@/lib/store';
+import { isAuthenticatedAtom, userIdAtom } from '@/lib/store';
 import type { SelectedOption } from '@/lib/types';
 import { useMutation } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
@@ -10,10 +10,12 @@ import type { Detail } from './Detail';
 
 export default function useDetail({ data: product }: { data: Detail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
+  const userId = useAtomValue(userIdAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const router = useRouter();
   const { mutate } = useMutation({
-    mutationFn: async (body: AddCartRequest[]) => await addToCart({ body }),
+    mutationFn: async (body: AddCartRequest[]) =>
+      await addToCart({ body, userId }),
   });
 
   const totalQuantity = selectedOptions.reduce(

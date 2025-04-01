@@ -1,8 +1,9 @@
 'use client';
 
 import { ProductInfo } from '@/app/(checkout)/_features';
+import type { CartItem } from '@/app/api/cart/route';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
-import type { CartItem, InventoryItem, QuantityHandlerType } from '@/lib/types';
+import type { QuantityHandlerType } from '@/lib/types';
 import { ShoppingCartIcon } from 'lucide-react';
 import { memo } from 'react';
 import styles from './CartList.module.scss';
@@ -33,7 +34,7 @@ type ItemHandlers = {
 export default function CartList(props: CartListProps) {
   const { cartItems, checkedItems, onToggleAll, ...rest } = props;
 
-  const allChecked = cartItems.every((item) => checkedItems[item.cartId]);
+  const allChecked = cartItems.every((item) => checkedItems[item.cartItemId]);
 
   const headerProps = { allChecked, onToggleAll };
   const itemProps = {
@@ -52,7 +53,7 @@ export default function CartList(props: CartListProps) {
         />
       )}
       {cartItems.map((item) => (
-        <MemorizedItem key={item.cartId} {...itemProps} item={item} />
+        <MemorizedItem key={item.cartItemId} {...itemProps} item={item} />
       ))}
     </div>
   );
@@ -81,8 +82,8 @@ function Item({
   return (
     <li className={styles.item}>
       <CheckBox
-        checked={checkedItems[item.cartId]}
-        onChange={(e) => onToggle(e, item.cartId)}
+        checked={checkedItems[item.cartItemId]}
+        onChange={(e) => onToggle(e, item.cartItemId)}
       />
 
       <button type="button" className={styles.item__info}>
@@ -91,8 +92,7 @@ function Item({
 
       <div className={styles.item__quantity}>
         <QuantityController
-          size={item.size}
-          id={item.cartId}
+          id={item.cartItemId}
           quantity={item.quantity}
           inventory={item.inventory}
           onQuantityChange={onQuantityChange}
@@ -107,7 +107,7 @@ function Item({
         <Button text="주문하기" onClick={onNextStep} />
         <Button
           text="삭제하기"
-          onClick={() => onDelete(item.cartId)}
+          onClick={() => onDelete(item.cartItemId)}
           variant="lined--r"
         />
       </div>

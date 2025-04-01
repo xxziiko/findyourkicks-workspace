@@ -1,15 +1,22 @@
 'use client';
 import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
-import { cartItemsAtom } from '@/lib/store';
-import { useAtom } from 'jotai';
+import { fetchCartItems } from '@/lib/api';
+import { userIdAtom } from '@/lib/store';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 export default function useCart() {
-  const [cartItems, setCartItems] = useAtom(cartItemsAtom);
+  const userId = useAtomValue(userIdAtom);
+  const { data: cartItems } = useSuspenseQuery({
+    queryKey: ['cart'],
+    queryFn: () => fetchCartItems(userId),
+    staleTime: 60,
+  });
 
   const { checkedItems, handleToggleAll, handleDeleteItem, handleToggle } =
-    useCheckBoxGroup(cartItems.map((item) => item.cartId));
+    useCheckBoxGroup(cartItems.map((item) => item?.cartItemId));
 
   const router = useRouter();
 
@@ -18,31 +25,25 @@ export default function useCart() {
   ).length;
 
   const totalPrice = cartItems
-    .filter((item) => checkedItems[item.cartId] ?? false)
+    .filter((item) => checkedItems[item.cartItemId] ?? false)
     .reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
 
   const totalPriceWithDeliveryFee = totalProduct === 0 ? 0 : totalPrice + 3000;
 
-  const handleQuantityChange = useCallback(
-    (id: string, quantity: number) => {
-      if (quantity > 0 && quantity <= 3) {
-        setCartItems((prev) =>
-          prev.map((item) =>
-            item.cartId === id ? { ...item, quantity: quantity } : item,
-          ),
-        );
-      }
-    },
-    [setCartItems],
-  );
+  const handleQuantityChange = useCallback((id: string, quantity: number) => {
+    // if (quantity > 0 && quantity <= 3) {
+    //   setCartItems((prev) =>
+    //     prev.map((item) =>
+    //       item.cartItemId === id ? { ...item, quantity: quantity } : item,
+    //     ),
+    //   );
+    // }
+  }, []);
 
-  const handleDelete = useCallback(
-    (id: string) => {
-      setCartItems((prev) => prev.filter((item) => item.cartId !== id));
-      handleDeleteItem(id);
-    },
-    [setCartItems, handleDeleteItem],
-  );
+  const handleDelete = useCallback((id: string) => {
+    // setCartItems((prev) => prev.filter((item) => item.cartItemId !== id));
+    // handleDeleteItem(id);
+  }, []);
 
   const handleNextStep = () => {
     router.push('/checkout');
