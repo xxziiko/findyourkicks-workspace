@@ -39,7 +39,10 @@ export const useCheckBoxGroup = (
   );
 
   const handleDeleteItem = (id: string) => {
-    setCheckedItems((prev) => ({ ...prev, [id]: false }));
+    setCheckedItems((prev) => {
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
   };
 
   return {

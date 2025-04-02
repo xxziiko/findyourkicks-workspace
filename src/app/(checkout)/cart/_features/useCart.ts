@@ -6,17 +6,21 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+import { useDeleteCartMutation, useUpdateCartMutation } from '.';
 
 export default function useCart() {
   const userId = useAtomValue(userIdAtom);
   const { data: cartItems } = useSuspenseQuery({
     queryKey: ['cart'],
-    queryFn: () => fetchCartItems(userId),
-    staleTime: 60,
+    queryFn: async () => await fetchCartItems(userId),
+    gcTime: 0,
   });
 
   const { checkedItems, handleToggleAll, handleDeleteItem, handleToggle } =
     useCheckBoxGroup(cartItems.map((item) => item?.cartItemId));
+
+  const { mutate: mutateCartQuantity } = useUpdateCartMutation();
+  const { mutate: mutateDeleteCartItem } = useDeleteCartMutation();
 
   const router = useRouter();
 
@@ -30,20 +34,20 @@ export default function useCart() {
 
   const totalPriceWithDeliveryFee = totalProduct === 0 ? 0 : totalPrice + 3000;
 
-  const handleQuantityChange = useCallback((id: string, quantity: number) => {
-    // if (quantity > 0 && quantity <= 3) {
-    //   setCartItems((prev) =>
-    //     prev.map((item) =>
-    //       item.cartItemId === id ? { ...item, quantity: quantity } : item,
-    //     ),
-    //   );
-    // }
-  }, []);
+  const handleQuantityChange = useCallback(
+    (cartItemId: string, quantity: number) => {
+      mutateCartQuantity({ cartItemId, quantity });
+    },
+    [mutateCartQuantity],
+  );
 
-  const handleDelete = useCallback((id: string) => {
-    // setCartItems((prev) => prev.filter((item) => item.cartItemId !== id));
-    // handleDeleteItem(id);
-  }, []);
+  const handleDelete = useCallback(
+    (cartItemId: string) => {
+      mutateDeleteCartItem(cartItemId);
+      handleDeleteItem(cartItemId);
+    },
+    [mutateDeleteCartItem, handleDeleteItem],
+  );
 
   const handleNextStep = () => {
     router.push('/checkout');

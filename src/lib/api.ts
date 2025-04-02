@@ -65,3 +65,26 @@ export const fetchCartItems = async (userId: string): Promise<CartItem[]> =>
   await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`,
   ).then((res) => res.json());
+
+export const updateCartQuantity = async ({
+  cartItemId,
+  quantity,
+}: {
+  cartItemId: string;
+  quantity: number;
+}) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart?cartItemId=${cartItemId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ quantity }),
+    },
+  );
+
+export const deleteCartItem = async (cartItemId: string) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart?cartItemId=${cartItemId}`,
+    {
+      method: 'DELETE',
+    },
+  );
