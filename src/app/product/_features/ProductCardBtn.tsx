@@ -6,13 +6,12 @@ interface Card {
   src: string;
   brand: string;
   title: string;
-  price: string;
-  onClick: () => void;
+  price: number;
 }
 
-const Card = ({ title, src, brand, price, onClick }: Card) => {
+const Card = ({ title, src, brand, price }: Card) => {
   return (
-    <button type="button" className={styles.card} onClick={onClick}>
+    <button type="button" className={styles.card}>
       <div className={styles.card__content}>
         <Image src={src} alt="product" width="13rem" height="13rem" />
         <div className={styles.card__details}>

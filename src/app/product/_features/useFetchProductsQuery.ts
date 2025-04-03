@@ -1,7 +1,7 @@
 import { fetchProducts } from '@/lib/api';
-import type { ProductResponse } from '@/lib/types';
 import { handleError } from '@/lib/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import type { ProductResponse } from './useProductList';
 
 export default function useFetchProductsQuery({
   initialProducts,
@@ -14,24 +14,27 @@ export default function useFetchProductsQuery({
       pages: [initialProducts],
       pageParams: [1],
     },
-    getNextPageParam: (lastPage) => {
-      const nextPage = lastPage.start + 100;
-      return nextPage <= 1000 ? nextPage : null;
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.length < 30 ? null : pages.length + 1,
+    select: (data) => {
+      if (data.pages.length === 0) return [];
+
+      return data.pages.flatMap(
+        (page) =>
+          page.map((item) => ({
+            productId: item.product_id,
+            title: item.title,
+            price: item.price,
+            image: item.image,
+            brand: item.brand?.name ?? '',
+            category: item.category?.name ?? '',
+          })) ?? [],
+      );
     },
-    select: (data) =>
-      data.pages.flatMap((page) =>
-        page.items.map((item) => ({
-          productId: item.productId,
-          image: item.image,
-          title: item.title,
-          price: item.lprice,
-          brand: item.brand,
-          category: item.category4,
-          maker: item.maker,
-        })),
-      ),
+
+    enabled: !!initialProducts,
     staleTime: 1000 * 60 * 2,
-    enabled: false,
+    gcTime: 1000 * 60 * 2,
   });
 
   return handleError({ data: rest, error });

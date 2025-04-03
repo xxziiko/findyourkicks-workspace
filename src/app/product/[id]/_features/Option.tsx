@@ -1,16 +1,28 @@
 import { QuantityController } from '@/components';
-import type { QuantityHandlerType, SelectedOption } from '@/lib/types';
+import type {
+  InventoryItem,
+  QuantityHandlerType,
+  SelectedOption,
+} from '@/lib/types';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';
 
 interface OptionProps extends SelectedOption {
   price: number;
+  inventory: InventoryItem[];
   onDelete: (id: string) => void;
   onQuantityChange: QuantityHandlerType;
 }
 
-const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
+const Option = ({
+  size,
+  quantity,
+  price,
+  onDelete,
+  inventory,
+  ...props
+}: OptionProps) => {
   return (
     <li key={size} className={styles.option}>
       <p className={styles.option__size}>{size}</p>
@@ -18,7 +30,7 @@ const Option = ({ size, quantity, price, onDelete, ...props }: OptionProps) => {
         {...props}
         id={size}
         quantity={quantity}
-        size={size}
+        inventory={inventory.filter((item) => item.size === size)[0]}
       />
 
       <div className={styles.option__price_box}>

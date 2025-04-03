@@ -1,36 +1,38 @@
-import type { ApiResponse } from '@/lib/types';
-import { assert } from '@/lib/utils';
+import type { CartItem } from '@/app/api/cart/route';
 
-// products
-export const fetchNaverData = async (start = 1) => {
-  const API_URL = `https://openapi.naver.com/v1/search/shop.json?query=${encodeURIComponent(
-    '운동화',
-  )}&display=99&start=${start}&sort=sim`;
+interface RawProduct {
+  product_id: string;
+  title: string;
+  price: number;
+  image: string;
 
-  const response = await fetch(API_URL, {
-    method: 'GET',
-    cache: 'force-cache',
-    headers: {
-      'Content-Type': 'application/json',
-      'User-Agent': 'curl/7.49.1',
-      'X-Naver-Client-Id': process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-      'X-Naver-Client-Secret': process.env.NEXT_PUBLIC_NAVER_CLIENT_SECRET,
-    },
-  });
+  brand: {
+    name: string;
+  } | null;
 
-  assert(response.ok, 'Failed to fetch data');
+  category: {
+    name: string;
+  } | null;
+}
+export interface AddCartRequest {
+  product_id: string;
+  size: string;
+  quantity: number;
+  price: number;
+}
+[];
 
-  return response.json();
-};
-
-export const fetchProducts = async (page = 1): Promise<ApiResponse> => {
-  const { data } = await fetch(
+export const fetchProducts = async (page = 1): Promise<RawProduct[]> => {
+  const data = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=${page}`,
+    {
+      next: { revalidate: 3600 * 2 },
+    },
   ).then((res) => res.json());
-
   return data;
 };
 
+// detail
 export const fetchProductById = async (productId: string) =>
   await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`,
@@ -50,4 +52,36 @@ export const signInWithKakao = async (next = '/') =>
 export const signOutUser = async () =>
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signout`, {
     method: 'POST',
+  });
+
+// cart
+export const addToCart = async ({
+  body,
+  userId,
+}: { body: AddCartRequest[]; userId: string }) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+
+export const fetchCartItems = async (userId: string): Promise<CartItem[]> =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`,
+  ).then((res) => res.json());
+
+export const updateCartQuantity = async ({
+  cartItemId,
+  quantity,
+}: {
+  cartItemId: string;
+  quantity: number;
+}) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ quantity }),
+  });
+
+export const deleteCartItem = async (cartItemId: string) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
+    method: 'DELETE',
   });

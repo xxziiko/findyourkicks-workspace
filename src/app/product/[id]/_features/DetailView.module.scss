@@ -5,13 +5,13 @@
 }
 
 .detail {
-  @include split-layout(3rem, 10rem 0);
+  @include split-layout(3rem, 10rem 0, 1024px);
 
   .image__box {
     @include sticky-base(10rem);
     align-self: flex-start;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       @include flex-center;
       position: inherit;
       width: 100%;
@@ -19,7 +19,7 @@
   }
 
   &__divider {
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
       border-left: 1px solid #dedede;
     }
   }
@@ -28,7 +28,7 @@
 .content {
   @include layout-base;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     width: 50%;
   }
 
@@ -36,6 +36,9 @@
     @include layout-base;
 
     &_text {
+      font-size: $font-sm;
+      padding: 1rem 0;
+
       &--brand {
         font-weight: 600;
       }

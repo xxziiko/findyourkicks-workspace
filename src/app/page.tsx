@@ -1,10 +1,10 @@
-import { fetchNaverData } from '@/lib/api';
+import { fetchProducts } from '@/lib/api';
 import ProductList from './product/_features/ProductList';
 
-const fetchForSSG = async () => await fetchNaverData();
+// export const dynamic = 'force-static';
 
 export default async function Home() {
-  const initialProducts = await fetchForSSG();
+  const initialProducts = await fetchProducts();
 
   return <ProductList initialProducts={initialProducts} />;
 }

@@ -1,32 +1,30 @@
 'use client';
-import { SIZE_INVENTORY } from '@/lib/constants';
-import {
-  cartItemsAtom,
-  isAuthenticatedAtom,
-  productItemAtom,
-} from '@/lib/store';
-import type { CartItem, ProductItem, SelectedOption } from '@/lib/types';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { type AddCartRequest, addToCart } from '@/lib/api';
+import { isAuthenticatedAtom, userIdAtom } from '@/lib/store';
+import type { SelectedOption } from '@/lib/types';
+import { useMutation } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import type { Detail } from './Detail';
 
-export default function useDetail() {
-  const productDetail = useAtomValue<ProductItem | null>(productItemAtom);
+export default function useDetail({ data: product }: { data: Detail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
+  const userId = useAtomValue(userIdAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
-  const setCart = useSetAtom(cartItemsAtom);
   const router = useRouter();
-  const price = Number(productDetail?.price);
+  const { mutate } = useMutation({
+    mutationFn: async (body: AddCartRequest[]) =>
+      await addToCart({ body, userId }),
+  });
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
     0,
   );
 
-  const inventory = SIZE_INVENTORY.map((inv) => {
-    const selected = selectedOptions.find((opt) => opt.size === inv.size);
-    return selected ? { ...inv, stock: inv.stock - selected.quantity } : inv;
-  });
+  const getCurrentQuantity = (selectedSize: string) =>
+    selectedOptions.find(({ size }) => size === selectedSize)?.quantity ?? 0;
 
   const handleSelectSize = useCallback((id: string) => {
     setSelectedOptions((prev) => {
@@ -44,66 +42,40 @@ export default function useDetail() {
     setSelectedOptions((prev) => prev.filter((option) => option.size !== id));
   }, []);
 
-  const handleQuantityChange = useCallback((id: string, quantity: number) => {
-    const initialStock =
-      SIZE_INVENTORY.find((item) => item.size === id)?.stock ?? 0;
+  const handleQuantityChange = useCallback(
+    (id: string, quantity: number) => {
+      const initialStock =
+        product.inventory.find((item) => item.size === id)?.stock ?? 0;
 
-    if (quantity >= 1 && quantity <= initialStock) {
-      setSelectedOptions((prev) =>
-        prev.map((option) =>
-          option.size === id ? { ...option, quantity } : option,
-        ),
-      );
-    }
-  }, []);
+      if (quantity >= 1 && quantity <= initialStock) {
+        setSelectedOptions((prev) =>
+          prev.map((option) =>
+            option.size === id ? { ...option, quantity } : option,
+          ),
+        );
+      }
+    },
+    [product],
+  );
 
   const resetSelectedOptions = () => {
     setSelectedOptions([]);
   };
 
   const createCart = () => {
-    return selectedOptions.map(
-      (option) =>
-        ({
-          cartId: crypto.randomUUID(),
-          ...option,
-          ...productDetail,
-        }) as CartItem,
-    );
-  };
-
-  const mergeCartItems = (updatedCart: CartItem[]) => {
-    const cartItems = createCart();
-
-    cartItems.forEach((newItem) => {
-      const index = updatedCart.findIndex(
-        (cartItem) =>
-          cartItem.productId === newItem.productId &&
-          cartItem.size === newItem.size,
-      );
-
-      if (index !== -1) {
-        updatedCart[index].quantity += newItem.quantity;
-        return;
-      }
-
-      updatedCart.push(newItem);
-    });
-  };
-
-  const addCart = () => {
-    setCart((prev) => {
-      const updatedCart = [...prev];
-      mergeCartItems(updatedCart);
-
-      return updatedCart;
-    });
-    resetSelectedOptions();
+    return selectedOptions.map((option) => ({
+      product_id: product.productId,
+      price: product.price,
+      ...option,
+    }));
   };
 
   const handleCartButton = () => {
     if (isAuthenticated) {
-      addCart();
+      const cartItems = createCart();
+
+      mutate(cartItems);
+      resetSelectedOptions();
       //TODO: modal
       return;
     }
@@ -112,11 +84,9 @@ export default function useDetail() {
   };
 
   return {
-    productDetail,
-    price,
+    product,
     selectedOptions,
     totalQuantity,
-    inventory,
 
     handleSelectSize,
     handleDeleteButton,
@@ -124,5 +94,6 @@ export default function useDetail() {
     resetSelectedOptions,
     createCart,
     handleCartButton,
+    getCurrentQuantity,
   };
 }

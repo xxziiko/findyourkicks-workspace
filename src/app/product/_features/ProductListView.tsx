@@ -1,19 +1,25 @@
-import type { ProductItem } from '@/lib/types';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import type { Ref } from 'react';
 import ProductCardBtn from './ProductCardBtn';
 import styles from './ProductListView.module.scss';
 
+export interface ProductItem {
+  productId: string;
+  image: string;
+  title: string;
+  price: number;
+  brand: string;
+  category: string;
+}
+
 export type ProductListProps = {
   isFetchingNextPage: boolean;
   loadMoreRef: Ref<HTMLDivElement | null>;
-  handleCardButton: (item: ProductItem) => () => void;
   products: ProductItem[];
 };
 
 export default function ProductListView({
-  handleCardButton,
   isFetchingNextPage,
   loadMoreRef,
   products,
@@ -28,7 +34,6 @@ export default function ProductListView({
               brand={product.brand}
               title={product.title}
               price={product.price}
-              onClick={handleCardButton(product)}
             />
           </Link>
         ))}

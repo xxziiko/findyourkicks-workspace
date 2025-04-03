@@ -1,18 +1,32 @@
-import { fetchNaverData } from '@/lib/api';
+import { createClient } from '@/lib/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
+  const supabase = await createClient();
+
   const { searchParams } = new URL(request.url);
-  const start = Number.parseInt(searchParams.get('page') ?? '1', 10);
+  const page = Number(searchParams.get('page') ?? '1');
+  const limit = 30;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
-  const data = await fetchNaverData(start);
+  const { data: products, error } = await supabase
+    .from('products')
+    .select(`
+      product_id,
+      title,
+      price,
+      image,
+      brand:brands!fk_product_brand (
+        name
+      ),
+      category:categories!products_category_id_fkey (
+        name
+      )
+    `)
+    .range(from, to)
+    .order('product_id', { ascending: true });
 
-  if (!data) {
-    return NextResponse.json(
-      { error: '데이터를 불러올 수 없습니다.' },
-      { status: 500 },
-    );
-  }
-
-  return new NextResponse(JSON.stringify({ data }), { status: 200 });
+  if (error) return NextResponse.json({ error }, { status: 500 });
+  return NextResponse.json(products);
 }
