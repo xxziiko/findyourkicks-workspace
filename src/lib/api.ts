@@ -25,6 +25,9 @@ export interface AddCartRequest {
 export const fetchProducts = async (page = 1): Promise<RawProduct[]> => {
   const data = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/products?page=${page}`,
+    {
+      next: { revalidate: 3600 * 2 },
+    },
   ).then((res) => res.json());
   return data;
 };

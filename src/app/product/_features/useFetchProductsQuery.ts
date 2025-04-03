@@ -28,6 +28,7 @@ export default function useFetchProductsQuery({
         })),
       ),
     staleTime: 1000 * 60 * 2,
+    gcTime: 1000 * 60 * 2,
     enabled: false,
   });
 
