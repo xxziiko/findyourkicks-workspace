@@ -1,4 +1,3 @@
-// app/api/cart/item/[id]/route.ts
 import { createClient } from '@/lib/utils/supabase/server';
 import { type NextRequest, NextResponse } from 'next/server';
 
