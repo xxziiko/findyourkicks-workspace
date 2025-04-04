@@ -1,13 +1,13 @@
 'use client';
 
-import { CartBadge } from '@/components';
+import { CartNavLink } from '@/components';
 import useHeader from '@/components/layouts/header/useHeader';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Header.module.scss';
 
 export default function Header() {
-  const { badgeCount, userEmail, handleLogout, handleCartButton } = useHeader();
+  const { userEmail, handleLogout } = useHeader();
 
   return (
     <header className={styles.header}>
@@ -23,15 +23,7 @@ export default function Header() {
           </div>
         )}
 
-        <button
-          type="button"
-          className={styles.tabs__tab}
-          onClick={handleCartButton}
-          disabled={!userEmail}
-        >
-          CART
-          {!!badgeCount && <CartBadge quantity={badgeCount} />}
-        </button>
+        <CartNavLink />
 
         {userEmail && (
           <button onClick={handleLogout} type="button">

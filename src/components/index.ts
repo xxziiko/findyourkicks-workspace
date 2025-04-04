@@ -6,3 +6,4 @@ export { default as CheckBox } from './checkbox/CheckBox';
 export { default as CheckoutSteps } from './CheckoutSteps';
 export { default as Dropdown } from './dropdown/Dropdown';
 export { default as NoData } from './NoData';
+export { default as CartNavLink } from './cart-badge/CartNavLink';
