@@ -5,6 +5,7 @@ import type { CartItem } from '@/app/api/cart/route';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
 import type { QuantityHandlerType } from '@/lib/types';
 import { ShoppingCartIcon } from 'lucide-react';
+import Link from 'next/link';
 import { memo } from 'react';
 import styles from './CartList.module.scss';
 
@@ -86,9 +87,9 @@ function Item({
         onChange={(e) => onToggle(e, item.cartItemId)}
       />
 
-      <button type="button" className={styles.item__info}>
+      <Link href={`/product/${item.productId}`} className={styles.item__info}>
         <ProductInfo item={item} type="cart" />
-      </button>
+      </Link>
 
       <div className={styles.item__quantity}>
         <QuantityController

@@ -26,7 +26,7 @@ type RawCartResponse = {
 
 export type CartItem = {
   cartItemId: string;
-  producId: string;
+  productId: string;
   inventoryId: string;
   title: string;
   image: string;
@@ -82,7 +82,7 @@ export async function GET(req: Request) {
   const flatItems: CartItem[] =
     cart.cart_items.map((item) => ({
       cartItemId: item.cart_item_id,
-      producId: item.product_id,
+      productId: item.product_id,
       inventoryId: item.inventory_id,
       title: item.product?.title,
       image: item.product?.image,
