@@ -7,7 +7,7 @@ import Link from 'next/link';
 import styles from './Header.module.scss';
 
 export default function Header() {
-  const { items, userEmail, handleLogout, handleCartButton } = useHeader();
+  const { badgeCount, userEmail, handleLogout, handleCartButton } = useHeader();
 
   return (
     <header className={styles.header}>
@@ -30,7 +30,7 @@ export default function Header() {
           disabled={!userEmail}
         >
           CART
-          {!!items.length && <CartBadge quantity={items.length} />}
+          {!!badgeCount && <CartBadge quantity={badgeCount} />}
         </button>
 
         {userEmail && (

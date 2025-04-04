@@ -13,8 +13,6 @@ export default function useCart() {
   const { data: cartItems } = useSuspenseQuery({
     queryKey: ['cart'],
     queryFn: async () => await fetchCartItems(userId),
-    // FIXME: 임시로 캐시 무효화
-    gcTime: 0,
   });
 
   const { checkedItems, handleToggleAll, handleDeleteItem, handleToggle } =
