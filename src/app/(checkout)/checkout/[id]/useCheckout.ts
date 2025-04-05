@@ -1,12 +1,12 @@
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
-import { confirmOrder } from '@/lib/api';
+import { requestPayments } from '@/lib/api';
 import { isAllCheckedAgreementAtom } from '@/lib/store';
 import { useMutation } from '@tanstack/react-query';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 
-export interface ConfirmOrderPayload {
+export interface RequestPaymentsPayload {
   orderSheetId: string;
   paymentMethod: string;
   userAddressId: string;
@@ -20,7 +20,7 @@ export interface ConfirmOrderPayload {
   termsAgreed: boolean;
 }
 
-interface ConfirmOrderResponse {
+interface TosspaymentsPayload {
   orderId: string;
   orderName: string;
   amount: number;
@@ -28,8 +28,6 @@ interface ConfirmOrderResponse {
   customerEmail: string;
   customerMobilePhone: string;
 }
-
-// const MOCK_ADDRESS = null;
 
 export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +42,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const totalPriceWithDeliveryFee = totalPrice + 3000;
 
   const { mutate: mutateOrderItems } = useMutation({
-    mutationFn: confirmOrder,
+    mutationFn: requestPayments,
     onSuccess: (response) => {
       const paymentRequestBody = {
         ...response,
@@ -55,7 +53,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
         amount: totalPriceWithDeliveryFee,
       };
 
-      requestPayment(paymentRequestBody);
+      requestTossPayments(paymentRequestBody);
     },
   });
 
@@ -68,27 +66,25 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
       termsAgreed: isAllCheckedAgreement,
     };
 
-    console.log('payload', payload);
     mutateOrderItems(payload);
   };
 
   // ------  SDK 초기화 ------
-  const clientKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
-  const customerKey = process.env.NEXT_PUBLIC_TOSS_CUSTOMER_KEY;
+  const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
+  const customerKey = orderSheet.orderSheetId;
 
-  async function requestPayment({
+  async function requestTossPayments({
     orderId,
     orderName,
     amount,
     customerEmail,
     customerName,
     customerMobilePhone,
-  }: ConfirmOrderResponse) {
+  }: TosspaymentsPayload) {
     const tossPayments = await loadTossPayments(clientKey);
     const payment = tossPayments.payment({ customerKey });
 
     // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
-    //TODO: 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
 
     await payment.requestPayment({
       method: 'CARD', // 카드 결제
@@ -101,7 +97,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
       customerEmail,
       customerMobilePhone,
       customerName,
-      successUrl: `${window.location.origin}/complete`, // 결제 요청이 성공하면 리다이렉트되는 URL
+      successUrl: `${window.location.origin}/confirm`, // 결제 요청이 성공하면 리다이렉트되는 URL
       failUrl: `${window.location.origin}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
 
       // 카드 결제에 필요한 정보
