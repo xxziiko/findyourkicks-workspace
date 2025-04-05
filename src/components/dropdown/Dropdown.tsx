@@ -1,5 +1,6 @@
 'use client';
 import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import { createContext, useContext } from 'react';
 import styles from './Dropdown.module.scss';
 import useDropdownMenu from './useDropdownMenu';
@@ -9,6 +10,8 @@ type DropdownContextType = {
   onSelectKeyDown: (
     e: React.KeyboardEvent<HTMLUListElement | HTMLLIElement>,
   ) => void;
+  autoFocus: (node: HTMLInputElement | null) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 const DropdownContext = createContext<DropdownContextType | null>(null);
@@ -16,19 +19,28 @@ const DropdownContext = createContext<DropdownContextType | null>(null);
 export default function Dropdown({
   children,
   variant,
-}: { children: React.ReactNode; variant?: 'border' }) {
+  selectedText,
+  setSelectedText,
+}: {
+  children: React.ReactNode;
+  variant?: 'border';
+  selectedText: string;
+  setSelectedText: (text: string) => void;
+}) {
   const {
     isOpen,
-    selectedText,
     handleSelectedText,
     handleDropdown,
     handleKeyDown,
+    handleBlur,
     autoFocus,
-  } = useDropdownMenu();
+  } = useDropdownMenu(selectedText, setSelectedText);
 
   const value = {
     onSelectText: handleSelectedText,
     onSelectKeyDown: handleKeyDown,
+    autoFocus,
+    onBlur: handleBlur,
   };
 
   return (
@@ -40,7 +52,7 @@ export default function Dropdown({
       >
         <li className={styles['drop-down__header']}>
           {selectedText === '직접 입력' ? (
-            <input ref={autoFocus} />
+            <Dropdown.Input />
           ) : (
             <p>{selectedText}</p>
           )}
@@ -53,10 +65,7 @@ export default function Dropdown({
   );
 }
 
-function Item({
-  text = '',
-  children,
-}: { text?: string; children?: React.ReactNode }) {
+function Item({ text = '' }: { text?: string }) {
   const { onSelectText, onSelectKeyDown } = useDropdown();
 
   return (
@@ -66,12 +75,30 @@ function Item({
       onKeyDown={(e) => onSelectKeyDown(e)}
     >
       {text && <p>{text}</p>}
-      {children && children}
     </li>
   );
 }
 
+function Input() {
+  const { autoFocus, onBlur } = useDropdown();
+  const [value, setValue] = useState('');
+
+  const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <input
+      ref={autoFocus}
+      value={value}
+      onChange={handleChangeText}
+      onBlur={onBlur}
+    />
+  );
+}
+
 Dropdown.Item = Item;
+Dropdown.Input = Input;
 
 function useDropdown(): DropdownContextType {
   const context = useContext(DropdownContext);

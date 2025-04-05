@@ -11,7 +11,6 @@ export default function CardLayout({
   title?: string;
   label?: React.ReactNode;
   type?: string;
-  onLabelClick?: () => void;
 }) {
   return (
     <div className={styles[`card_${type}`] ?? styles.card}>

@@ -36,7 +36,6 @@ export default function Checkout({
           label={
             <CardLayout.Label text={conditionalTitle} onClick={handleModal} />
           }
-          onLabelClick={handleModal}
         >
           <DeliveryInfo data={orderSheet.deliveryInfo} />
         </CardLayout>

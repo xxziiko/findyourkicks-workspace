@@ -4,6 +4,8 @@ import type { Address } from '@/app/api/checkout/[id]/route';
 import { Dropdown, NoData } from '@/components';
 import { CircleAlertIcon } from 'lucide-react';
 import styles from './DeliveryInfo.module.scss';
+import useDeliveryInfo from './uesDeliveryInfo';
+
 const DELIVERY_TEXT = [
   '요청사항 없음',
   '경비실에 보관해주세요.',
@@ -11,31 +13,9 @@ const DELIVERY_TEXT = [
   '직접 입력',
 ] as const;
 
-const DELIVERY_SUBTITLE = [
-  '배송지 명',
-  '주문자 명',
-  '연락처',
-  '배송지',
-] as const;
-
-const KEYS: (keyof Address)[] = [
-  'alias',
-  'receiverName',
-  'receiverPhone',
-  'address',
-];
-
 export default function DeliveryInfo({ data }: { data: Address | null }) {
-  const address = mapAddressData(data);
-
-  function mapAddressData(data: Address | null) {
-    if (!data) return [];
-
-    return KEYS.map((key, index) => ({
-      subtitle: DELIVERY_SUBTITLE[index],
-      data: data[key],
-    }));
-  }
+  const { address, deliveryMessage, setDeliveryMessage } =
+    useDeliveryInfo(data);
 
   return (
     <>
@@ -55,7 +35,11 @@ export default function DeliveryInfo({ data }: { data: Address | null }) {
           <div className={styles.delivery__item}>
             <p className={styles['delivery__sub--last']}>베송 메세지</p>
 
-            <Dropdown variant="border">
+            <Dropdown
+              variant="border"
+              selectedText={deliveryMessage}
+              setSelectedText={setDeliveryMessage}
+            >
               {DELIVERY_TEXT.map((item) => (
                 <Dropdown.Item key={item} text={item} />
               ))}

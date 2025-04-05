@@ -1,6 +1,6 @@
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
 import { requestPayments } from '@/lib/api';
-import { isAllCheckedAgreementAtom } from '@/lib/store';
+import { deliveryMessageAtom, isAllCheckedAgreementAtom } from '@/lib/store';
 import { useMutation } from '@tanstack/react-query';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtomValue } from 'jotai';
@@ -31,8 +31,7 @@ interface TosspaymentsPayload {
 
 export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //TODO: 배송 메시지 입력 기능 추가
-  const [deliveryMessage, setDeliveryMessage] = useState('');
+  const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
   const conditionalTitle = !orderSheet.deliveryInfo ? '주소 입력' : '주소 변경';
   const totalPrice = orderSheet.orderSheetItems.reduce(
