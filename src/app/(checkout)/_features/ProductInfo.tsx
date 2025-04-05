@@ -1,11 +1,18 @@
-import type { OrderItem } from '@/app/api/checkout/route';
 import { Image } from '@/components';
 import styles from './ProductInfo.module.scss';
+
+export type ProductInfo = {
+  title: string;
+  image: string;
+  size: string;
+  price: number;
+  quantity: number;
+};
 
 export default function ProductInfo({
   item,
   type,
-}: { item: OrderItem; type: 'checkout' | 'cart' }) {
+}: { item: ProductInfo; type: 'checkout' | 'cart' }) {
   return (
     <div className={styles.info}>
       <Image src={item.image} alt="product" width="8rem" height="7rem" />

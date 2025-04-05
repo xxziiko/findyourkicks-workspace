@@ -15,18 +15,26 @@ export async function POST(req: Request) {
   const { userId, body } = request;
   // 요청
 
-  const { data: existingOrderSheet } = await supabase
-    .from('order_sheets')
-    .select('order_sheet_id')
-    .eq('user_id', userId)
-    .eq('status', 'pending')
-    .single();
+  // TODO: 주문서 존재 여부 확인
+  // const { data: existingOrderSheet } = await supabase
+  //   .from('order_sheets')
+  //   .select('order_sheet_id')
+  //   .eq('user_id', userId)
+  //   .eq('status', 'pending')
+  //   .single();
 
-  if (existingOrderSheet) {
-    return NextResponse.json({
-      orderSheetId: existingOrderSheet.order_sheet_id,
-    });
-  }
+  // if (existingOrderSheet) {
+  //   return NextResponse.json({
+  //     orderSheetId: existingOrderSheet.order_sheet_id,
+  //   });
+  // }
+
+  const { data: defaultAddress } = await supabase
+    .from('user_addresses')
+    .select('address_id')
+    .eq('user_id', userId)
+    .eq('is_default', true)
+    .single();
 
   // 1. 주문서 생성
   const { data: orderSheet, error: orderSheetError } = await supabase
@@ -34,6 +42,7 @@ export async function POST(req: Request) {
     .insert({
       user_id: userId,
       status: 'pending',
+      user_address_id: defaultAddress?.address_id,
       created_at: new Date().toISOString(),
     })
     .select('order_sheet_id')

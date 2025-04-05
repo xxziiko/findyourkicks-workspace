@@ -87,7 +87,10 @@ function Item({
       />
 
       <Link href={`/product/${item.productId}`} className={styles.item__info}>
-        <ProductInfo item={item} type="cart" />
+        <ProductInfo
+          item={{ ...item, size: item.selectedSizeInfo.size }}
+          type="cart"
+        />
       </Link>
 
       <div className={styles.item__quantity}>

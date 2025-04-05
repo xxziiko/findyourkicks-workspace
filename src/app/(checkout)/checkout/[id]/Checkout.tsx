@@ -46,7 +46,11 @@ export default function Checkout({
         >
           <div className={styles['products-inner']}>
             {orderSheet?.orderSheetItems?.map((item: OrderSheetItem) => (
-              <ProductInfo item={item} key={item.productId} type="checkout" />
+              <ProductInfo
+                item={item}
+                key={`${item.productId}-${item.size}-${item.quantity}`}
+                type="checkout"
+              />
             ))}
           </div>
         </CardLayout>

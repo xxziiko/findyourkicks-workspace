@@ -8,7 +8,7 @@ export interface OrderSheetResponse {
 }
 
 export interface Address {
-  id: number;
+  addressId: string;
   alias: string;
   receiverName: string;
   receiverPhone: string;
@@ -26,6 +26,7 @@ export type OrderSheetItem = {
 };
 
 export type RawDelivery = {
+  address_id: number;
   alias: string;
   receiver_name: string;
   receiver_phone: string;
@@ -82,6 +83,7 @@ export async function GET(
     .from('order_sheets')
     .select(`
       user_address:user_address_id (
+      address_id,
       alias,
       receiver_name,
       receiver_phone,
@@ -92,11 +94,11 @@ export async function GET(
     .eq('order_sheet_id', orderSheetId)
     .single<{ user_address: RawDelivery }>();
 
-  // if (!deliveryInfo) {
-  //   console.log('deliveryInfo', deliveryInfo);
+  if (!rawDeliveryInfo) {
+    // console.log('deliveryInfo', rawDeliveryInfo);
 
-  //   NextResponse.json({ error: '배송 정보가 존재하지 않습니다.' });
-  // }
+    return NextResponse.json({ error: '배송 정보가 존재하지 않습니다.' });
+  }
 
   const orderSheetItems = (
     rawOrderSheetItems as unknown as RawOrderSheetItem[]
@@ -113,11 +115,12 @@ export async function GET(
     orderSheetId,
     orderSheetItems,
     deliveryInfo: {
-      alias: rawDeliveryInfo?.user_address.alias,
-      receiverName: rawDeliveryInfo?.user_address.receiver_name,
-      receiverPhone: rawDeliveryInfo?.user_address.receiver_phone,
-      address: rawDeliveryInfo?.user_address.address,
-      message: rawDeliveryInfo?.user_address.message,
+      addressId: rawDeliveryInfo?.user_address?.address_id,
+      alias: rawDeliveryInfo?.user_address?.alias,
+      receiverName: rawDeliveryInfo?.user_address?.receiver_name,
+      receiverPhone: rawDeliveryInfo?.user_address?.receiver_phone,
+      address: rawDeliveryInfo?.user_address?.address,
+      message: rawDeliveryInfo?.user_address?.message,
     },
   };
 

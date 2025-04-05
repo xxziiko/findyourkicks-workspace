@@ -1,6 +1,8 @@
+import type { ConfirmOrderPayload } from '@/app/(checkout)/checkout/[id]/useCheckout';
 import type { CartItem } from '@/app/api/cart/route';
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
 import type { OrderSheetItemPayload } from '@/app/api/checkout/route';
+
 interface RawProduct {
   product_id: string;
   title: string;
@@ -103,7 +105,10 @@ export const createOrderSheet = async ({
 export const fetchOrderSheet = async (orderSheetId: string) =>
   await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/checkout/${orderSheetId}`,
-    {
-      method: 'GET',
-    },
   ).then((res) => res.json());
+
+export const confirmOrder = async (payload: ConfirmOrderPayload) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comfirm`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }).then((res) => res.json());

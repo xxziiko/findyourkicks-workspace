@@ -1,48 +1,75 @@
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
+import { confirmOrder } from '@/lib/api';
 import { isAllCheckedAgreementAtom } from '@/lib/store';
+import { useMutation } from '@tanstack/react-query';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 
-interface RequestPaymentParams {
+export interface ConfirmOrderPayload {
+  orderSheetId: string;
+  paymentMethod: string;
+  userAddressId: string;
+  deliveryInfo?: {
+    alias?: string;
+    receiverName?: string;
+    receiverPhone?: string;
+    address?: string;
+    message?: string;
+  };
+  termsAgreed: boolean;
+}
+
+interface ConfirmOrderResponse {
   orderId: string;
   orderName: string;
   amount: number;
-  customerEmail: string;
   customerName: string;
+  customerEmail: string;
   customerMobilePhone: string;
 }
-
-const paymentRequestBody = {
-  orderId: 'O_evBvXO_Ge2XwXA2xPtj', // 고유 주문번호
-  orderName: '토스 티셔츠 외 2건',
-  amount: 50000,
-  customerEmail: 'customer123@gmail.com',
-  customerName: '김토스',
-  customerMobilePhone: '01012341234',
-};
 
 // const MOCK_ADDRESS = null;
 
 export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  //TODO: 배송 메시지 입력 기능 추가
+  const [deliveryMessage, setDeliveryMessage] = useState('');
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
   const conditionalTitle = !orderSheet.deliveryInfo ? '주소 입력' : '주소 변경';
-
-  const handleModal = () => setIsModalOpen((prev) => !prev);
-
   const totalPrice = orderSheet.orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
-
   const totalPriceWithDeliveryFee = totalPrice + 3000;
 
-  // TODO: mutate orderItems
+  const { mutate: mutateOrderItems } = useMutation({
+    mutationFn: confirmOrder,
+    onSuccess: (response) => {
+      const paymentRequestBody = {
+        ...response,
+        orderName:
+          orderSheet.orderSheetItems.length === 1
+            ? orderSheet.orderSheetItems[0].title
+            : `${orderSheet.orderSheetItems[0].title} 외 ${orderSheet.orderSheetItems.length - 1}건`,
+        amount: totalPriceWithDeliveryFee,
+      };
+
+      requestPayment(paymentRequestBody);
+    },
+  });
 
   const handlePayment = () => {
-    // TODO: mutate response data
-    requestPayment(paymentRequestBody);
+    const payload = {
+      orderSheetId: orderSheet.orderSheetId,
+      paymentMethod: 'card',
+      userAddressId: orderSheet.deliveryInfo.addressId,
+      deliveryInfo: { message: deliveryMessage },
+      termsAgreed: isAllCheckedAgreement,
+    };
+
+    console.log('payload', payload);
+    mutateOrderItems(payload);
   };
 
   // ------  SDK 초기화 ------
@@ -56,7 +83,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
     customerEmail,
     customerName,
     customerMobilePhone,
-  }: RequestPaymentParams) {
+  }: ConfirmOrderResponse) {
     const tossPayments = await loadTossPayments(clientKey);
     const payment = tossPayments.payment({ customerKey });
 
@@ -84,6 +111,8 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
       },
     });
   }
+
+  const handleModal = () => setIsModalOpen((prev) => !prev);
 
   return {
     conditionalTitle,
