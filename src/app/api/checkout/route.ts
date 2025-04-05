@@ -55,24 +55,20 @@ export async function POST(req: Request) {
   const orderSheetId = orderSheet.order_sheet_id;
 
   // 2. 주문 아이템 생성
-  const results = await Promise.all(
-    body.map((item: OrderSheetItemPayload) => {
-      const body = {
-        order_sheet_id: orderSheetId,
-        product_id: item.productId,
-        size: item.size,
-        price: item.price,
-        quantity: item.quantity,
-        created_at: new Date().toISOString(),
-      };
+  const orderItems = body.map((item: OrderSheetItemPayload) => ({
+    order_sheet_id: orderSheetId,
+    product_id: item.productId,
+    size: item.size,
+    price: item.price,
+    quantity: item.quantity,
+    created_at: new Date().toISOString(),
+  }));
 
-      return supabase.from('order_sheet_items').insert(body);
-    }),
-  );
+  const { error: insertError } = await supabase
+    .from('order_sheet_items')
+    .insert(orderItems);
 
-  const itemError = await results.find((result) => result.error)?.error;
-
-  if (itemError) {
+  if (insertError) {
     return NextResponse.json(
       { error: '주문 아이템 생성 실패' },
       { status: 500 },
