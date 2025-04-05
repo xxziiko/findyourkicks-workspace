@@ -1,4 +1,5 @@
-import type { ConfirmOrderPayload } from '@/app/(checkout)/checkout/[id]/useCheckout';
+import type { RequestPaymentsPayload } from '@/app/(checkout)/checkout/[id]/useCheckout';
+import type { CreateOrderPayload } from '@/app/(checkout)/confirm/page';
 import type { CartItem } from '@/app/api/cart/route';
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
 import type { OrderSheetItemPayload } from '@/app/api/checkout/route';
@@ -112,6 +113,11 @@ export const requestPayments = async (payload: RequestPaymentsPayload) =>
     method: 'POST',
     body: JSON.stringify(payload),
   }).then((res) => res.json());
+
+export const createOrder = async (
+  payload: CreateOrderPayload,
+): Promise<{ message: string; orderId: string }> =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout/confirm`, {
     method: 'POST',
     body: JSON.stringify(payload),
   }).then((res) => res.json());

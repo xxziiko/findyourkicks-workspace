@@ -9,7 +9,7 @@ export default function CheckoutLayout({
   children,
 }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const currentStep = steps.indexOf(pathname);
+  const currentStep = steps.findIndex((step) => pathname.startsWith(step));
 
   return (
     <div>

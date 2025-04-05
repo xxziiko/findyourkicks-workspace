@@ -10,7 +10,7 @@ export default async function CheckoutPage({
   const { id } = await params;
   const orderSheet = await fetchOrderSheet(id);
 
-  if (!orderSheet) redirect('/cart');
+  if (!orderSheet.orderSheetId) redirect('/cart');
 
   return <Checkout id={id} orderSheet={orderSheet} />;
 }

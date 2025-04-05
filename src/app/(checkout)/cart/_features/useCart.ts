@@ -60,12 +60,12 @@ export default function useCart() {
       size: item.selectedSizeInfo.size,
       price: item.price,
       quantity: item.quantity,
+      cartItemId: item.cartItemId,
     }));
   };
 
   const handleAllOrderSheet = () => {
     const body = mapCartItemsToCheckoutRequest(cartItems);
-
     mutateCreateOrderSheet({ userId, body });
   };
 
@@ -86,6 +86,7 @@ export default function useCart() {
     totalPrice,
     totalPriceWithDeliveryFee,
     handleToggle,
+
     handleToggleAll,
     handleQuantityChange,
     handleDelete,

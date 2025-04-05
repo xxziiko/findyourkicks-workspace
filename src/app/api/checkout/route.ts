@@ -6,6 +6,7 @@ export interface OrderSheetItemPayload {
   size: string;
   price: number;
   quantity: number;
+  cartItemId: string;
 }
 
 export async function POST(req: Request) {
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
   const orderItems = body.map((item: OrderSheetItemPayload) => ({
     order_sheet_id: orderSheetId,
     product_id: item.productId,
+    cart_item_id: item.cartItemId,
     size: item.size,
     price: item.price,
     quantity: item.quantity,

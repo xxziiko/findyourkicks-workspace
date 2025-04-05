@@ -18,6 +18,7 @@ export interface Address {
 
 export type OrderSheetItem = {
   productId: string;
+  cartItemId: string;
   title: string;
   image: string;
   size: string;
@@ -36,6 +37,7 @@ export type RawDelivery = {
 
 interface RawOrderSheetItem {
   product_id: string;
+  cart_item_id: string;
   size: string;
   quantity: number;
   price: number;
@@ -60,6 +62,7 @@ export async function GET(
       size,
       quantity,
       price,
+      cart_item_id,
       product:product_id (
         title,
         image
@@ -104,6 +107,7 @@ export async function GET(
     rawOrderSheetItems as unknown as RawOrderSheetItem[]
   ).map((item) => ({
     productId: item.product_id,
+    cartItemId: item.cart_item_id,
     size: item.size,
     quantity: item.quantity,
     price: item.price,
