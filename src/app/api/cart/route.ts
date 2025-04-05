@@ -27,10 +27,9 @@ type RawCartResponse = {
 export type CartItem = {
   cartItemId: string;
   productId: string;
-  inventoryId: string;
   title: string;
   image: string;
-  inventory: {
+  selectedSizeInfo: {
     size: string;
     stock: number;
   };
@@ -83,10 +82,9 @@ export async function GET(req: Request) {
     cart.cart_items.map((item) => ({
       cartItemId: item.cart_item_id,
       productId: item.product_id,
-      inventoryId: item.inventory_id,
       title: item.product?.title,
       image: item.product?.image,
-      inventory: item.inventory,
+      selectedSizeInfo: item.inventory,
       quantity: item.quantity,
       price: item.price,
       addedAt: item.added_at,

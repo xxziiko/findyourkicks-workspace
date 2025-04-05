@@ -4,6 +4,7 @@ import { CartView, useCart } from '@/app/(checkout)/cart/_features';
 
 export default function Cart() {
   const {
+    isAllChecked,
     cartItems,
     checkedItems,
     totalProduct,
@@ -13,10 +14,12 @@ export default function Cart() {
     handleQuantityChange,
     handleDelete,
     handleToggle,
-    handleNextStep,
+    handleAllOrderSheet,
+    handleOrderSheet,
   } = useCart();
 
   const props = {
+    isAllChecked,
     cartItems,
     totalProduct,
     checkedItems,
@@ -26,7 +29,8 @@ export default function Cart() {
     onQuantityChange: handleQuantityChange,
     onDelete: handleDelete,
     onToggle: handleToggle,
-    onNextStep: handleNextStep,
+    onAllOrderSheet: handleAllOrderSheet,
+    onOrderSheet: handleOrderSheet,
   };
 
   return <CartView {...props} />;

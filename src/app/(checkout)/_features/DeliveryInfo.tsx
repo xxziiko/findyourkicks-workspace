@@ -1,17 +1,9 @@
 'use client';
 
+import type { Address } from '@/app/api/checkout/[id]/route';
 import { Dropdown, NoData } from '@/components';
 import { CircleAlertIcon } from 'lucide-react';
 import styles from './DeliveryInfo.module.scss';
-
-interface AddressData {
-  id: number;
-  alias: string;
-  name: string;
-  phone: string;
-  address: string;
-}
-
 const DELIVERY_TEXT = [
   '요청사항 없음',
   '경비실에 보관해주세요.',
@@ -26,12 +18,17 @@ const DELIVERY_SUBTITLE = [
   '배송지',
 ] as const;
 
-const KEYS: (keyof AddressData)[] = ['alias', 'name', 'phone', 'address'];
+const KEYS: (keyof Address)[] = [
+  'alias',
+  'receiverName',
+  'receiverPhone',
+  'address',
+];
 
-export default function DeliveryInfo({ data }: { data: AddressData | null }) {
+export default function DeliveryInfo({ data }: { data: Address | null }) {
   const address = mapAddressData(data);
 
-  function mapAddressData(data: AddressData | null) {
+  function mapAddressData(data: Address | null) {
     if (!data) return [];
 
     return KEYS.map((key, index) => ({

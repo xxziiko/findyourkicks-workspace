@@ -5,7 +5,7 @@ type CheckBoxState = {
 };
 
 type CheckBoxHookReturn = {
-  allChecked: boolean;
+  isAllChecked: boolean;
   checkedItems: CheckBoxState;
   handleToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleToggle: (e: React.ChangeEvent<HTMLInputElement>, id: string) => void;
@@ -20,7 +20,7 @@ export const useCheckBoxGroup = (
     Object.fromEntries(keys.map((id) => [id, initialChecked])),
   );
 
-  const allChecked = keys.every((item) => checkedItems[item]);
+  const isAllChecked = keys.every((item) => checkedItems[item]);
 
   const handleToggleAll = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +46,7 @@ export const useCheckBoxGroup = (
   };
 
   return {
-    allChecked,
+    isAllChecked,
     checkedItems,
     handleToggleAll,
     handleToggle,

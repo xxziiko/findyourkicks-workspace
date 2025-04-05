@@ -1,5 +1,6 @@
 import type { CartItem } from '@/app/api/cart/route';
-
+import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
+import type { OrderSheetItemPayload } from '@/app/api/checkout/route';
 interface RawProduct {
   product_id: string;
   title: string;
@@ -85,3 +86,24 @@ export const deleteCartItem = async (cartItemId: string) =>
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
     method: 'DELETE',
   });
+
+// checkout
+export const createOrderSheet = async ({
+  userId,
+  body,
+}: {
+  userId: string;
+  body: OrderSheetItemPayload[];
+}): Promise<OrderSheetResponse> =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
+    method: 'POST',
+    body: JSON.stringify({ userId, body }),
+  }).then((res) => res.json());
+
+export const fetchOrderSheet = async (orderSheetId: string) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/checkout/${orderSheetId}`,
+    {
+      method: 'GET',
+    },
+  ).then((res) => res.json());

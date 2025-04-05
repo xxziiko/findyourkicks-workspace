@@ -1,6 +1,8 @@
+import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
+import { isAllCheckedAgreementAtom } from '@/lib/store';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
+import { useAtomValue } from 'jotai';
 import { useState } from 'react';
-import { useCart } from '../cart/_features';
 
 interface RequestPaymentParams {
   orderId: string;
@@ -11,22 +13,37 @@ interface RequestPaymentParams {
   customerMobilePhone: string;
 }
 
-const MOCK_ADDRESS = {
-  id: 0,
-  alias: '우리집',
-  name: '홍길동',
-  phone: '010-1234-1234',
-  address: '[13607] 경기도 성남시 분당구 백현로',
+const paymentRequestBody = {
+  orderId: 'O_evBvXO_Ge2XwXA2xPtj', // 고유 주문번호
+  orderName: '토스 티셔츠 외 2건',
+  amount: 50000,
+  customerEmail: 'customer123@gmail.com',
+  customerName: '김토스',
+  customerMobilePhone: '01012341234',
 };
 
 // const MOCK_ADDRESS = null;
 
-export default function useCheckout() {
-  const { cartItems } = useCart();
+export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const conditionalTitle = !MOCK_ADDRESS ? '주소 입력' : '주소 변경';
+  const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
+  const conditionalTitle = !orderSheet.deliveryInfo ? '주소 입력' : '주소 변경';
 
   const handleModal = () => setIsModalOpen((prev) => !prev);
+
+  const totalPrice = orderSheet.orderSheetItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0,
+  );
+
+  const totalPriceWithDeliveryFee = totalPrice + 3000;
+
+  // TODO: mutate orderItems
+
+  const handlePayment = () => {
+    // TODO: mutate response data
+    requestPayment(paymentRequestBody);
+  };
 
   // ------  SDK 초기화 ------
   const clientKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
@@ -70,10 +87,11 @@ export default function useCheckout() {
 
   return {
     conditionalTitle,
-    MOCK_ADDRESS,
-    cartItems,
+    totalPrice,
+    totalPriceWithDeliveryFee,
     isModalOpen,
+    isAllCheckedAgreement,
     handleModal,
-    requestPayment,
+    handlePayment,
   };
 }
