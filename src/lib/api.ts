@@ -80,15 +80,21 @@ export const updateCartQuantity = async ({
   cartItemId: string;
   quantity: number;
 }) =>
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
-    method: 'PATCH',
-    body: JSON.stringify({ quantity }),
-  });
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart/item/${cartItemId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ quantity }),
+    },
+  );
 
 export const deleteCartItem = async (cartItemId: string) =>
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
-    method: 'DELETE',
-  });
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart/item/${cartItemId}`,
+    {
+      method: 'DELETE',
+    },
+  );
 
 // checkout
 export const createOrderSheet = async ({
