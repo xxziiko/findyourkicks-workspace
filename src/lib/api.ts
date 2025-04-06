@@ -66,7 +66,7 @@ export const addToCart = async ({
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`, {
     method: 'POST',
     body: JSON.stringify(body),
-  });
+  }).then((res) => res.json());
 
 export const fetchCartItems = async (userId: string): Promise<CartItem[]> =>
   await fetch(
