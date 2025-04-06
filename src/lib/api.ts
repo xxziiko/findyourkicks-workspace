@@ -1,4 +1,8 @@
+import type { RequestPaymentsPayload } from '@/app/(checkout)/checkout/[id]/useCheckout';
+import type { CreateOrderPayload } from '@/app/(checkout)/confirm/page';
 import type { CartItem } from '@/app/api/cart/route';
+import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
+import type { OrderSheetItemPayload } from '@/app/api/checkout/route';
 
 interface RawProduct {
   product_id: string;
@@ -62,7 +66,7 @@ export const addToCart = async ({
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart?userId=${userId}`, {
     method: 'POST',
     body: JSON.stringify(body),
-  });
+  }).then((res) => res.json());
 
 export const fetchCartItems = async (userId: string): Promise<CartItem[]> =>
   await fetch(
@@ -76,12 +80,50 @@ export const updateCartQuantity = async ({
   cartItemId: string;
   quantity: number;
 }) =>
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
-    method: 'PATCH',
-    body: JSON.stringify({ quantity }),
-  });
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart/item/${cartItemId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ quantity }),
+    },
+  );
 
 export const deleteCartItem = async (cartItemId: string) =>
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/${cartItemId}`, {
-    method: 'DELETE',
-  });
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cart/item/${cartItemId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+
+// checkout
+export const createOrderSheet = async ({
+  userId,
+  body,
+}: {
+  userId: string;
+  body: OrderSheetItemPayload[];
+}): Promise<OrderSheetResponse> =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
+    method: 'POST',
+    body: JSON.stringify({ userId, body }),
+  }).then((res) => res.json());
+
+export const fetchOrderSheet = async (orderSheetId: string) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/checkout/${orderSheetId}`,
+  ).then((res) => res.json());
+
+export const requestPayments = async (payload: RequestPaymentsPayload) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout/payments`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }).then((res) => res.json());
+
+export const createOrder = async (
+  payload: CreateOrderPayload,
+): Promise<{ message: string; orderId: string }> =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout/confirm`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }).then((res) => res.json());

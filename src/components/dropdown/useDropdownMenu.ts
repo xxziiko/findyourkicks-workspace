@@ -1,11 +1,17 @@
 import { useCallback, useState } from 'react';
 
-export default function useDropdownMenu() {
+export default function useDropdownMenu(
+  selectedText: string,
+  setSelectedText: (text: string) => void,
+) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedText, setSelectedText] = useState('메세지를 선택해주세요');
 
   const handleSelectedText = (text: string) => {
     setSelectedText(text);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setSelectedText(e.target.value);
   };
 
   const handleDropdown = () => {
@@ -32,5 +38,6 @@ export default function useDropdownMenu() {
     handleDropdown,
     handleKeyDown,
     autoFocus,
+    handleBlur,
   };
 }

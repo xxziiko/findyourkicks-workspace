@@ -11,12 +11,13 @@ import styles from './CartList.module.scss';
 
 export type CartListProps = {
   cartItems: CartItem[];
+  isAllChecked: boolean;
   checkedItems: { [cartId: string]: boolean };
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } & ItemHandlers;
 
 interface HeaderProps {
-  allChecked: boolean;
+  isAllChecked: boolean;
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -29,15 +30,13 @@ type ItemHandlers = {
   onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
   onQuantityChange: QuantityHandlerType;
   onDelete: (id: string) => void;
-  onNextStep: () => void;
+  onOrderSheet: (productId: string) => void;
 };
 
 export default function CartList(props: CartListProps) {
-  const { cartItems, checkedItems, onToggleAll, ...rest } = props;
+  const { isAllChecked, cartItems, checkedItems, onToggleAll, ...rest } = props;
 
-  const allChecked = cartItems.every((item) => checkedItems[item.cartItemId]);
-
-  const headerProps = { allChecked, onToggleAll };
+  const headerProps = { isAllChecked, onToggleAll };
   const itemProps = {
     checkedItems,
     ...rest,
@@ -60,10 +59,10 @@ export default function CartList(props: CartListProps) {
   );
 }
 
-function Header({ allChecked, onToggleAll }: HeaderProps) {
+function Header({ isAllChecked, onToggleAll }: HeaderProps) {
   return (
     <div className={styles.list__header}>
-      <CheckBox checked={allChecked} onChange={onToggleAll} />
+      <CheckBox checked={isAllChecked} onChange={onToggleAll} />
       <p>상품/옵션 정보</p>
       <p>수량</p>
       <p>주문 금액</p>
@@ -78,7 +77,7 @@ function Item({
   onToggle,
   onQuantityChange,
   onDelete,
-  onNextStep,
+  onOrderSheet,
 }: ItemProps) {
   return (
     <li className={styles.item}>
@@ -88,14 +87,17 @@ function Item({
       />
 
       <Link href={`/product/${item.productId}`} className={styles.item__info}>
-        <ProductInfo item={item} type="cart" />
+        <ProductInfo
+          item={{ ...item, size: item.selectedSizeInfo.size }}
+          type="cart"
+        />
       </Link>
 
       <div className={styles.item__quantity}>
         <QuantityController
           id={item.cartItemId}
           quantity={item.quantity}
-          inventory={item.inventory}
+          inventory={item.selectedSizeInfo}
           onQuantityChange={onQuantityChange}
         />
       </div>
@@ -105,7 +107,7 @@ function Item({
       </div>
 
       <div className={styles.item__buttons}>
-        <Button text="주문하기" onClick={onNextStep} />
+        <Button text="주문하기" onClick={() => onOrderSheet(item.cartItemId)} />
         <Button
           text="삭제하기"
           onClick={() => onDelete(item.cartItemId)}

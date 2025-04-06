@@ -12,6 +12,7 @@ export default function useCartBadge() {
     queryKey: ['cart'],
     queryFn: async () => await fetchCartItems(userId ?? ''),
     enabled: !!userId,
+    staleTime: 60 * 2,
   });
 
   const handleCartButton = () => {

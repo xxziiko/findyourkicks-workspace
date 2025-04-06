@@ -1,12 +1,14 @@
 'use client';
+
+import type { CartItem } from '@/app/api/cart/route';
 import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
 import { fetchCartItems } from '@/lib/api';
 import { userIdAtom } from '@/lib/store';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useDeleteCartMutation, useUpdateCartMutation } from '.';
+import { useCreateOrderSheetMutation } from '../../_features';
 
 export default function useCart() {
   const userId = useAtomValue(userIdAtom);
@@ -15,13 +17,17 @@ export default function useCart() {
     queryFn: async () => await fetchCartItems(userId),
   });
 
-  const { checkedItems, handleToggleAll, handleDeleteItem, handleToggle } =
-    useCheckBoxGroup(cartItems.map((item) => item?.cartItemId));
+  const {
+    isAllChecked,
+    checkedItems,
+    handleToggleAll,
+    handleDeleteItem,
+    handleToggle,
+  } = useCheckBoxGroup(cartItems.map((item) => item?.cartItemId));
 
   const { mutate: mutateCartQuantity } = useUpdateCartMutation();
   const { mutate: mutateDeleteCartItem } = useDeleteCartMutation();
-
-  const router = useRouter();
+  const { mutate: mutateCreateOrderSheet } = useCreateOrderSheetMutation();
 
   const totalProduct = Object.values(checkedItems).filter(
     (checkedItem) => !!checkedItem,
@@ -48,20 +54,43 @@ export default function useCart() {
     [mutateDeleteCartItem, handleDeleteItem],
   );
 
-  const handleNextStep = () => {
-    router.push('/checkout');
+  const mapCartItemsToCheckoutRequest = (cartItems: CartItem[]) => {
+    return cartItems.map((item: CartItem) => ({
+      productId: item.productId,
+      size: item.selectedSizeInfo.size,
+      price: item.price,
+      quantity: item.quantity,
+      cartItemId: item.cartItemId,
+    }));
+  };
+
+  const handleAllOrderSheet = () => {
+    const body = mapCartItemsToCheckoutRequest(cartItems);
+    mutateCreateOrderSheet({ userId, body });
+  };
+
+  const handleOrderSheet = (cartItemId: string) => {
+    const filteredCart = cartItems.filter(
+      (item) => item.cartItemId === cartItemId,
+    );
+
+    const body = mapCartItemsToCheckoutRequest(filteredCart);
+    mutateCreateOrderSheet({ userId, body });
   };
 
   return {
+    isAllChecked,
     cartItems,
     checkedItems,
     totalProduct,
     totalPrice,
     totalPriceWithDeliveryFee,
     handleToggle,
+
     handleToggleAll,
     handleQuantityChange,
     handleDelete,
-    handleNextStep,
+    handleAllOrderSheet,
+    handleOrderSheet,
   };
 }

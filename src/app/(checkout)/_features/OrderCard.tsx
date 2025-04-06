@@ -1,7 +1,9 @@
 import { CheckBox } from '@/components';
-import { CardLayout } from '@/components/layouts';
-
 import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
+import { CardLayout } from '@/components/layouts';
+import { isAllCheckedAgreementAtom } from '@/lib/store';
+import { useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 import styles from './OrderCard.module.scss';
 
 interface OrderCardProps {
@@ -48,13 +50,18 @@ const AGREEMENT_TEXT = [
 ];
 
 function AgreementSection() {
-  const { allChecked, checkedItems, handleToggleAll, handleToggle } =
+  const { isAllChecked, checkedItems, handleToggleAll, handleToggle } =
     useCheckBoxGroup(AGREEMENT_TEXT, false);
+  const setIsAllCheckedAgreement = useSetAtom(isAllCheckedAgreementAtom);
+
+  useEffect(() => {
+    setIsAllCheckedAgreement(isAllChecked);
+  }, [isAllChecked, setIsAllCheckedAgreement]);
 
   return (
     <div className={styles.agreement}>
       <div className={styles.agreement__item}>
-        <CheckBox onChange={handleToggleAll} checked={allChecked} />
+        <CheckBox onChange={handleToggleAll} checked={isAllChecked} />
         <h4>주문 동의 및 개인정보 수집 이용 동의</h4>
       </div>
 
