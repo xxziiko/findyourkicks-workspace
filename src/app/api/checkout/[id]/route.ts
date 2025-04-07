@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export interface OrderSheetResponse {
   orderSheetId: string;
   orderSheetItems: OrderSheetItem[];
-  deliveryInfo: Address;
+  delivery: Address;
 }
 
 export interface Address {
@@ -82,7 +82,7 @@ export async function GET(
   // console.log('rawOrderSheetItems', rawOrderSheetItems);
 
   // 3. 배송 정보 조회
-  const { data: rawDeliveryInfo } = await supabase
+  const { data: rawDelivery } = await supabase
     .from('order_sheets')
     .select(`
       user_address:user_address_id (
@@ -97,8 +97,8 @@ export async function GET(
     .eq('order_sheet_id', orderSheetId)
     .single<{ user_address: RawDelivery }>();
 
-  if (!rawDeliveryInfo) {
-    // console.log('deliveryInfo', rawDeliveryInfo);
+  if (!rawDelivery) {
+    // console.log('rawDelivery', rawDelivery);
 
     return NextResponse.json({ error: '배송 정보가 존재하지 않습니다.' });
   }
@@ -118,13 +118,13 @@ export async function GET(
   const response = {
     orderSheetId,
     orderSheetItems,
-    deliveryInfo: {
-      addressId: rawDeliveryInfo?.user_address?.address_id,
-      alias: rawDeliveryInfo?.user_address?.alias,
-      receiverName: rawDeliveryInfo?.user_address?.receiver_name,
-      receiverPhone: rawDeliveryInfo?.user_address?.receiver_phone,
-      address: rawDeliveryInfo?.user_address?.address,
-      message: rawDeliveryInfo?.user_address?.message,
+    delivery: {
+      addressId: rawDelivery?.user_address?.address_id ?? null,
+      alias: rawDelivery?.user_address?.alias ?? null,
+      receiverName: rawDelivery?.user_address?.receiver_name ?? null,
+      receiverPhone: rawDelivery?.user_address?.receiver_phone ?? null,
+      address: rawDelivery?.user_address?.address ?? null,
+      message: rawDelivery?.user_address?.message ?? null,
     },
   };
 

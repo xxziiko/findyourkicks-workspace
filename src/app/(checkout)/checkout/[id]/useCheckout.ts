@@ -10,7 +10,7 @@ export interface RequestPaymentsPayload {
   orderSheetId: string;
   paymentMethod: string;
   userAddressId: string;
-  deliveryInfo?: {
+  delivery?: {
     alias?: string;
     receiverName?: string;
     receiverPhone?: string;
@@ -33,7 +33,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
-  const conditionalTitle = !orderSheet.deliveryInfo ? '주소 입력' : '주소 변경';
+  const conditionalTitle = !orderSheet.delivery ? '주소 입력' : '주소 변경';
   const totalPrice = orderSheet.orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
@@ -60,8 +60,8 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
     const payload = {
       orderSheetId: orderSheet.orderSheetId,
       paymentMethod: 'card',
-      userAddressId: orderSheet.deliveryInfo.addressId,
-      deliveryInfo: { message: deliveryMessage },
+      userAddressId: orderSheet.delivery.addressId,
+      delivery: { message: deliveryMessage },
       termsAgreed: isAllCheckedAgreement,
     };
 

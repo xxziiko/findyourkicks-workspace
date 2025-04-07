@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components';
-import { OrderCard } from '../../_features';
+import { CheckoutSummary } from '../../_features';
 import styles from '../page.module.scss';
 import CartList, { type CartListProps } from './CartList';
 
@@ -25,7 +25,7 @@ export default function CartView(props: CartViewProps) {
     <section className={styles.section}>
       <CartList {...cartListProps} onOrderSheet={onOrderSheet} />
 
-      <OrderCard
+      <CheckoutSummary
         type="주문"
         totalPrice={totalPrice}
         totalPriceWithDeliveryFee={totalPriceWithDeliveryFee}

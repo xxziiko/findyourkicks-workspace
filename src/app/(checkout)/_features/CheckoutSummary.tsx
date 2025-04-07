@@ -4,19 +4,19 @@ import { CardLayout } from '@/components/layouts';
 import { isAllCheckedAgreementAtom } from '@/lib/store';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
-import styles from './OrderCard.module.scss';
+import styles from './CheckoutSummary.module.scss';
 
-interface OrderCardProps {
+interface CheckoutSummaryProps {
   totalPrice: number;
   totalPriceWithDeliveryFee: number;
   type: '주문' | '결제';
 }
 
-export default function OrderCard({
+export default function CheckoutSummary({
   totalPrice,
   totalPriceWithDeliveryFee,
   type,
-}: OrderCardProps) {
+}: CheckoutSummaryProps) {
   return (
     <CardLayout title={`${type} 정보`} type="primary">
       <div className={styles.inner}>

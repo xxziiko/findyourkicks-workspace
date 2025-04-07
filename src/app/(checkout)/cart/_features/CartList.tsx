@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductInfo } from '@/app/(checkout)/_features';
+import { OrderProducts } from '@/app/(checkout)/_features';
 import type { CartItem } from '@/app/api/cart/route';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
 import type { QuantityHandlerType } from '@/lib/types';
@@ -87,8 +87,8 @@ function Item({
       />
 
       <Link href={`/product/${item.productId}`} className={styles.item__info}>
-        <ProductInfo
-          item={{ ...item, size: item.selectedSizeInfo.size }}
+        <OrderProducts
+          item={{ ...item, size: item.selectedOption.size }}
           type="cart"
         />
       </Link>
@@ -97,7 +97,7 @@ function Item({
         <QuantityController
           id={item.cartItemId}
           quantity={item.quantity}
-          inventory={item.selectedSizeInfo}
+          inventory={item.selectedOption}
           onQuantityChange={onQuantityChange}
         />
       </div>

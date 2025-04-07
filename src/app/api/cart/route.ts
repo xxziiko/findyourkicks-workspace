@@ -29,7 +29,7 @@ export type CartItem = {
   productId: string;
   title: string;
   image: string;
-  selectedSizeInfo: {
+  selectedOption: {
     size: string;
     stock: number;
   };
@@ -84,7 +84,7 @@ export async function GET(req: Request) {
       productId: item.product_id,
       title: item.product?.title,
       image: item.product?.image,
-      selectedSizeInfo: item.inventory,
+      selectedOption: item.inventory,
       quantity: item.quantity,
       price: item.price,
       addedAt: item.added_at,
