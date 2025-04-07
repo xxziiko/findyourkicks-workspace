@@ -9,21 +9,21 @@ import Link from 'next/link';
 import { memo } from 'react';
 import styles from './CartList.module.scss';
 
-export type CartListProps = {
+export interface CartListProps extends ItemHandlers {
   cartItems: CartItem[];
   isAllChecked: boolean;
   checkedItems: { [cartId: string]: boolean };
-  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
-} & ItemHandlers;
-
-interface HeaderProps {
-  isAllChecked: boolean;
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface ItemProps extends ItemHandlers {
   item: CartItem;
   checkedItems: { [cartId: string]: boolean };
+}
+
+interface HeaderProps {
+  isAllChecked: boolean;
+  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 type ItemHandlers = {
