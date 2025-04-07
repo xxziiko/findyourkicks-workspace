@@ -1,6 +1,6 @@
 'use client';
 
-import { OrderProducts } from '@/app/(checkout)/_features';
+import { OrderProducts } from '@/app/(order-flow)/_features';
 import type { CartItem } from '@/app/api/cart/route';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
 import type { QuantityHandlerType } from '@/lib/types';

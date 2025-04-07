@@ -1,6 +1,6 @@
 'use client';
 
-import { CartView, useCart } from '@/app/(checkout)/cart/_features';
+import { CartView, useCart } from '@/app/(order-flow)/cart/_features';
 
 export default function Cart() {
   const {
