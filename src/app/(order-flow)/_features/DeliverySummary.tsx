@@ -37,12 +37,19 @@ export default function DeliverySummary({ data }: { data: Address | null }) {
 
             <Dropdown
               variant="border"
-              selectedText={deliveryMessage}
-              setSelectedText={setDeliveryMessage}
+              selected={deliveryMessage}
+              setSelected={setDeliveryMessage}
             >
-              {DELIVERY_TEXT.map((item) => (
-                <Dropdown.Item key={item} text={item} />
-              ))}
+              <Dropdown.Trigger />
+              <Dropdown.Menu>
+                {DELIVERY_TEXT.map((item) => (
+                  <Dropdown.Item
+                    key={item}
+                    text={item}
+                    editable={item === '직접 입력'}
+                  />
+                ))}
+              </Dropdown.Menu>
             </Dropdown>
           </div>
         </>

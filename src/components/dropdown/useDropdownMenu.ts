@@ -1,21 +1,23 @@
 import { useCallback, useState } from 'react';
 
-export default function useDropdownMenu(
-  selectedText: string,
-  setSelectedText: (text: string) => void,
-) {
+export default function useDropdownMenu(setSelected: (text: string) => void) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
 
-  const handleSelectedText = (text: string) => {
-    setSelectedText(text);
+  const handleSelected = (text: string) => {
+    setSelected(text);
+  };
+
+  const handleEditable = (isEdit: boolean) => setIsEditable(isEdit);
+
+  const handleClose = () => setIsOpen(false);
+
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    setSelectedText(e.target.value);
-  };
-
-  const handleDropdown = () => {
-    setIsOpen((prev) => !prev);
+    setSelected(e.target.value);
   };
 
   const handleKeyDown = (
@@ -33,9 +35,11 @@ export default function useDropdownMenu(
 
   return {
     isOpen,
-    selectedText,
-    handleSelectedText,
-    handleDropdown,
+    isEditable,
+    handleEditable,
+    handleSelected,
+    handleToggle,
+    handleClose,
     handleKeyDown,
     autoFocus,
     handleBlur,
