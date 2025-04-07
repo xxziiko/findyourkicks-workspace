@@ -3,8 +3,8 @@
 import type { Address } from '@/app/api/checkout/[id]/route';
 import { Dropdown, NoData } from '@/components';
 import { CircleAlertIcon } from 'lucide-react';
-import styles from './DeliveryInfo.module.scss';
-import useDeliveryInfo from './uesDeliveryInfo';
+import { useDeliverySummary } from '.';
+import styles from './DeliverySummary.module.scss';
 
 const DELIVERY_TEXT = [
   '요청사항 없음',
@@ -13,9 +13,9 @@ const DELIVERY_TEXT = [
   '직접 입력',
 ] as const;
 
-export default function DeliveryInfo({ data }: { data: Address | null }) {
+export default function DeliverySummary({ data }: { data: Address | null }) {
   const { address, deliveryMessage, setDeliveryMessage } =
-    useDeliveryInfo(data);
+    useDeliverySummary(data);
 
   return (
     <>
@@ -37,12 +37,19 @@ export default function DeliveryInfo({ data }: { data: Address | null }) {
 
             <Dropdown
               variant="border"
-              selectedText={deliveryMessage}
-              setSelectedText={setDeliveryMessage}
+              selected={deliveryMessage}
+              setSelected={setDeliveryMessage}
             >
-              {DELIVERY_TEXT.map((item) => (
-                <Dropdown.Item key={item} text={item} />
-              ))}
+              <Dropdown.Trigger />
+              <Dropdown.Menu>
+                {DELIVERY_TEXT.map((item) => (
+                  <Dropdown.Item
+                    key={item}
+                    text={item}
+                    editable={item === '직접 입력'}
+                  />
+                ))}
+              </Dropdown.Menu>
             </Dropdown>
           </div>
         </>

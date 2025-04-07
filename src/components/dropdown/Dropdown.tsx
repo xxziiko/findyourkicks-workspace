@@ -1,15 +1,19 @@
 'use client';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { createContext, useContext } from 'react';
 import styles from './Dropdown.module.scss';
 import useDropdownMenu from './useDropdownMenu';
 
 type DropdownContextType = {
-  onSelectText: (text: string) => void;
-  onSelectKeyDown: (
-    e: React.KeyboardEvent<HTMLUListElement | HTMLLIElement>,
-  ) => void;
+  selected: string;
+  isOpen: boolean;
+  isEditable: boolean;
+  onEdit: (isEdit: boolean) => void;
+  onSelect: (text: string) => void;
+  onToggle: () => void;
+  onClose: () => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLUListElement | HTMLLIElement>) => void;
   autoFocus: (node: HTMLInputElement | null) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
@@ -18,63 +22,87 @@ const DropdownContext = createContext<DropdownContextType | null>(null);
 
 export default function Dropdown({
   children,
+  selected,
   variant,
-  selectedText,
-  setSelectedText,
+  setSelected,
 }: {
   children: React.ReactNode;
   variant?: 'border';
-  selectedText: string;
-  setSelectedText: (text: string) => void;
+  selected: string;
+  setSelected: (text: string) => void;
 }) {
   const {
     isOpen,
-    handleSelectedText,
-    handleDropdown,
+    isEditable,
+    handleSelected,
+    handleEditable,
+    handleClose,
+    handleToggle,
     handleKeyDown,
     handleBlur,
     autoFocus,
-  } = useDropdownMenu(selectedText, setSelectedText);
+  } = useDropdownMenu(setSelected);
 
   const value = {
-    onSelectText: handleSelectedText,
-    onSelectKeyDown: handleKeyDown,
+    selected,
+    isOpen,
+    variant,
+    isEditable,
+    onEdit: handleEditable,
+    onSelect: handleSelected,
+    onToggle: handleToggle,
+    onClose: handleClose,
+    onKeyDown: handleKeyDown,
     autoFocus,
     onBlur: handleBlur,
   };
 
   return (
     <DropdownContext.Provider value={value}>
-      <ul
-        className={styles[`drop-down_${variant}`] ?? styles['drop-down']}
-        onClick={handleDropdown}
-        onKeyDown={handleKeyDown}
-      >
-        <li className={styles['drop-down__header']}>
-          {selectedText === '직접 입력' ? (
-            <Dropdown.Input />
-          ) : (
-            <p>{selectedText}</p>
-          )}
-          <ChevronDown />
-        </li>
-
-        {isOpen && children}
-      </ul>
+      <div className={styles[`drop-down__${variant}`] ?? styles['drop-down']}>
+        {children}
+      </div>
     </DropdownContext.Provider>
   );
 }
 
-function Item({ text = '' }: { text?: string }) {
-  const { onSelectText, onSelectKeyDown } = useDropdown();
+function Trigger() {
+  const { selected, isOpen, onToggle, isEditable } = useDropdown();
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={isOpen}
+      className={styles['drop-down__trigger']}
+    >
+      {isEditable ? <Input /> : selected}
+      {isOpen ? <ChevronUp /> : <ChevronDown />}
+    </button>
+  );
+}
+
+function Menu({ children }: { children: React.ReactNode }) {
+  const { isOpen } = useDropdown();
+  if (!isOpen) return null;
+
+  return <ul className={styles['drop-down__menu']}>{children}</ul>;
+}
+
+function Item({
+  text,
+  editable = false,
+}: { text: string; editable?: boolean }) {
+  const { onSelect, onClose, onKeyDown, onEdit } = useDropdown();
+
+  const handleSelect = () => {
+    onSelect(text);
+    onEdit(editable);
+    onClose();
+  };
 
   return (
-    <li
-      className={styles.item}
-      onClick={() => onSelectText(text)}
-      onKeyDown={(e) => onSelectKeyDown(e)}
-    >
-      {text && <p>{text}</p>}
+    <li onClick={handleSelect} onKeyDown={onKeyDown}>
+      <p>{text}</p>
     </li>
   );
 }
@@ -89,6 +117,7 @@ function Input() {
 
   return (
     <input
+      className={styles.input}
       ref={autoFocus}
       value={value}
       onChange={handleChangeText}
@@ -98,7 +127,8 @@ function Input() {
 }
 
 Dropdown.Item = Item;
-Dropdown.Input = Input;
+Dropdown.Trigger = Trigger;
+Dropdown.Menu = Menu;
 
 function useDropdown(): DropdownContextType {
   const context = useContext(DropdownContext);

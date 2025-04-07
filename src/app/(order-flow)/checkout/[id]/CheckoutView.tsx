@@ -1,43 +1,52 @@
-'use client';
 import type {
   OrderSheetItem,
   OrderSheetResponse,
 } from '@/app/api/checkout/[id]/route';
+
 import { Button } from '@/components';
 import { CardLayout, Modal } from '@/components/layouts';
 import {
+  CheckoutSummary,
   DeliveryForm,
-  DeliveryInfo,
-  OrderCard,
-  ProductInfo,
+  DeliverySummary,
+  OrderProducts,
 } from '../../_features';
 import styles from './page.module.scss';
-import useCheckout from './useCheckout';
 
-export default function Checkout({
-  id,
+interface CheckoutViewProps {
+  orderSheet: OrderSheetResponse;
+  conditionalTitle: string;
+  isModalOpen: boolean;
+  totalPrice: number;
+  totalPriceWithDeliveryFee: number;
+  isAllCheckedAgreement: boolean;
+  onModalControl: () => void;
+  onPaymentOpen: () => void;
+}
+
+export default function CheckoutView({
+  conditionalTitle,
+  isModalOpen,
   orderSheet,
-}: { id: string; orderSheet: OrderSheetResponse }) {
-  const {
-    conditionalTitle,
-    isModalOpen,
-    isAllCheckedAgreement,
-    totalPrice,
-    totalPriceWithDeliveryFee,
-    handleModal,
-    handlePayment,
-  } = useCheckout(orderSheet);
-
+  totalPrice,
+  totalPriceWithDeliveryFee,
+  isAllCheckedAgreement,
+  onModalControl,
+  onPaymentOpen,
+}: CheckoutViewProps) {
   return (
     <div className={styles.layout}>
       <div className={styles.layout__left}>
         <CardLayout
           title="배송 정보"
           label={
-            <CardLayout.Label text={conditionalTitle} onClick={handleModal} />
+            <CardLayout.Label
+              text={conditionalTitle}
+              onClick={onModalControl}
+            />
           }
         >
-          <DeliveryInfo data={orderSheet.deliveryInfo} />
+          <DeliverySummary data={orderSheet.delivery} />
         </CardLayout>
 
         <CardLayout
@@ -45,7 +54,7 @@ export default function Checkout({
         >
           <div className={styles['products-inner']}>
             {orderSheet?.orderSheetItems?.map((item: OrderSheetItem) => (
-              <ProductInfo
+              <OrderProducts
                 item={item}
                 key={`${item.productId}-${item.size}-${item.quantity}`}
                 type="checkout"
@@ -56,7 +65,7 @@ export default function Checkout({
       </div>
 
       <div className={styles.layout__right}>
-        <OrderCard
+        <CheckoutSummary
           totalPrice={totalPrice}
           totalPriceWithDeliveryFee={totalPriceWithDeliveryFee}
           type="결제"
@@ -64,13 +73,13 @@ export default function Checkout({
 
         <Button
           text="결제하기"
-          onClick={handlePayment}
+          onClick={onPaymentOpen}
           disabled={!isAllCheckedAgreement}
         />
       </div>
 
       {isModalOpen && (
-        <Modal onClose={handleModal} title={conditionalTitle}>
+        <Modal onClose={onModalControl} title={conditionalTitle}>
           <DeliveryForm />
         </Modal>
       )}

@@ -16,7 +16,7 @@ const KEYS: (keyof Address)[] = [
   'address',
 ];
 
-export default function useDeliveryInfo(data: Address | null) {
+export default function useDeliverySummary(data: Address | null) {
   const address = mapAddressData(data);
   const [deliveryMessage, setDeliveryMessage] = useAtom(deliveryMessageAtom);
 

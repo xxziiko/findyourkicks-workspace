@@ -1,5 +1,5 @@
-import type { RequestPaymentsPayload } from '@/app/(checkout)/checkout/[id]/useCheckout';
-import type { CreateOrderPayload } from '@/app/(checkout)/confirm/page';
+import type { RequestPaymentsPayload } from '@/app/(order-flow)/checkout/[id]/useCheckout';
+import type { CreateOrderPayload } from '@/app/(order-flow)/confirm/page';
 import type { CartItem } from '@/app/api/cart/route';
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
 import type { OrderSheetItemPayload } from '@/app/api/checkout/route';

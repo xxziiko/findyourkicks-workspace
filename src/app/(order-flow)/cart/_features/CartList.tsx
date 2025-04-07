@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductInfo } from '@/app/(checkout)/_features';
+import { OrderProducts } from '@/app/(order-flow)/_features';
 import type { CartItem } from '@/app/api/cart/route';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
 import type { QuantityHandlerType } from '@/lib/types';
@@ -9,21 +9,21 @@ import Link from 'next/link';
 import { memo } from 'react';
 import styles from './CartList.module.scss';
 
-export type CartListProps = {
+export interface CartListProps extends ItemHandlers {
   cartItems: CartItem[];
   isAllChecked: boolean;
   checkedItems: { [cartId: string]: boolean };
-  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
-} & ItemHandlers;
-
-interface HeaderProps {
-  isAllChecked: boolean;
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface ItemProps extends ItemHandlers {
   item: CartItem;
   checkedItems: { [cartId: string]: boolean };
+}
+
+interface HeaderProps {
+  isAllChecked: boolean;
+  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 type ItemHandlers = {
@@ -87,8 +87,8 @@ function Item({
       />
 
       <Link href={`/product/${item.productId}`} className={styles.item__info}>
-        <ProductInfo
-          item={{ ...item, size: item.selectedSizeInfo.size }}
+        <OrderProducts
+          item={{ ...item, size: item.selectedOption.size }}
           type="cart"
         />
       </Link>
@@ -97,7 +97,7 @@ function Item({
         <QuantityController
           id={item.cartItemId}
           quantity={item.quantity}
-          inventory={item.selectedSizeInfo}
+          inventory={item.selectedOption}
           onQuantityChange={onQuantityChange}
         />
       </div>

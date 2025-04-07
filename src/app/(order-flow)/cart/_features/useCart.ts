@@ -57,7 +57,7 @@ export default function useCart() {
   const mapCartItemsToCheckoutRequest = (cartItems: CartItem[]) => {
     return cartItems.map((item: CartItem) => ({
       productId: item.productId,
-      size: item.selectedSizeInfo.size,
+      size: item.selectedOption.size,
       price: item.price,
       quantity: item.quantity,
       cartItemId: item.cartItemId,

@@ -32,18 +32,18 @@ export async function POST(req: Request) {
     );
   }
 
-  // payload에 deleveryInfo가 있다면 업데이트
-  if (payload.deliveryInfo) {
-    const { error: updateDeliveryInfoError } = await supabase
+  // payload에 delevery가 있다면 업데이트
+  if (payload.delivery) {
+    const { error: updateDeliveryError } = await supabase
       .from('user_addresses')
-      .update(payload.deliveryInfo)
+      .update(payload.delivery)
       .eq('address_id', userAddressId);
 
-    if (updateDeliveryInfoError) {
+    if (updateDeliveryError) {
       return NextResponse.json(
         {
           error: '배송 정보 업데이트 실패',
-          details: updateDeliveryInfoError.message,
+          details: updateDeliveryError.message,
         },
         { status: 500 },
       );
