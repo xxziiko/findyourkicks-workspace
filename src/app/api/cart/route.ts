@@ -79,16 +79,18 @@ export async function GET(req: Request) {
   }
 
   const flatItems: CartItem[] =
-    cart.cart_items.map((item) => ({
-      cartItemId: item.cart_item_id,
-      productId: item.product_id,
-      title: item.product?.title,
-      image: item.product?.image,
-      selectedOption: item.inventory,
-      quantity: item.quantity,
-      price: item.price,
-      addedAt: item.added_at,
-    })) ?? [];
+    cart.cart_items
+      .sort((a, b) => a.cart_item_id.localeCompare(b.cart_item_id))
+      .map((item) => ({
+        cartItemId: item.cart_item_id,
+        productId: item.product_id,
+        title: item.product?.title,
+        image: item.product?.image,
+        selectedOption: item.inventory,
+        quantity: item.quantity,
+        price: item.price,
+        addedAt: item.added_at,
+      })) ?? [];
 
   return NextResponse.json(flatItems);
 }
