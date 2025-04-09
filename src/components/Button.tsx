@@ -14,7 +14,8 @@ interface ButtonProps {
   icon?: React.ReactNode;
   width?: string;
   disabled?: boolean;
-  onClick: (e: React.MouseEvent) => Promise<void> | void;
+  type?: 'button' | 'submit' | 'reset';
+  onClick?: (e: React.MouseEvent) => Promise<void> | void;
 }
 
 export default function Button({

@@ -1,6 +1,4 @@
 .modal {
-  border: 1px solid red;
-
   &__overlay {
     @include flex-center;
     position: fixed;

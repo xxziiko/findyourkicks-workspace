@@ -33,7 +33,9 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
-  const conditionalTitle = !orderSheet.delivery ? '주소 입력' : '주소 변경';
+  const conditionalTitle = !orderSheet.delivery.address
+    ? '주소 입력'
+    : '주소 변경';
   const totalPrice = orderSheet.orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,

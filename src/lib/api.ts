@@ -1,9 +1,9 @@
+import type { DeliveryFormData } from '@/app/(order-flow)/_features/useDeliveryForm';
 import type { RequestPaymentsPayload } from '@/app/(order-flow)/checkout/[id]/useCheckout';
 import type { CreateOrderPayload } from '@/app/(order-flow)/confirm/page';
 import type { CartItem } from '@/app/api/cart/route';
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
 import type { OrderSheetItemPayload } from '@/app/api/checkout/route';
-
 interface RawProduct {
   product_id: string;
   title: string;
@@ -124,6 +124,12 @@ export const createOrder = async (
   payload: CreateOrderPayload,
 ): Promise<{ message: string; orderId: string }> =>
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout/confirm`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }).then((res) => res.json());
+
+export const createUserAddress = async (payload: DeliveryFormData) =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout/user-address`, {
     method: 'POST',
     body: JSON.stringify(payload),
   }).then((res) => res.json());

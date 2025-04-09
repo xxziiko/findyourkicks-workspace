@@ -79,8 +79,8 @@ export default function CheckoutView({
       </div>
 
       {isModalOpen && (
-        <Modal onClose={onModalControl} title={conditionalTitle}>
-          <DeliveryForm />
+        <Modal title={conditionalTitle}>
+          <DeliveryForm onClose={onModalControl} />
         </Modal>
       )}
     </div>

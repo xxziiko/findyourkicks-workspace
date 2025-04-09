@@ -1,19 +1,55 @@
-import { useEffect, useState } from 'react';
+import { createUserAddress } from '@/lib/api';
+import { userIdAtom } from '@/lib/store';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-interface AddressData {
-  zonecode: string;
-  roadAddress: string;
-  jibunAddress: string;
-  extraAddress: string;
-}
+export type DeliveryFormData = z.infer<typeof schema>;
 
-export default function useDeliveryForm() {
-  const [address, setAddress] = useState<AddressData>({
-    zonecode: '',
-    roadAddress: '',
-    jibunAddress: '',
-    extraAddress: '',
+const schema = z.object({
+  name: z.string().min(1, { message: '이름을 입력해주세요.' }).max(10),
+  phone: z
+    .string()
+    .min(1, { message: '전화번호를 입력해주세요.' })
+    .max(11, { message: '전화번호는 11자리를 초과할 수 없습니다.' })
+    .regex(/^[0-9]+$/, { message: '숫자만 입력해주세요.' }),
+  alias: z.string().min(1).max(10),
+  zonecode: z.string().min(1),
+  roadAddress: z.string().min(1),
+  extraAddress: z.string().min(1),
+});
+
+export default function useDeliveryForm(onClose: () => void) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<DeliveryFormData>({ resolver: zodResolver(schema) });
+
+  const userId = useAtomValue(userIdAtom);
+
+  const queryClient = useQueryClient();
+  const { mutate: mutateUserAddress } = useMutation({
+    mutationFn: createUserAddress,
+    onSuccess: () => {
+      // queryClient.invalidateQueries({ queryKey: ['userAddress'] });
+      onClose();
+    },
   });
+
+  const onSubmit = (data: DeliveryFormData) => {
+    const formattedData = {
+      ...data,
+      address: `[${data.zonecode}] ${data.roadAddress} ${data.extraAddress}`,
+      userId,
+    };
+
+    mutateUserAddress(formattedData);
+  };
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -34,7 +70,6 @@ export default function useDeliveryForm() {
       oncomplete: (data: {
         zonecode: string;
         roadAddress: string;
-        jibunAddress: string;
         bname: string;
         buildingName: string;
         apartment: string;
@@ -55,15 +90,12 @@ export default function useDeliveryForm() {
           extraRoadAddr = ` (${extraRoadAddr})`;
         }
 
-        setAddress({
-          zonecode: data.zonecode,
-          roadAddress: roadAddr,
-          jibunAddress: data.jibunAddress,
-          extraAddress: extraRoadAddr,
-        });
+        setValue('zonecode', data.zonecode);
+        setValue('roadAddress', roadAddr);
+        setValue('extraAddress', extraRoadAddr);
       },
     }).open();
   };
 
-  return { address, handlePostcode };
+  return { handlePostcode, register, handleSubmit, onSubmit, errors };
 }

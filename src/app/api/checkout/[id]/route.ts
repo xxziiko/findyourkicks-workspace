@@ -33,6 +33,7 @@ export type RawDelivery = {
   receiver_phone: string;
   address: string;
   message: string;
+  is_default: boolean;
 };
 
 interface RawOrderSheetItem {
@@ -91,7 +92,8 @@ export async function GET(
       receiver_name,
       receiver_phone,
       address,
-      message
+      message,
+      is_default
     )
     `)
     .eq('order_sheet_id', orderSheetId)
@@ -125,6 +127,7 @@ export async function GET(
       receiverPhone: rawDelivery?.user_address?.receiver_phone ?? null,
       address: rawDelivery?.user_address?.address ?? null,
       message: rawDelivery?.user_address?.message ?? null,
+      isDefault: rawDelivery?.user_address?.is_default ?? null,
     },
   };
 
