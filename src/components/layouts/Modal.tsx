@@ -1,6 +1,9 @@
+'use client';
+
+import { useEffect } from 'react';
 import Button from '../Button';
 import styles from './Modal.module.scss';
-
+import Portal from './Portal';
 interface ModalProps {
   title: string;
   onClose: () => void;
@@ -8,16 +11,25 @@ interface ModalProps {
 }
 
 export default function Modal({ title, onClose, children }: ModalProps) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div className={styles.modal__overlay}>
-      <div className={styles.modal__container}>
-        <Header title={title} />
+    <Portal>
+      <div className={styles.modal__overlay}>
+        <div className={styles.modal__container}>
+          <Header title={title} />
 
-        <div className={styles.layout}>{children}</div>
+          <div>{children}</div>
 
-        <Footer onClose={onClose} />
+          <Footer onClose={onClose} />
+        </div>
       </div>
-    </div>
+    </Portal>
   );
 }
 
