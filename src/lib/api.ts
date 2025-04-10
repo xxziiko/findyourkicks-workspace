@@ -139,3 +139,16 @@ export const fetchUserAddresses = async () =>
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/addresses`).then(
     (res) => res.json(),
   );
+
+export const fetchDefaultUserAddress = async () =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/users/addresses/default`,
+  ).then((res) => res.json());
+
+export const updateUserAddress = async (addressId: string) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/users/addresses/${addressId}`,
+    {
+      method: 'PATCH',
+    },
+  ).then((res) => res.json());

@@ -26,6 +26,13 @@
       font-size: $font-sm;
       font-weight: 700;
     }
+
+    &__label {
+      padding: 0.35rem;
+      border-radius: $radius-s;
+      font-size: $font-xs;
+      background-color: #efefef;
+    }
   }
 
   &__body {

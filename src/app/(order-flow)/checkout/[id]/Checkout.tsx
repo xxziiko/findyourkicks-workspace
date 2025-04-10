@@ -4,9 +4,8 @@ import CheckoutView from './CheckoutView';
 import useCheckout from './useCheckout';
 
 export default function Checkout({
-  id,
   orderSheet,
-}: { id: string; orderSheet: OrderSheetResponse }) {
+}: { orderSheet: OrderSheetResponse }) {
   const {
     defaultAddress,
     title,
