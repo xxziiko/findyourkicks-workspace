@@ -1,7 +1,7 @@
 import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
-import { requestPayments } from '@/lib/api';
+import { fetchDefaultUserAddress, requestPayments } from '@/lib/api';
 import { deliveryMessageAtom, isAllCheckedAgreementAtom } from '@/lib/store';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
@@ -33,14 +33,22 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
-  const conditionalTitle = !orderSheet.delivery.address
-    ? '주소 입력'
-    : '주소 변경';
+  const [modalView, setModalView] = useState<'form' | 'list'>(
+    orderSheet.delivery.addressId ? 'list' : 'form',
+  );
+  const title = modalView === 'form' ? '주소 입력' : '주소 변경';
+
   const totalPrice = orderSheet.orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
   const totalPriceWithDeliveryFee = totalPrice + 3000;
+
+  const { data: defaultAddress } = useSuspenseQuery({
+    queryKey: ['defaultAddress'],
+    initialData: orderSheet.delivery,
+    queryFn: fetchDefaultUserAddress,
+  });
 
   const { mutate: mutateOrderItems } = useMutation({
     mutationFn: requestPayments,
@@ -110,14 +118,24 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   }
 
   const handleModal = () => setIsModalOpen((prev) => !prev);
+  const handleModalView = () => setModalView('form');
+
+  const onCloseModal = () => {
+    handleModal();
+    setModalView(orderSheet.delivery.addressId ? 'list' : 'form');
+  };
 
   return {
-    conditionalTitle,
+    defaultAddress,
+    title,
     totalPrice,
     totalPriceWithDeliveryFee,
     isModalOpen,
     isAllCheckedAgreement,
+    modalView,
     handleModal,
     handlePayment,
+    handleModalView,
+    onCloseModal,
   };
 }

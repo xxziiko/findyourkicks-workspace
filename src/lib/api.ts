@@ -134,3 +134,8 @@ export const createUserAddress = async (payload: DeliveryFormData) =>
     method: 'POST',
     body: JSON.stringify(payload),
   }).then((res) => res.json());
+
+export const fetchUserAddresses = async () =>
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/addresses`).then(
+    (res) => res.json(),
+  );

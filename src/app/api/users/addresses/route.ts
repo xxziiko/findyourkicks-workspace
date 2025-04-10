@@ -34,3 +34,27 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json(newAddress);
 }
+
+export async function GET(req: NextRequest) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  const { data: addresses, error: addressesError } = await supabase
+    .from('user_addresses')
+    .select('*')
+    .eq('user_id', data.user?.id);
+
+  if (addressesError) {
+    return NextResponse.json({ error: '주소 조회 실패' }, { status: 500 });
+  }
+
+  const response = addresses.map((address) => ({
+    addressId: address.address_id,
+    receiverName: address.receiver_name,
+    receiverPhone: address.receiver_phone,
+    alias: address.alias,
+    address: address.address,
+    isDefault: address.is_default,
+  }));
+
+  return NextResponse.json(response);
+}

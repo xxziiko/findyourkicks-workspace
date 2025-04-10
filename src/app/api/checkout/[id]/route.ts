@@ -14,6 +14,7 @@ export interface Address {
   receiverPhone: string;
   address: string;
   message: string;
+  isDefault?: boolean;
 }
 
 export type OrderSheetItem = {

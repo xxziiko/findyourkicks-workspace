@@ -1,11 +1,12 @@
 import type {
+  Address,
   OrderSheetItem,
   OrderSheetResponse,
 } from '@/app/api/checkout/[id]/route';
-
 import { Button } from '@/components';
 import { CardLayout, Modal } from '@/components/layouts';
 import {
+  AddressList,
   CheckoutSummary,
   DeliveryForm,
   DeliverySummary,
@@ -14,39 +15,42 @@ import {
 import styles from './page.module.scss';
 
 interface CheckoutViewProps {
+  defaultAddress: Address;
   orderSheet: OrderSheetResponse;
-  conditionalTitle: string;
+  title: string;
+  modalView: 'form' | 'list';
   isModalOpen: boolean;
   totalPrice: number;
   totalPriceWithDeliveryFee: number;
   isAllCheckedAgreement: boolean;
   onModalControl: () => void;
   onPaymentOpen: () => void;
+  onAddressListOpen: () => void;
+  onCloseModal: () => void;
 }
 
 export default function CheckoutView({
-  conditionalTitle,
+  defaultAddress,
+  title,
   isModalOpen,
+  modalView,
   orderSheet,
   totalPrice,
   totalPriceWithDeliveryFee,
   isAllCheckedAgreement,
   onModalControl,
   onPaymentOpen,
+  onAddressListOpen,
+  onCloseModal,
 }: CheckoutViewProps) {
   return (
     <div className={styles.layout}>
       <div className={styles.layout__left}>
         <CardLayout
           title="배송 정보"
-          label={
-            <CardLayout.Label
-              text={conditionalTitle}
-              onClick={onModalControl}
-            />
-          }
+          label={<CardLayout.Label text={title} onClick={onModalControl} />}
         >
-          <DeliverySummary data={orderSheet.delivery} />
+          <DeliverySummary data={defaultAddress} />
         </CardLayout>
 
         <CardLayout
@@ -79,8 +83,21 @@ export default function CheckoutView({
       </div>
 
       {isModalOpen && (
-        <Modal title={conditionalTitle}>
-          <DeliveryForm onClose={onModalControl} />
+        <Modal title={title}>
+          {modalView === 'list' ? (
+            <div>
+              <Button
+                text="배송지 추가하기"
+                onClick={onAddressListOpen}
+                variant="lined"
+                width="100%"
+              />
+
+              <AddressList onClose={onCloseModal} />
+            </div>
+          ) : (
+            <DeliveryForm onClose={onCloseModal} />
+          )}
         </Modal>
       )}
     </div>

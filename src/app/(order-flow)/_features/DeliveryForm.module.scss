@@ -2,9 +2,10 @@
 
 .form {
   @include flex-col;
-  gap: 1.5rem;
-  width: 25rem;
-  padding: 2rem 0.5rem;
+  justify-content: space-between;
+  padding: 1rem 0.5rem;
+  width: 420px;
+  height: 500px;
 
   &__wrapper {
     @include flex-col;

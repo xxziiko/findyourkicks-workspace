@@ -1,6 +1,5 @@
 'use client';
 
-import DeliveryForm from '@/app/(order-flow)/_features/DeliveryForm';
 import { useEffect } from 'react';
 import Button from '../Button';
 import styles from './Modal.module.scss';
@@ -39,10 +38,15 @@ function Header({ title }: { title: string }) {
   );
 }
 
-function Footer({ onClose }: { onClose: () => void }) {
+function Footer({
+  onClose,
+  type = 'default',
+}: { onClose: () => void; type?: 'default' | 'single' }) {
   return (
     <div className={styles.footer}>
-      <Button text="저장하기" width="15%" type="submit" />
+      {type === 'default' && (
+        <Button text="저장하기" width="15%" type="submit" />
+      )}
 
       <Button onClick={onClose} text="닫기" variant="lined--r" width="15%" />
     </div>
