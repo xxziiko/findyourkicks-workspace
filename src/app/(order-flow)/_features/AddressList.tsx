@@ -1,33 +1,10 @@
 import type { Address } from '@/app/api/checkout/[id]/route';
 import Modal from '@/components/layouts/Modal';
-import { fetchUserAddresses, updateUserAddress } from '@/lib/api';
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from '@tanstack/react-query';
 import styles from './AddressList.module.scss';
+import useAddressList from './useAddressList';
 
 export default function AddressList({ onClose }: { onClose: () => void }) {
-  const queryClient = useQueryClient();
-  const { data: addresses } = useSuspenseQuery({
-    queryKey: ['addresses'],
-    queryFn: fetchUserAddresses,
-  });
-
-  const { mutate: mutateDefaultAddress } = useMutation({
-    mutationFn: updateUserAddress,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['addresses', 'defaultAddress'],
-      });
-      onClose();
-    },
-  });
-
-  const onUpdateDefaultAddress = (addressId: string) => {
-    mutateDefaultAddress(addressId);
-  };
+  const { addresses, onUpdateDefaultAddress } = useAddressList(onClose);
 
   return (
     <div className={styles.address}>
