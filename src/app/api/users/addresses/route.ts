@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     .from('user_addresses')
     .insert({
       receiver_name: name,
-      receiver_phone: phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3'),
+      receiver_phone: phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
       alias,
       address,
       is_default: !addressId,

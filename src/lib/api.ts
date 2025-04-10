@@ -128,8 +128,9 @@ export const createOrder = async (
     body: JSON.stringify(payload),
   }).then((res) => res.json());
 
+//address
 export const createUserAddress = async (payload: DeliveryFormData) =>
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout/user-address`, {
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/addresses`, {
     method: 'POST',
     body: JSON.stringify(payload),
   }).then((res) => res.json());
