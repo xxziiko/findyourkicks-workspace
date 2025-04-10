@@ -3,16 +3,35 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
-  const { name, phone, alias, address, userId } = await req.json();
+  const { name, phone, alias, address } = await req.json();
 
+  const { data: user, error: userError } = await supabase.auth.getUser();
   const { data: addressId, error: addressIdError } = await supabase
     .from('user_addresses')
     .select('address_id')
-    .eq('user_id', userId)
-    .single();
+    .eq('user_id', user.user?.id)
+    .eq('is_default', true);
 
   if (addressIdError) {
+    console.error('주소 조회 실패', addressIdError);
     return NextResponse.json({ error: '주소 조회 실패' }, { status: 500 });
+  }
+
+  if (addressId) {
+    const { error: updateDefaultAddressError } = await supabase
+      .from('user_addresses')
+      .update({
+        is_default: false,
+      })
+      .eq('address_id', addressId[0].address_id);
+
+    if (updateDefaultAddressError) {
+      console.error('기본 배송지 초기화 실패', updateDefaultAddressError);
+      return NextResponse.json(
+        { error: '기본 배송지 초기화 실패' },
+        { status: 500 },
+      );
+    }
   }
 
   const { data: newAddress, error: newAddressError } = await supabase
@@ -22,13 +41,14 @@ export async function POST(req: NextRequest) {
       receiver_phone: phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
       alias,
       address,
-      is_default: !addressId,
-      user_id: userId,
+      is_default: true,
+      user_id: user.user?.id,
     })
     .eq('address_id', addressId)
     .single();
 
   if (newAddressError) {
+    console.error('주소 생성 실패', newAddressError);
     return NextResponse.json({ error: '주소 생성 실패' }, { status: 500 });
   }
 

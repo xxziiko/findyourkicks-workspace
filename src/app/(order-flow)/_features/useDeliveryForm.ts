@@ -1,8 +1,6 @@
 import { createUserAddress } from '@/lib/api';
-import { userIdAtom } from '@/lib/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -30,13 +28,12 @@ export default function useDeliveryForm(onClose: () => void) {
     setValue,
   } = useForm<DeliveryFormData>({ resolver: zodResolver(schema) });
 
-  const userId = useAtomValue(userIdAtom);
-
   const queryClient = useQueryClient();
   const { mutate: mutateUserAddress } = useMutation({
     mutationFn: createUserAddress,
     onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ['userAddress'] });
+      queryClient.invalidateQueries({ queryKey: ['addresses'] });
+      queryClient.invalidateQueries({ queryKey: ['defaultAddress'] });
       onClose();
     },
   });
@@ -45,7 +42,6 @@ export default function useDeliveryForm(onClose: () => void) {
     const formattedData = {
       ...data,
       address: `[${data.zonecode}] ${data.roadAddress} ${data.extraAddress}`,
-      userId,
     };
 
     mutateUserAddress(formattedData);
