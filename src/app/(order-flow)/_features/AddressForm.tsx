@@ -1,8 +1,8 @@
 'use client';
 import { Button } from '@/components';
 import Modal from '@/components/layouts/Modal';
-import styles from './DeliveryForm.module.scss';
-import useDeliveryForm from './useDeliveryForm';
+import styles from './AddressForm.module.scss';
+import useAddressFrom from './useAddressFrom';
 
 const USER_INPUT_NAME = ['name', 'phone', 'alias'] as const;
 const ADDRESS_INPUT_NAME = ['roadAddress', 'extraAddress'] as const;
@@ -21,9 +21,9 @@ declare global {
   }
 }
 
-export default function DeliveryForm({ onClose }: { onClose: () => void }) {
+export default function AddressForm({ onClose }: { onClose: () => void }) {
   const { handlePostcode, register, handleSubmit, errors, onSubmit } =
-    useDeliveryForm(onClose);
+    useAddressFrom(onClose);
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

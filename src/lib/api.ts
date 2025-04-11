@@ -1,4 +1,4 @@
-import type { DeliveryFormData } from '@/app/(order-flow)/_features/useDeliveryForm';
+import type { AddressFormData } from '@/app/(order-flow)/_features/useAddressFrom';
 import type { RequestPaymentsPayload } from '@/app/(order-flow)/checkout/[id]/useCheckout';
 import type { CreateOrderPayload } from '@/app/(order-flow)/confirm/page';
 import type { CartItem } from '@/app/api/cart/route';
@@ -129,7 +129,7 @@ export const createOrder = async (
   }).then((res) => res.json());
 
 //address
-export const createUserAddress = async (payload: DeliveryFormData) =>
+export const createUserAddress = async (payload: AddressFormData) =>
   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/addresses`, {
     method: 'POST',
     body: JSON.stringify(payload),

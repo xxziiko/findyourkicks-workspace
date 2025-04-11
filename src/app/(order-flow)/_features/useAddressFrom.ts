@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export type DeliveryFormData = z.infer<typeof schema>;
+export type AddressFormData = z.infer<typeof schema>;
 
 const schema = z.object({
   name: z.string().min(1, { message: '이름을 입력해주세요.' }).max(10),
@@ -20,13 +20,13 @@ const schema = z.object({
   extraAddress: z.string().min(1),
 });
 
-export default function useDeliveryForm(onClose: () => void) {
+export default function useAddressFrom(onClose: () => void) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<DeliveryFormData>({ resolver: zodResolver(schema) });
+  } = useForm<AddressFormData>({ resolver: zodResolver(schema) });
 
   const queryClient = useQueryClient();
   const { mutate: mutateUserAddress } = useMutation({
@@ -38,7 +38,7 @@ export default function useDeliveryForm(onClose: () => void) {
     },
   });
 
-  const onSubmit = (data: DeliveryFormData) => {
+  const onSubmit = (data: AddressFormData) => {
     const formattedData = {
       ...data,
       address: `[${data.zonecode}] ${data.roadAddress} ${data.extraAddress}`,

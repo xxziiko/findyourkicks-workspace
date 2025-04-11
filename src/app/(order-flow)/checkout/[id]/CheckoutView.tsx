@@ -7,9 +7,9 @@ import type {
 import { Button } from '@/components';
 import { CardLayout, Modal } from '@/components/layouts';
 import {
+  AddressForm,
   AddressList,
   CheckoutSummary,
-  DeliveryForm,
   DeliverySummary,
   OrderProducts,
 } from '../../_features';
@@ -97,7 +97,7 @@ export default function CheckoutView({
               <AddressList onClose={onCloseModal} />
             </div>
           ) : (
-            <DeliveryForm onClose={onCloseModal} />
+            <AddressForm onClose={onCloseModal} />
           )}
         </Modal>
       )}
