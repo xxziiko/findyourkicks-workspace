@@ -15,6 +15,7 @@ export default function Cart() {
     handleDelete,
     handleToggle,
     handleOrderSheet,
+    handleOrderSheetForSingleProduct,
   } = useCart();
 
   const props = {
@@ -29,6 +30,7 @@ export default function Cart() {
     onDelete: handleDelete,
     onToggle: handleToggle,
     onCreateOrderSheet: handleOrderSheet,
+    onCreateOrderSheetForSingleProduct: handleOrderSheetForSingleProduct,
   };
 
   return <CartView {...props} />;

@@ -30,7 +30,7 @@ type ItemHandlers = {
   onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
   onQuantityChange: QuantityHandlerType;
   onDelete: (id: string) => void;
-  onCreateOrderSheet: () => void;
+  onCreateOrderSheetForSingleProduct: (cartItemId: string) => void;
 };
 
 export default function CartList(props: CartListProps) {
@@ -77,7 +77,7 @@ function Item({
   onToggle,
   onQuantityChange,
   onDelete,
-  onCreateOrderSheet,
+  onCreateOrderSheetForSingleProduct,
 }: ItemProps) {
   return (
     <li className={styles.item}>
@@ -107,7 +107,10 @@ function Item({
       </div>
 
       <div className={styles.item__buttons}>
-        <Button text="주문하기" onClick={onCreateOrderSheet} />
+        <Button
+          text="주문하기"
+          onClick={() => onCreateOrderSheetForSingleProduct(item.cartItemId)}
+        />
         <Button
           text="삭제하기"
           onClick={() => onDelete(item.cartItemId)}

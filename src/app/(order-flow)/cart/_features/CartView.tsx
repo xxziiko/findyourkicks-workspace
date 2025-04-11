@@ -9,6 +9,7 @@ interface CartViewProps extends CartListProps {
   totalProduct: number;
   totalPrice: number;
   totalPriceWithDeliveryFee: number;
+  onCreateOrderSheet: () => void;
 }
 
 export default function CartView(props: CartViewProps) {
@@ -17,11 +18,15 @@ export default function CartView(props: CartViewProps) {
     totalPrice,
     totalPriceWithDeliveryFee,
     onCreateOrderSheet,
+    onCreateOrderSheetForSingleProduct,
     ...cartListProps
   } = props;
   return (
     <section className={styles.section}>
-      <CartList {...cartListProps} onCreateOrderSheet={onCreateOrderSheet} />
+      <CartList
+        {...cartListProps}
+        onCreateOrderSheetForSingleProduct={onCreateOrderSheetForSingleProduct}
+      />
 
       <CheckoutSummary
         type="주문"

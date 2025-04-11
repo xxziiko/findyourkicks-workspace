@@ -72,6 +72,14 @@ export default function useCart() {
     mutateCreateOrderSheet({ userId, body });
   };
 
+  const handleOrderSheetForSingleProduct = (cartItemId: string) => {
+    const filteredCart = cartItems.filter(
+      (item) => item.cartItemId === cartItemId,
+    );
+    const body = mapCartItemsToCheckoutRequest(filteredCart);
+    mutateCreateOrderSheet({ userId, body });
+  };
+
   return {
     isAllChecked,
     cartItems,
@@ -85,5 +93,6 @@ export default function useCart() {
     handleQuantityChange,
     handleDelete,
     handleOrderSheet,
+    handleOrderSheetForSingleProduct,
   };
 }
