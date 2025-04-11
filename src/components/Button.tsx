@@ -1,4 +1,5 @@
 import styles from '@/components/Button.module.scss';
+import { Loader } from 'lucide-react';
 
 type Variant =
   | 'kakao'
@@ -15,6 +16,7 @@ interface ButtonProps {
   width?: string;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  isLoading?: boolean;
   onClick?: (e: React.MouseEvent) => Promise<void> | void;
 }
 
@@ -23,6 +25,7 @@ export default function Button({
   text,
   variant,
   width,
+  isLoading,
   ...props
 }: ButtonProps) {
   return (
@@ -32,7 +35,8 @@ export default function Button({
       style={{ width }}
     >
       {icon}
-      <p>{text}</p>
+
+      {isLoading ? <Loader className={styles.btn__loader} /> : <p>{text}</p>}
     </button>
   );
 }

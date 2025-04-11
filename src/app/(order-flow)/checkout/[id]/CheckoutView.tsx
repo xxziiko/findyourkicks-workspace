@@ -21,6 +21,7 @@ interface CheckoutViewProps {
   title: string;
   modalView: 'form' | 'list';
   isModalOpen: boolean;
+  isMutatingOrderItems: boolean;
   totalPrice: number;
   totalPriceWithDeliveryFee: number;
   isAllCheckedAgreement: boolean;
@@ -39,6 +40,7 @@ export default function CheckoutView({
   totalPrice,
   totalPriceWithDeliveryFee,
   isAllCheckedAgreement,
+  isMutatingOrderItems,
   onModalControl,
   onPaymentOpen,
   onAddressListOpen,
@@ -80,6 +82,7 @@ export default function CheckoutView({
           text="결제하기"
           onClick={onPaymentOpen}
           disabled={!isAllCheckedAgreement}
+          isLoading={isMutatingOrderItems}
         />
       </div>
 

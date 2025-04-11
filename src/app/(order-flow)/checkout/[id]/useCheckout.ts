@@ -50,21 +50,22 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
     queryFn: fetchDefaultUserAddress,
   });
 
-  const { mutate: mutateOrderItems } = useMutation({
-    mutationFn: requestPayments,
-    onSuccess: (response) => {
-      const paymentRequestBody = {
-        ...response,
-        orderName:
-          orderSheet.orderSheetItems.length === 1
-            ? orderSheet.orderSheetItems[0].title
-            : `${orderSheet.orderSheetItems[0].title} 외 ${orderSheet.orderSheetItems.length - 1}건`,
-        amount: totalPriceWithDeliveryFee,
-      };
+  const { mutate: mutateOrderItems, isPending: isMutatingOrderItems } =
+    useMutation({
+      mutationFn: requestPayments,
+      onSuccess: (response) => {
+        const paymentRequestBody = {
+          ...response,
+          orderName:
+            orderSheet.orderSheetItems.length === 1
+              ? orderSheet.orderSheetItems[0].title
+              : `${orderSheet.orderSheetItems[0].title} 외 ${orderSheet.orderSheetItems.length - 1}건`,
+          amount: totalPriceWithDeliveryFee,
+        };
 
-      requestTossPayments(paymentRequestBody);
-    },
-  });
+        requestTossPayments(paymentRequestBody);
+      },
+    });
 
   const handlePayment = () => {
     const payload = {
@@ -132,6 +133,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
     totalPriceWithDeliveryFee,
     isModalOpen,
     isAllCheckedAgreement,
+    isMutatingOrderItems,
     modalView,
     handleModal,
     handlePayment,
