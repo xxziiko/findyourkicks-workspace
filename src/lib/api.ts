@@ -152,3 +152,8 @@ export const updateUserAddress = async (addressId: string) =>
       method: 'PATCH',
     },
   ).then((res) => res.json());
+
+export const fetchOrder = async (orderId: string) =>
+  await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/complete/${orderId}`,
+  ).then((res) => res.json());
