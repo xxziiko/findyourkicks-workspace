@@ -27,10 +27,9 @@ type RawCartResponse = {
 export type CartItem = {
   cartItemId: string;
   productId: string;
-  inventoryId: string;
   title: string;
   image: string;
-  inventory: {
+  selectedOption: {
     size: string;
     stock: number;
   };
@@ -80,17 +79,18 @@ export async function GET(req: Request) {
   }
 
   const flatItems: CartItem[] =
-    cart.cart_items.map((item) => ({
-      cartItemId: item.cart_item_id,
-      productId: item.product_id,
-      inventoryId: item.inventory_id,
-      title: item.product?.title,
-      image: item.product?.image,
-      inventory: item.inventory,
-      quantity: item.quantity,
-      price: item.price,
-      addedAt: item.added_at,
-    })) ?? [];
+    cart.cart_items
+      .sort((a, b) => a.cart_item_id.localeCompare(b.cart_item_id))
+      .map((item) => ({
+        cartItemId: item.cart_item_id,
+        productId: item.product_id,
+        title: item.product?.title,
+        image: item.product?.image,
+        selectedOption: item.inventory,
+        quantity: item.quantity,
+        price: item.price,
+        addedAt: item.added_at,
+      })) ?? [];
 
   return NextResponse.json(flatItems);
 }
@@ -134,12 +134,10 @@ export async function POST(req: Request) {
     cartId = newCart.cart_id;
   }
 
-  const insertedItems = [];
+  // const insertedItems = [];
 
+  // item: { product_id, inventory_id, quantity, price }
   for (const item of payload) {
-    // item: { product_id, inventory_id, quantity, price }
-
-    //  해당 inventory의 재고를 확인
     const { data: inventory, error: invError } = await supabase
       .from('inventory')
       .select('inventory_id, stock')
@@ -154,7 +152,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. 기존 cart_item 있는지 확인
     const { data: existingItem } = await supabase
       .from('cart_items')
       .select('*')
@@ -164,7 +161,7 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (existingItem) {
-      const { data: updated } = await supabase
+      await supabase
         .from('cart_items')
         .update({
           quantity: existingItem.quantity + item.quantity,
@@ -174,11 +171,11 @@ export async function POST(req: Request) {
         .select()
         .single();
 
-      if (updated) insertedItems.push(updated);
+      // if (updated) insertedItems.push(updated);
       continue;
     }
 
-    const { data: inserted } = await supabase
+    await supabase
       .from('cart_items')
       .insert({
         cart_id: cartId,
@@ -191,11 +188,10 @@ export async function POST(req: Request) {
       .select()
       .single();
 
-    if (inserted) insertedItems.push(inserted);
+    // if (inserted) insertedItems.push(inserted);
   }
 
   return NextResponse.json({
     message: '장바구니에 상품이 추가되었습니다.',
-    items: insertedItems,
   });
 }

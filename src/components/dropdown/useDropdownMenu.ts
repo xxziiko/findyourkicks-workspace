@@ -1,15 +1,23 @@
 import { useCallback, useState } from 'react';
 
-export default function useDropdownMenu() {
+export default function useDropdownMenu(setSelected: (text: string) => void) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedText, setSelectedText] = useState('메세지를 선택해주세요');
+  const [isEditable, setIsEditable] = useState(false);
 
-  const handleSelectedText = (text: string) => {
-    setSelectedText(text);
+  const handleSelected = (text: string) => {
+    setSelected(text);
   };
 
-  const handleDropdown = () => {
+  const handleEditable = (isEdit: boolean) => setIsEditable(isEdit);
+
+  const handleClose = () => setIsOpen(false);
+
+  const handleToggle = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setSelected(e.target.value);
   };
 
   const handleKeyDown = (
@@ -27,10 +35,13 @@ export default function useDropdownMenu() {
 
   return {
     isOpen,
-    selectedText,
-    handleSelectedText,
-    handleDropdown,
+    isEditable,
+    handleEditable,
+    handleSelected,
+    handleToggle,
+    handleClose,
     handleKeyDown,
     autoFocus,
+    handleBlur,
   };
 }

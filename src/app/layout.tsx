@@ -26,6 +26,7 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body>
+        <div id="modal-root" />
         <Providers>
           <Provider>
             <UserInitializer user={user} />

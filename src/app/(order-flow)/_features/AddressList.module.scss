@@ -1,0 +1,48 @@
+.address {
+  @include flex-col;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  width: 420px;
+  height: 500px;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+  }
+
+  &__item {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $gray-light;
+  }
+
+  &__header {
+    @include flex-item;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+
+    &__name {
+      font-size: $font-sm;
+      font-weight: 700;
+    }
+
+    &__label {
+      padding: 0.35rem;
+      border-radius: $radius-s;
+      font-size: $font-xs;
+      background-color: #efefef;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    p {
+      font-size: $font-sm;
+    }
+  }
+}

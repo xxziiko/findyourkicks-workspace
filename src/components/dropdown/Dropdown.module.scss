@@ -7,24 +7,29 @@
 .drop-down {
   @include drop-down-default;
 
-  &_border {
+  &__border {
     @include drop-down-default;
     border-radius: $radius-s;
     border: 1px solid $gray-light;
+    padding: 1rem;
 
     li {
-      padding: 0.5rem;
+      @include flex-between;
+      align-items: center;
+      color: $primary;
+      padding: 0.5rem 0;
     }
   }
 
-  &__header {
+  &__menu {
+    padding-top: 0.5rem;
+  }
+
+  &__trigger {
     @include flex-between;
     align-items: center;
     color: $primary;
-  }
-
-  li {
-    padding: 0.5rem;
+    width: 100%;
   }
 }
 
@@ -35,4 +40,8 @@
     background-color: #ededed;
     border-radius: $radius-xs;
   }
+}
+
+.input {
+  width: 80%;
 }
