@@ -48,9 +48,11 @@ export async function POST(req: Request) {
   const { error: paymentInsertError } = await supabase.from('payments').insert({
     payment_id: paymentResult.paymentId,
     payment_method: paymentResult.method, // 카드, 가상계좌 등
+    payment_easypay_provider: paymentResult.easyPay.provider,
     payment_key: paymentKey,
     amount: paymentResult.totalAmount,
     status: paymentResult.status,
+    order_name: paymentResult.orderName,
     approved_at: new Date(paymentResult.approvedAt).toISOString(),
   });
 
@@ -141,16 +143,27 @@ export async function POST(req: Request) {
   // 7. 장바구니 삭제
   const cartItemIds = items.map((item) => item.cart_item_id);
 
+  const { data: cart, error: cartError } = await supabase
+    .from('cart')
+    .select('cart_id')
+    .eq('user_id', sheet.user_id)
+    .single();
+
+  if (cartError || !cart) {
+    return NextResponse.json(
+      { error: '장바구니 조회 실패', details: cartError?.message },
+      { status: 500 },
+    );
+  }
+
   const { error: deleteError } = await supabase
     .from('cart_items')
     .delete()
+    .eq('cart_id', cart.cart_id)
     .in('cart_item_id', cartItemIds);
 
   if (deleteError) {
-    return NextResponse.json(
-      { error: '장바구니 아이템 삭제 실패', details: deleteError.message },
-      { status: 500 },
-    );
+    console.error('장바구니 아이템 삭제 실패:', deleteError);
   }
 
   return NextResponse.json({
