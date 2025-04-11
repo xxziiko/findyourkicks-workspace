@@ -81,7 +81,7 @@ export default function CheckoutView({
         <Button
           text="결제하기"
           onClick={onPaymentOpen}
-          disabled={!isAllCheckedAgreement}
+          disabled={!isAllCheckedAgreement || !defaultAddress.addressId}
           isLoading={isMutatingOrderItems}
         />
       </div>

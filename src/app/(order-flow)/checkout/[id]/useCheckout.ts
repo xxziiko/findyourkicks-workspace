@@ -32,10 +32,6 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
-  const [modalView, setModalView] = useState<'form' | 'list'>(
-    orderSheet.delivery.addressId ? 'list' : 'form',
-  );
-  const title = modalView === 'form' ? '주소 입력' : '주소 변경';
 
   const totalPrice = orderSheet.orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -48,6 +44,11 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
     initialData: orderSheet.delivery,
     queryFn: fetchDefaultUserAddress,
   });
+
+  const [modalView, setModalView] = useState<'form' | 'list'>(
+    defaultAddress.addressId ? 'list' : 'form',
+  );
+  const title = modalView === 'form' ? '주소 입력' : '주소 변경';
 
   const { mutate: mutateOrderItems, isPending: isMutatingOrderItems } =
     useMutation({
@@ -105,8 +106,8 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
       customerEmail,
       customerMobilePhone,
       customerName,
-      successUrl: `${window.location.origin}/confirm`, // 결제 요청이 성공하면 리다이렉트되는 URL
-      failUrl: `${window.location.origin}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
+      successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/confirm`, // 결제 요청이 성공하면 리다이렉트되는 URL
+      failUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
 
       // 카드 결제에 필요한 정보
       card: {
@@ -121,7 +122,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
 
   const onCloseModal = () => {
     handleModal();
-    setModalView(orderSheet.delivery.addressId ? 'list' : 'form');
+    setModalView(defaultAddress.addressId ? 'list' : 'form');
   };
 
   return {
