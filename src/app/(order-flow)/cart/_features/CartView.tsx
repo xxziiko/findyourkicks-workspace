@@ -9,7 +9,7 @@ interface CartViewProps extends CartListProps {
   totalProduct: number;
   totalPrice: number;
   totalPriceWithDeliveryFee: number;
-  onAllOrderSheet: () => void;
+  onCreateOrderSheet: () => void;
 }
 
 export default function CartView(props: CartViewProps) {
@@ -17,13 +17,16 @@ export default function CartView(props: CartViewProps) {
     totalProduct,
     totalPrice,
     totalPriceWithDeliveryFee,
-    onAllOrderSheet,
-    onOrderSheet,
+    onCreateOrderSheet,
+    onCreateOrderSheetForSingleProduct,
     ...cartListProps
   } = props;
   return (
     <section className={styles.section}>
-      <CartList {...cartListProps} onOrderSheet={onOrderSheet} />
+      <CartList
+        {...cartListProps}
+        onCreateOrderSheetForSingleProduct={onCreateOrderSheetForSingleProduct}
+      />
 
       <CheckoutSummary
         type="주문"
@@ -33,7 +36,8 @@ export default function CartView(props: CartViewProps) {
 
       <Button
         text={`${totalPriceWithDeliveryFee.toLocaleString()}원 • 총 ${totalProduct}건 주문하기`}
-        onClick={onAllOrderSheet}
+        onClick={onCreateOrderSheet}
+        disabled={totalProduct === 0}
       />
     </section>
   );

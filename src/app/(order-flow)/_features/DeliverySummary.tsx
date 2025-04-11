@@ -19,11 +19,11 @@ export default function DeliverySummary({ data }: { data: Address | null }) {
 
   return (
     <>
-      {!data && (
+      {!data?.address && (
         <NoData title="배송지를 입력해주세요!" icon={<CircleAlertIcon />} />
       )}
 
-      {data && (
+      {data?.address && (
         <>
           {address.map((info) => (
             <div className={styles.delivery__item} key={info.subtitle}>

@@ -1,23 +1,32 @@
+'use client';
+
+import { useEffect } from 'react';
 import Button from '../Button';
 import styles from './Modal.module.scss';
-
+import Portal from './Portal';
 interface ModalProps {
   title: string;
-  onClose: () => void;
   children: React.ReactNode;
 }
 
-export default function Modal({ title, onClose, children }: ModalProps) {
+export default function Modal({ title, children }: ModalProps) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div className={styles.modal__overlay}>
-      <div className={styles.modal__container}>
-        <Header title={title} />
+    <Portal>
+      <div className={styles.modal__overlay}>
+        <div className={styles.modal__container}>
+          <Header title={title} />
 
-        <div className={styles.layout}>{children}</div>
-
-        <Footer onClose={onClose} />
+          <div>{children}</div>
+        </div>
       </div>
-    </div>
+    </Portal>
   );
 }
 
@@ -29,12 +38,19 @@ function Header({ title }: { title: string }) {
   );
 }
 
-function Footer({ onClose }: { onClose: () => void }) {
+function Footer({
+  onClose,
+  type = 'default',
+}: { onClose: () => void; type?: 'default' | 'single' }) {
   return (
     <div className={styles.footer}>
-      <Button onClick={onClose} text="저장하기" width="15%" />
+      {type === 'default' && (
+        <Button text="저장하기" width="15%" type="submit" />
+      )}
 
       <Button onClick={onClose} text="닫기" variant="lined--r" width="15%" />
     </div>
   );
 }
+
+Modal.Footer = Footer;

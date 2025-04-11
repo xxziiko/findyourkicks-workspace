@@ -4,28 +4,37 @@ import CheckoutView from './CheckoutView';
 import useCheckout from './useCheckout';
 
 export default function Checkout({
-  id,
   orderSheet,
-}: { id: string; orderSheet: OrderSheetResponse }) {
+}: { orderSheet: OrderSheetResponse }) {
   const {
-    conditionalTitle,
+    defaultAddress,
+    title,
     isModalOpen,
     isAllCheckedAgreement,
     totalPrice,
     totalPriceWithDeliveryFee,
+    isMutatingOrderItems,
+    modalView,
     handleModal,
     handlePayment,
+    handleModalView,
+    onCloseModal,
   } = useCheckout(orderSheet);
 
   const props = {
-    conditionalTitle,
+    defaultAddress,
+    title,
     isModalOpen,
     isAllCheckedAgreement,
     totalPrice,
+    orderSheet,
     totalPriceWithDeliveryFee,
+    modalView,
+    isMutatingOrderItems,
     onModalControl: handleModal,
     onPaymentOpen: handlePayment,
-    orderSheet,
+    onAddressListOpen: handleModalView,
+    onCloseModal,
   };
 
   return <CheckoutView {...props} />;
