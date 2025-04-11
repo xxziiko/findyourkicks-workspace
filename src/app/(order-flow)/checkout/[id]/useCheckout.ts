@@ -8,7 +8,6 @@ import { useState } from 'react';
 
 export interface RequestPaymentsPayload {
   orderSheetId: string;
-  paymentMethod: string;
   userAddressId: string;
   delivery?: {
     alias?: string;
@@ -70,7 +69,6 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const handlePayment = () => {
     const payload = {
       orderSheetId: orderSheet.orderSheetId,
-      paymentMethod: 'card',
       userAddressId: orderSheet.delivery.addressId,
       delivery: { message: deliveryMessage },
       termsAgreed: isAllCheckedAgreement,

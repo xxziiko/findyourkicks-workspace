@@ -69,6 +69,7 @@ export async function POST(req: Request) {
     .insert({
       user_id: sheet.user_id,
       order_sheet_id: orderId,
+      address_id: sheet.user_address_id,
       total_amount: Number(amount),
       status: 'paid',
       order_date: new Date().toISOString(),
