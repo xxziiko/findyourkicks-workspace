@@ -105,8 +105,8 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
       customerEmail,
       customerMobilePhone,
       customerName,
-      successUrl: `${window.location.origin}/confirm`, // 결제 요청이 성공하면 리다이렉트되는 URL
-      failUrl: `${window.location.origin}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
+      successUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/confirm`, // 결제 요청이 성공하면 리다이렉트되는 URL
+      failUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
 
       // 카드 결제에 필요한 정보
       card: {
