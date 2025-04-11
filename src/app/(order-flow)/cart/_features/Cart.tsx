@@ -14,7 +14,6 @@ export default function Cart() {
     handleQuantityChange,
     handleDelete,
     handleToggle,
-    handleAllOrderSheet,
     handleOrderSheet,
   } = useCart();
 
@@ -29,8 +28,7 @@ export default function Cart() {
     onQuantityChange: handleQuantityChange,
     onDelete: handleDelete,
     onToggle: handleToggle,
-    onAllOrderSheet: handleAllOrderSheet,
-    onOrderSheet: handleOrderSheet,
+    onCreateOrderSheet: handleOrderSheet,
   };
 
   return <CartView {...props} />;

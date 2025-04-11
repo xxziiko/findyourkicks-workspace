@@ -64,16 +64,10 @@ export default function useCart() {
     }));
   };
 
-  const handleAllOrderSheet = () => {
-    const body = mapCartItemsToCheckoutRequest(cartItems);
-    mutateCreateOrderSheet({ userId, body });
-  };
-
-  const handleOrderSheet = (cartItemId: string) => {
+  const handleOrderSheet = () => {
     const filteredCart = cartItems.filter(
-      (item) => item.cartItemId === cartItemId,
+      (item) => checkedItems[item.cartItemId],
     );
-
     const body = mapCartItemsToCheckoutRequest(filteredCart);
     mutateCreateOrderSheet({ userId, body });
   };
@@ -90,7 +84,6 @@ export default function useCart() {
     handleToggleAll,
     handleQuantityChange,
     handleDelete,
-    handleAllOrderSheet,
     handleOrderSheet,
   };
 }
