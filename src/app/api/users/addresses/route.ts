@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '주소 조회 실패' }, { status: 500 });
   }
 
-  if (addressId) {
+  if (addressId.length > 0) {
     const { error: updateDefaultAddressError } = await supabase
       .from('user_addresses')
       .update({
