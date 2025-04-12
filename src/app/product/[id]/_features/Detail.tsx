@@ -14,6 +14,7 @@ export default function Detail({ data }: { data: Detail }) {
     product,
     selectedOptions,
     totalQuantity,
+    isMutatingCart,
     handleSelectSize,
     handleDeleteButton,
     handleQuantityChange,
@@ -25,7 +26,7 @@ export default function Detail({ data }: { data: Detail }) {
     product,
     totalQuantity,
     selectedOptions,
-
+    isMutatingCart,
     onSelectSize: handleSelectSize,
     onDelete: handleDeleteButton,
     onQuantityChange: handleQuantityChange,

@@ -5,7 +5,7 @@ import { CartView, useCart } from '@/app/(order-flow)/cart/_features';
 export default function Cart() {
   const {
     isAllChecked,
-    isLoading,
+    isMutatingOrderSheet,
     cartItems,
     checkedItems,
     totalProduct,
@@ -22,7 +22,7 @@ export default function Cart() {
   const props = {
     isAllChecked,
     cartItems,
-    isLoading,
+    isMutatingOrderSheet,
     totalProduct,
     checkedItems,
     totalPrice,

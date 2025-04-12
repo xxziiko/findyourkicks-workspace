@@ -12,7 +12,7 @@ import { useCreateOrderSheetMutation } from '../../_features';
 
 export default function useCart() {
   const userId = useAtomValue(userIdAtom);
-  const { data: cartItems, isLoading } = useSuspenseQuery({
+  const { data: cartItems } = useSuspenseQuery({
     queryKey: ['cart'],
     queryFn: async () => await fetchCartItems(userId),
   });
@@ -27,7 +27,8 @@ export default function useCart() {
 
   const { mutate: mutateCartQuantity } = useUpdateCartMutation();
   const { mutate: mutateDeleteCartItem } = useDeleteCartMutation();
-  const { mutate: mutateCreateOrderSheet } = useCreateOrderSheetMutation();
+  const { mutate: mutateCreateOrderSheet, isPending: isMutatingOrderSheet } =
+    useCreateOrderSheetMutation();
 
   const totalProduct = Object.values(checkedItems).filter(
     (checkedItem) => !!checkedItem,
@@ -82,7 +83,7 @@ export default function useCart() {
 
   return {
     isAllChecked,
-    isLoading,
+    isMutatingOrderSheet,
     cartItems,
     checkedItems,
     totalProduct,

@@ -10,14 +10,12 @@ import styles from './CartList.module.scss';
 export interface CartListProps extends ItemHandlers {
   cartItems: CartItem[];
   isAllChecked: boolean;
-  isLoading: boolean;
   checkedItems: { [cartId: string]: boolean };
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface ItemProps extends ItemHandlers {
   item: CartItem;
-  isLoading: boolean;
   checkedItems: { [cartId: string]: boolean };
 }
 
@@ -73,7 +71,6 @@ function Header({ isAllChecked, onToggleAll }: HeaderProps) {
 
 function Item({
   item,
-  isLoading,
   checkedItems,
   onToggle,
   onQuantityChange,
@@ -111,13 +108,11 @@ function Item({
         <Button
           text="주문하기"
           onClick={() => onCreateOrderSheetForSingleProduct(item.cartItemId)}
-          isLoading={isLoading}
         />
         <Button
           text="삭제하기"
           onClick={() => onDelete(item.cartItemId)}
           variant="lined--r"
-          isLoading={isLoading}
         />
       </div>
     </li>

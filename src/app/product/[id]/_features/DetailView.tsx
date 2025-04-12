@@ -1,7 +1,8 @@
 'use client';
 
+import Loading from '@/app/loading';
 import { Button, Image } from '@/components';
-import type { EventHandlers, InventoryItem, SelectedOption } from '@/lib/types';
+import type { EventHandlers, SelectedOption } from '@/lib/types';
 import type { Detail } from './Detail';
 import styles from './DetailView.module.scss';
 import Option from './Option';
@@ -11,6 +12,7 @@ export type DetailViewProps = DetailViewBase & EventHandlers;
 interface DetailViewBase {
   product: Detail;
   totalQuantity: number;
+  isMutatingCart: boolean;
   selectedOptions: SelectedOption[];
   onCartButton: () => void;
   onDelete: (id: string) => void;
@@ -28,19 +30,17 @@ export default function DetailView(props: DetailViewProps) {
 
       <div className={styles.detail__divider} />
 
-      <DetailView.Content {...props} />
+      <Content {...props} />
     </article>
   );
 }
-
-DetailView.Content = Content;
 
 function Content(props: DetailViewProps) {
   const {
     product,
     totalQuantity,
     selectedOptions,
-
+    isMutatingCart,
     onSelectSize,
     onDelete,
     onQuantityChange,
@@ -48,7 +48,9 @@ function Content(props: DetailViewProps) {
     getCurrentQuantity,
   } = props;
 
-  return (
+  return isMutatingCart ? (
+    <Loading />
+  ) : (
     <section className={styles.content}>
       <div className={styles.content__top}>
         <div>
@@ -109,7 +111,7 @@ function Content(props: DetailViewProps) {
             onClick={() => {}}
             variant="lined--r"
             disabled={totalQuantity === 0}
-          /> */}
+            /> */}
         </div>
       </div>
     </section>
