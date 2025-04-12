@@ -20,10 +20,9 @@ export default function Header() {
           <div className={styles.tabs}>
             <p>{userEmail.split('@')[0]}님</p>
             <p>마이페이지</p>
+            <CartNavLink />
           </div>
         )}
-
-        <CartNavLink />
 
         {userEmail && (
           <button onClick={handleLogout} type="button">
