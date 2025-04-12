@@ -1,10 +1,18 @@
 import { fetchProducts } from '@/lib/api';
+import { Suspense } from 'react';
+import ProductListLoading from './ProductListLoading';
 import ProductList from './product/_features/ProductList';
 
-// export const dynamic = 'force-static';
-
 export default async function Home() {
-  const initialProducts = await fetchProducts();
+  return (
+    <Suspense fallback={<ProductListLoading />}>
+      <Products />
+    </Suspense>
+  );
+}
 
-  return <ProductList initialProducts={initialProducts} />;
+async function Products() {
+  const products = await fetchProducts();
+
+  return <ProductList products={products} />;
 }

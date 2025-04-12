@@ -4,14 +4,15 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import type { ProductResponse } from './useProductList';
 
 export default function useFetchProductsQuery({
-  initialProducts,
-}: { initialProducts: ProductResponse }) {
+  initialValues,
+}: { initialValues: ProductResponse }) {
   const { error, ...rest } = useInfiniteQuery({
+    //FIXME: querykey 관리 방식 추후 수정 필요
     queryKey: ['products'],
     queryFn: async ({ pageParam }) => await fetchProducts(pageParam),
     initialPageParam: 1,
     initialData: {
-      pages: [initialProducts],
+      pages: [initialValues],
       pageParams: [1],
     },
     getNextPageParam: (lastPage, pages) =>
@@ -32,7 +33,7 @@ export default function useFetchProductsQuery({
       );
     },
 
-    enabled: !!initialProducts,
+    enabled: !!initialValues,
     staleTime: 1000 * 60 * 2,
     gcTime: 1000 * 60 * 2,
   });
