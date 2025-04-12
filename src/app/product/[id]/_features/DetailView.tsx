@@ -104,7 +104,12 @@ function Content(props: DetailViewProps) {
 
         <div className={styles.content__bottom_buttons}>
           <Button text="장바구니" onClick={onCartButton} />
-          <Button text="구매하기" onClick={() => {}} variant="lined--r" />
+          {/* <Button
+            text="구매하기"
+            onClick={() => {}}
+            variant="lined--r"
+            disabled={totalQuantity === 0}
+          /> */}
         </div>
       </div>
     </section>
