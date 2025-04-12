@@ -4,9 +4,9 @@ import ProductListView from './ProductListView';
 import useProductList, { type ProductResponse } from './useProductList';
 
 export default function ProductList({
-  initialProducts,
-}: { initialProducts: ProductResponse }) {
-  const props = useProductList({ initialProducts });
+  products,
+}: { products: ProductResponse }) {
+  const props = useProductList({ initialValues: products });
 
   return <ProductListView {...props} />;
 }
