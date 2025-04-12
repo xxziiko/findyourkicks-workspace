@@ -1,5 +1,6 @@
 'use client';
 
+import Loading from '@/app/loading';
 import { Button } from '@/components';
 import { CheckoutSummary } from '../../_features';
 import styles from '../page.module.scss';
@@ -8,13 +9,14 @@ import CartList, { type CartListProps } from './CartList';
 interface CartViewProps extends CartListProps {
   totalProduct: number;
   totalPrice: number;
+  isMutatingOrderSheet: boolean;
   totalPriceWithDeliveryFee: number;
   onCreateOrderSheet: () => void;
 }
 
 export default function CartView(props: CartViewProps) {
   const {
-    isLoading,
+    isMutatingOrderSheet,
     totalProduct,
     totalPrice,
     totalPriceWithDeliveryFee,
@@ -22,11 +24,12 @@ export default function CartView(props: CartViewProps) {
     onCreateOrderSheetForSingleProduct,
     ...cartListProps
   } = props;
-  return (
+  return isMutatingOrderSheet ? (
+    <Loading />
+  ) : (
     <section className={styles.section}>
       <CartList
         {...cartListProps}
-        isLoading={isLoading}
         onCreateOrderSheetForSingleProduct={onCreateOrderSheetForSingleProduct}
       />
 
@@ -37,7 +40,7 @@ export default function CartView(props: CartViewProps) {
       />
 
       <Button
-        isLoading={isLoading}
+        isLoading={isMutatingOrderSheet}
         text={`${totalPriceWithDeliveryFee.toLocaleString()}원 • 총 ${totalProduct}건 주문하기`}
         onClick={onCreateOrderSheet}
         disabled={totalProduct === 0}

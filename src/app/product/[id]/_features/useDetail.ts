@@ -15,7 +15,7 @@ export default function useDetail({ data: product }: { data: Detail }) {
   const userId = useAtomValue(userIdAtom);
 
   const queryClient = useQueryClient();
-  const { mutate: mutateCart } = useMutation({
+  const { mutate: mutateCart, isPending: isMutatingCart } = useMutation({
     mutationFn: addToCart,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
@@ -88,6 +88,7 @@ export default function useDetail({ data: product }: { data: Detail }) {
   };
 
   return {
+    isMutatingCart,
     product,
     selectedOptions,
     totalQuantity,
