@@ -70,7 +70,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   const handlePayment = () => {
     const payload = {
       orderSheetId: orderSheet.orderSheetId,
-      userAddressId: orderSheet.delivery.addressId,
+      userAddressId: defaultAddress.addressId,
       delivery: { message: deliveryMessage },
       termsAgreed: isAllCheckedAgreement,
     };
