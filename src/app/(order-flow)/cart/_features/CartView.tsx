@@ -14,6 +14,7 @@ interface CartViewProps extends CartListProps {
 
 export default function CartView(props: CartViewProps) {
   const {
+    isLoading,
     totalProduct,
     totalPrice,
     totalPriceWithDeliveryFee,
@@ -25,6 +26,7 @@ export default function CartView(props: CartViewProps) {
     <section className={styles.section}>
       <CartList
         {...cartListProps}
+        isLoading={isLoading}
         onCreateOrderSheetForSingleProduct={onCreateOrderSheetForSingleProduct}
       />
 
@@ -35,6 +37,7 @@ export default function CartView(props: CartViewProps) {
       />
 
       <Button
+        isLoading={isLoading}
         text={`${totalPriceWithDeliveryFee.toLocaleString()}원 • 총 ${totalProduct}건 주문하기`}
         onClick={onCreateOrderSheet}
         disabled={totalProduct === 0}

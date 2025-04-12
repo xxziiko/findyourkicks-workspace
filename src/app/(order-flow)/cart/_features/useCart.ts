@@ -12,7 +12,7 @@ import { useCreateOrderSheetMutation } from '../../_features';
 
 export default function useCart() {
   const userId = useAtomValue(userIdAtom);
-  const { data: cartItems } = useSuspenseQuery({
+  const { data: cartItems, isLoading } = useSuspenseQuery({
     queryKey: ['cart'],
     queryFn: async () => await fetchCartItems(userId),
   });
@@ -82,6 +82,7 @@ export default function useCart() {
 
   return {
     isAllChecked,
+    isLoading,
     cartItems,
     checkedItems,
     totalProduct,
