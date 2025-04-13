@@ -67,14 +67,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: '주소 조회 실패' }, { status: 500 });
   }
 
-  const response = addresses.map((address) => ({
-    addressId: address.address_id,
-    receiverName: address.receiver_name,
-    receiverPhone: address.receiver_phone,
-    alias: address.alias,
-    address: address.address,
-    isDefault: address.is_default,
-  }));
+  const response = addresses
+    .sort((a, b) => b.is_default - a.is_default)
+    .map((address) => ({
+      addressId: address.address_id,
+      receiverName: address.receiver_name,
+      receiverPhone: address.receiver_phone,
+      alias: address.alias,
+      address: address.address,
+      isDefault: address.is_default,
+    }));
 
   return NextResponse.json(response);
 }
