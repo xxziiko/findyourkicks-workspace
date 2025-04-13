@@ -1,4 +1,4 @@
-import type { AddressFormData } from '@/app/(order-flow)/_features/useAddressFrom';
+import type { AddressFormData } from '@/app/(order-flow)/_features/useAddressForm';
 import type { RequestPaymentsPayload } from '@/app/(order-flow)/checkout/[id]/useCheckout';
 import type { CreateOrderPayload } from '@/app/(order-flow)/confirm/page';
 import type { CartItem } from '@/app/api/cart/route';

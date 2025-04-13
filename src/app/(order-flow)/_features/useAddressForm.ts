@@ -20,7 +20,7 @@ const schema = z.object({
   extraAddress: z.string().min(1),
 });
 
-export default function useAddressFrom(onClose: () => void) {
+export default function useAddressForm(onClose: () => void) {
   const {
     register,
     handleSubmit,

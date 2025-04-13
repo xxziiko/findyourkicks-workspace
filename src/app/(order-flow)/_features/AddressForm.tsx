@@ -2,7 +2,7 @@
 import { Button } from '@/components';
 import Modal from '@/components/layouts/Modal';
 import styles from './AddressForm.module.scss';
-import useAddressFrom from './useAddressFrom';
+import useAddressForm from './useAddressForm';
 
 const USER_INPUT_NAME = ['name', 'phone', 'alias'] as const;
 const ADDRESS_INPUT_NAME = ['roadAddress', 'extraAddress'] as const;
@@ -23,7 +23,7 @@ declare global {
 
 export default function AddressForm({ onClose }: { onClose: () => void }) {
   const { handlePostcode, register, handleSubmit, errors, onSubmit } =
-    useAddressFrom(onClose);
+    useAddressForm(onClose);
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
