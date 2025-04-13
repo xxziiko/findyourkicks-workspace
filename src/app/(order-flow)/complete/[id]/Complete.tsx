@@ -96,40 +96,38 @@ export default function Complete({ order }: { order: Order }) {
       <CardLayout title="주문 정보">
         <div className={styles.complete__info}>
           <h5>결제정보</h5>
-          <div className={styles.complete__info__wrapper}>
-            <div className={styles.complete__info__wrapper__item}>
+          <div className={styles.complete__wrapper}>
+            <div className={styles.complete__items}>
               {PAYMENT_INFO.map((item) => (
                 <div key={item.title}>
-                  <p className={styles.complete__info__item__title}>
-                    {item.title}
-                  </p>
+                  <p className={styles.complete__subtitle}>{item.title}</p>
                   <p>{item.getContent(order)}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className={styles.complete__info__wrapper}>
+          <div className={styles.complete__wrapper}>
             {ORDER_INFO.map((item) => (
-              <div key={item.title} className={styles.complete__info__item}>
+              <div key={item.title} className={styles.complete__item}>
                 <h5>{item.title}</h5>
                 <p>{item.getContent(order)}</p>
               </div>
             ))}
           </div>
 
-          <div className={styles.complete__info__wrapper}>
+          <div className={styles.complete__wrapper}>
             {TOTAL_INFO.map((item) => (
-              <div key={item.title} className={styles.complete__info__item}>
+              <div key={item.title} className={styles.complete__item}>
                 <h5>{item.title}</h5>
                 <p>{item.getContent(order)}</p>
               </div>
             ))}
           </div>
 
-          <div className={styles.complete__info__item}>
+          <div className={styles.complete__item}>
             <h5>총 결제 금액</h5>
-            <p className={styles.complete__info__item__total}>
+            <p className={styles.complete__total}>
               {order.payment.amount.toLocaleString()}원
             </p>
           </div>

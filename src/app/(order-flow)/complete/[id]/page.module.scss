@@ -12,44 +12,44 @@
 
   &__info {
     @include flex-col;
+  }
 
-    &__wrapper {
-      @include flex-col;
-      border-bottom: 1px solid $primary;
+  &__wrapper {
+    @include flex-col;
+    border-bottom: 1px solid $primary;
 
-      &__item {
-        padding: 1.2rem 0;
-
-        div {
-          @include flex-item;
-          padding-bottom: 0.4rem;
-        }
-      }
-
-      p {
-        font-size: $font-s;
-      }
+    p {
+      font-size: $font-s;
     }
+  }
 
-    &__item {
+  &__items {
+    padding: 1.2rem 0;
+
+    div {
       @include flex-item;
-      padding: 1.2rem 0;
-      border-bottom: 1px solid $gray-light;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &__title {
-        color: $gray-dark;
-        width: 30%;
-      }
-
-      &__total {
-        font-size: $font-xl;
-        font-weight: 600;
-      }
+      padding-bottom: 0.4rem;
     }
+  }
+
+  &__item {
+    @include flex-item;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid $gray-light;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__subtitle {
+    color: $gray-dark;
+    width: 30%;
+  }
+
+  &__total {
+    font-size: $font-xl;
+    font-weight: 600;
   }
 
   &__button {
