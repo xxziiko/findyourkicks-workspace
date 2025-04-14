@@ -21,9 +21,5 @@ interface PaymentsResponse {
 }
 
 export const requestPayments = async (body: Payments) => {
-  const { data } = await api.post<PaymentsResponse, Payments>(
-    '/payments',
-    body,
-  );
-  return data;
+  return await api.post<PaymentsResponse, Payments>('/payments', body);
 };

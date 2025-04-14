@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const payload = await req.json();
-
   const {
     orderSheetId,
     paymentMethod,
@@ -12,7 +10,7 @@ export async function POST(req: Request) {
     termsAgreed,
     totalAmount,
     deliveryAddress,
-  } = payload;
+  } = await req.json();
 
   // 주문서 정보 업데이트
   const { error: updateError } = await supabase
@@ -34,21 +32,20 @@ export async function POST(req: Request) {
   }
 
   // payload에 delevery가 있다면 업데이트
-  if (payload.delivery) {
-    const { error: updateDeliveryError } = await supabase
-      .from('user_addresses')
-      .update(deliveryAddress)
-      .eq('address_id', userAddressId);
 
-    if (updateDeliveryError) {
-      return NextResponse.json(
-        {
-          error: '배송 정보 업데이트 실패',
-          details: updateDeliveryError.message,
-        },
-        { status: 500 },
-      );
-    }
+  const { error: updateDeliveryError } = await supabase
+    .from('user_addresses')
+    .update(deliveryAddress)
+    .eq('address_id', userAddressId);
+
+  if (updateDeliveryError) {
+    return NextResponse.json(
+      {
+        error: '배송 정보 업데이트 실패',
+        details: updateDeliveryError.message,
+      },
+      { status: 500 },
+    );
   }
 
   // 유저 정보 조회

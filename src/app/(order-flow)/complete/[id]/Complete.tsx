@@ -27,28 +27,28 @@ const PAYMENT_INFO: InfoItem[] = [
 const ORDER_INFO: InfoItem[] = [
   {
     title: '주문번호',
-    getContent: ({ orderId }) => orderId,
+    getContent: (order) => order.orderId,
   },
   {
     title: '주문일시',
-    getContent: ({ orderDate }) => orderDate,
+    getContent: (order) => order.orderDate,
   },
   {
     title: '주문상품',
-    getContent: ({ payment }) => payment.orderName,
+    getContent: (order) => order.payment.orderName,
   },
   {
     title: '주문자명',
-    getContent: ({ deliveryAddress }) => deliveryAddress.receiverName,
+    getContent: (order) => order.address.receiverName,
   },
   {
     title: '배송정보',
-    getContent: ({ deliveryAddress }) => (
+    getContent: (order) => (
       <>
-        <p className={styles.address}>{deliveryAddress.receiverName}</p>
-        <p className={styles.address}>{deliveryAddress.receiverPhone}</p>
-        <p className={styles.address}>{deliveryAddress.address}</p>
-        <p className={styles.address}>{deliveryAddress.message}</p>
+        <p className={styles.address}>{order.address.receiverName}</p>
+        <p className={styles.address}>{order.address.receiverPhone}</p>
+        <p className={styles.address}>{order.address.address}</p>
+        <p className={styles.address}>{order.address.message}</p>
       </>
     ),
   },

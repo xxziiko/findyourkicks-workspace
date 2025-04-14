@@ -7,15 +7,11 @@ export const createUserAddress = async (body: UserAddressRequest) =>
     body,
   );
 
-export const fetchUserAddresses = async () => {
-  const { data } = await api.get<UserAddress[]>('/users/addresses');
-  return data;
-};
+export const fetchUserAddresses = async () =>
+  await api.get<UserAddress[]>('/users/addresses');
 
-export const fetchDefaultUserAddress = async () => {
-  const { data } = await api.get<UserAddress>('/users/addresses/default');
-  return data;
-};
+export const fetchDefaultUserAddress = async () =>
+  await api.get<UserAddress>('/users/addresses/default');
 
 export const updateUserAddress = async (addressId: string) =>
   await api.patch<{ message: string }, UserAddress>(

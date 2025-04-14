@@ -1,10 +1,7 @@
-import type { OrderProductItem } from '@/features/order-sheet/types';
-import type { UserAddress } from '@/features/user/address/types';
-
 export interface OrderRequest {
   paymentKey: string;
   orderId: string;
-  amount: number;
+  amount: string;
 }
 
 export interface Order {
@@ -16,7 +13,13 @@ export interface Order {
     amount: number;
     orderName: string;
   };
-  deliveryAddress: UserAddress;
+  address: {
+    alias: string;
+    receiverName: string;
+    receiverPhone: string;
+    address: string;
+    message: string;
+  };
 }
 
 export interface OrderResponse {

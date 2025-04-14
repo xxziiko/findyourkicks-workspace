@@ -1,19 +1,11 @@
 import { api } from '@/shared/utils/api';
 
 export const signInWithGoogle = async (next = '/') => {
-  const { data } = await api.post<{ url: string }>(
-    `/auth/google?next=${encodeURIComponent(next)}`,
-  );
-
-  return data.url;
+  return await api.get<string>(`/auth/google?next=${encodeURIComponent(next)}`);
 };
 
 export const signInWithKakao = async (next = '/') => {
-  const { data } = await api.post<{ url: string }>(
-    `/auth/kakao?next=${encodeURIComponent(next)}`,
-  );
-
-  return data.url;
+  return await api.get<string>(`/auth/kakao?next=${encodeURIComponent(next)}`);
 };
 
 export const signOutUser = async () => await api.post('/auth/signout');

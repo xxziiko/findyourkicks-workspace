@@ -56,14 +56,14 @@ export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
     });
 
   const handlePayment = () => {
-    const payload = {
+    mutateOrderItems({
       orderSheetId: orderSheet.orderSheetId,
       userAddressId: defaultAddress.addressId,
-      deliveryAddress: { message: deliveryMessage },
+      deliveryAddress: {
+        message: deliveryMessage,
+      },
       termsAgreed: isAllCheckedAgreement,
-    };
-
-    mutateOrderItems(payload);
+    });
   };
 
   // ------  SDK 초기화 ------
