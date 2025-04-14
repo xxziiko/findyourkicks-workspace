@@ -1,22 +1,17 @@
-import { createOrder } from '@/lib/api';
+import { createOrder } from '@/features/order/apis';
+import type { OrderRequest } from '@/features/order/types';
 import { redirect } from 'next/navigation';
-
-export interface CreateOrderPayload {
-  paymentKey: string;
-  orderId: string;
-  amount: string;
-}
 
 export default async function ConfirmPage({
   searchParams,
 }: {
-  searchParams: Promise<CreateOrderPayload>;
+  searchParams: Promise<OrderRequest>;
 }) {
   const payload = await searchParams;
-  const orderResponse = await createOrder(payload);
+  const response = await createOrder(payload);
 
-  if (orderResponse.orderId) {
-    redirect(`/complete/${orderResponse.orderId}`);
+  if (response.orderId) {
+    redirect(`/complete/${response.orderId}`);
   }
 
   return <div>결제 확인 요청 중입니다.</div>;

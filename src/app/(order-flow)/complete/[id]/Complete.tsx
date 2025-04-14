@@ -1,27 +1,11 @@
 'use client';
 import { Button } from '@/components';
 import { CardLayout } from '@/components/layouts';
+import type { Order } from '@/features/order/types';
 import { CircleCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import styles from './page.module.scss';
-
-interface Order {
-  orderId: string;
-  orderDate: string;
-  payment: {
-    paymentMethod: string;
-    paymentEasypayProvider: string;
-    amount: number;
-    orderName: string;
-  };
-  address: {
-    receiverName: string;
-    receiverPhone: string;
-    address: string;
-    message: string;
-  };
-}
 
 interface InfoItem {
   title: string;
@@ -31,40 +15,40 @@ interface InfoItem {
 const PAYMENT_INFO: InfoItem[] = [
   {
     title: '결제수단',
-    getContent: (order) =>
-      `${order.payment.paymentMethod}(${order.payment.paymentEasypayProvider})`,
+    getContent: ({ payment }) =>
+      `${payment.paymentMethod}(${payment.paymentEasypayProvider})`,
   },
   {
     title: '결제금액',
-    getContent: (order) => `${order.payment.amount.toLocaleString()}원`,
+    getContent: ({ payment }) => `${payment.amount.toLocaleString()}원`,
   },
 ];
 
 const ORDER_INFO: InfoItem[] = [
   {
     title: '주문번호',
-    getContent: (order) => order.orderId,
+    getContent: ({ orderId }) => orderId,
   },
   {
     title: '주문일시',
-    getContent: (order) => order.orderDate,
+    getContent: ({ orderDate }) => orderDate,
   },
   {
     title: '주문상품',
-    getContent: (order) => order.payment.orderName,
+    getContent: ({ payment }) => payment.orderName,
   },
   {
     title: '주문자명',
-    getContent: (order) => order.address.receiverName,
+    getContent: ({ deliveryAddress }) => deliveryAddress.receiverName,
   },
   {
     title: '배송정보',
-    getContent: (order) => (
+    getContent: ({ deliveryAddress }) => (
       <>
-        <p className={styles.address}>{order.address.receiverName}</p>
-        <p className={styles.address}>{order.address.receiverPhone}</p>
-        <p className={styles.address}>{order.address.address}</p>
-        <p className={styles.address}>{order.address.message}</p>
+        <p className={styles.address}>{deliveryAddress.receiverName}</p>
+        <p className={styles.address}>{deliveryAddress.receiverPhone}</p>
+        <p className={styles.address}>{deliveryAddress.address}</p>
+        <p className={styles.address}>{deliveryAddress.message}</p>
       </>
     ),
   },

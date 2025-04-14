@@ -1,8 +1,8 @@
 'use client';
 
-import type { CartItem } from '@/app/api/cart/route';
 import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
-import { fetchCartItems } from '@/lib/api';
+import { fetchCartList } from '@/features/cart/apis';
+import type { CartList } from '@/features/cart/types';
 import { userIdAtom } from '@/lib/store';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
@@ -14,7 +14,7 @@ export default function useCart() {
   const userId = useAtomValue(userIdAtom);
   const { data: cartItems } = useSuspenseQuery({
     queryKey: ['cart'],
-    queryFn: async () => await fetchCartItems(userId),
+    queryFn: async () => await fetchCartList(userId),
   });
 
   const {
@@ -55,8 +55,8 @@ export default function useCart() {
     [mutateDeleteCartItem, handleDeleteItem],
   );
 
-  const mapCartItemsToCheckoutRequest = (cartItems: CartItem[]) => {
-    return cartItems.map((item: CartItem) => ({
+  const mapCartItemsToCheckoutRequest = (cartItems: CartList) => {
+    return cartItems.map((item) => ({
       productId: item.productId,
       size: item.selectedOption.size,
       price: item.price,

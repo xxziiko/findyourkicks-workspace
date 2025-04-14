@@ -1,4 +1,7 @@
-import { fetchUserAddresses, updateUserAddress } from '@/lib/api';
+import {
+  fetchUserAddresses,
+  updateUserAddress,
+} from '@/features/user/address/apis';
 import {
   useMutation,
   useQueryClient,

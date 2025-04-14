@@ -1,4 +1,4 @@
-import { signOutUser } from '@/lib/api';
+import { signOutUser } from '@/features/auth/apis';
 import { userAtom } from '@/lib/store';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';

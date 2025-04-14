@@ -1,11 +1,11 @@
-import { createUserAddress } from '@/lib/api';
+import { createUserAddress } from '@/features/user/address/apis';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export type AddressFormData = z.infer<typeof schema>;
+export type AddressForm = z.infer<typeof schema>;
 
 const schema = z.object({
   name: z.string().min(1, { message: '이름을 입력해주세요.' }).max(10),
@@ -26,8 +26,9 @@ export default function useAddressForm(onClose: () => void) {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<AddressFormData>({ resolver: zodResolver(schema) });
+  } = useForm<AddressForm>({ resolver: zodResolver(schema) });
 
+  //FIXME: 분리
   const queryClient = useQueryClient();
   const { mutate: mutateUserAddress } = useMutation({
     mutationFn: createUserAddress,
@@ -38,7 +39,7 @@ export default function useAddressForm(onClose: () => void) {
     },
   });
 
-  const onSubmit = (data: AddressFormData) => {
+  const onSubmit = (data: AddressForm) => {
     const formattedData = {
       ...data,
       address: `[${data.zonecode}] ${data.roadAddress} ${data.extraAddress}`,

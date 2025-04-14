@@ -1,5 +1,5 @@
-import type { CartItem } from '@/app/api/cart/route';
-import { deleteCartItem } from '@/lib/api';
+import { deleteCartItem } from '@/features/cart/apis';
+import type { CartList } from '@/features/cart/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useDeleteCartMutation() {
@@ -8,16 +8,16 @@ export default function useDeleteCartMutation() {
   return useMutation({
     mutationFn: deleteCartItem,
     onMutate: async (cartItemId) => {
-      const previousCart = queryClient.getQueryData<CartItem[]>(['cart']);
+      const previousCart = queryClient.getQueryData<CartList>(['cart']);
 
-      queryClient.setQueryData(['cart'], (old: CartItem[]) =>
+      queryClient.setQueryData(['cart'], (old: CartList) =>
         old.filter((item) => item.cartItemId !== cartItemId),
       );
 
       return { previousCart };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData<CartItem[]>(['cart'], context?.previousCart);
+      queryClient.setQueryData<CartList>(['cart'], context?.previousCart);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });

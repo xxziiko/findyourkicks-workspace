@@ -2,16 +2,25 @@
 
 import Loading from '@/app/loading';
 import { Button } from '@/components';
+import type { CartList } from '@/features/cart/types';
 import { CheckoutSummary } from '../../_features';
 import styles from '../page.module.scss';
-import CartList, { type CartListProps } from './CartList';
+import { CartTable } from './CartTable';
 
-interface CartViewProps extends CartListProps {
+interface CartViewProps {
+  cartItems: CartList;
   totalProduct: number;
   totalPrice: number;
   isMutatingOrderSheet: boolean;
   totalPriceWithDeliveryFee: number;
+  isAllChecked: boolean;
+  checkedItems: { [cartId: string]: boolean };
   onCreateOrderSheet: () => void;
+  onCreateOrderSheetForSingleProduct: (cartItemId: string) => void;
+  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
+  onQuantityChange: (cartItemId: string, quantity: number) => void;
+  onDelete: (cartItemId: string) => void;
 }
 
 export default function CartView(props: CartViewProps) {
@@ -22,14 +31,14 @@ export default function CartView(props: CartViewProps) {
     totalPriceWithDeliveryFee,
     onCreateOrderSheet,
     onCreateOrderSheetForSingleProduct,
-    ...cartListProps
+    ...cartTableProps
   } = props;
   return isMutatingOrderSheet ? (
     <Loading />
   ) : (
     <section className={styles.section}>
-      <CartList
-        {...cartListProps}
+      <CartTable
+        {...cartTableProps}
         onCreateOrderSheetForSingleProduct={onCreateOrderSheetForSingleProduct}
       />
 

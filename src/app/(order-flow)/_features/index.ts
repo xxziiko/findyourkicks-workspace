@@ -1,5 +1,5 @@
+export { OrderProduct } from './OrderProduct';
 export { default as CheckoutSummary } from './CheckoutSummary';
-export { default as OrderProducts } from './OrderProducts';
 export { default as DeliverySummary } from './DeliverySummary';
 export { default as AddressForm } from './AddressForm';
 export { default as useAddressForm } from './useAddressForm';

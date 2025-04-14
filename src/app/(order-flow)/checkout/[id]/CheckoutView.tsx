@@ -1,23 +1,20 @@
 'use client';
-import type {
-  Address,
-  OrderSheetItem,
-  OrderSheetResponse,
-} from '@/app/api/checkout/[id]/route';
 import { Button } from '@/components';
 import { CardLayout, Modal } from '@/components/layouts';
+import type { OrderProductItem } from '@/features/order-sheet/types';
+import type { UserAddress } from '@/features/user/address/types';
 import {
   AddressForm,
   AddressList,
   CheckoutSummary,
   DeliverySummary,
-  OrderProducts,
+  OrderProduct,
 } from '../../_features';
 import styles from './page.module.scss';
 
 interface CheckoutViewProps {
-  defaultAddress: Address;
-  orderSheet: OrderSheetResponse;
+  defaultAddress: UserAddress;
+  orderProducts: OrderProductItem[];
   title: string;
   modalView: 'form' | 'list';
   isModalOpen: boolean;
@@ -36,7 +33,7 @@ export default function CheckoutView({
   title,
   isModalOpen,
   modalView,
-  orderSheet,
+  orderProducts,
   totalPrice,
   totalPriceWithDeliveryFee,
   isAllCheckedAgreement,
@@ -56,14 +53,12 @@ export default function CheckoutView({
           <DeliverySummary data={defaultAddress} />
         </CardLayout>
 
-        <CardLayout
-          title={`주문 상품 (총 ${orderSheet.orderSheetItems?.length}건)`}
-        >
+        <CardLayout title={`주문 상품 (총 ${orderProducts.length}건)`}>
           <div className={styles['products-inner']}>
-            {orderSheet?.orderSheetItems?.map((item: OrderSheetItem) => (
-              <OrderProducts
-                item={item}
-                key={`${item.productId}-${item.size}-${item.quantity}`}
+            {orderProducts.map((product) => (
+              <OrderProduct
+                product={product}
+                key={`${product.productId}-${product.size}-${product.quantity}`}
                 type="checkout"
               />
             ))}

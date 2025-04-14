@@ -1,22 +1,19 @@
-import { OrderProducts } from '@/app/(order-flow)/_features';
-import type { CartItem } from '@/app/api/cart/route';
+import { OrderProduct } from '@/app/(order-flow)/_features';
 import { Button, CheckBox, NoData, QuantityController } from '@/components';
-import type { QuantityHandlerType } from '@/lib/types';
+import type { CartItem, CartList } from '@/features/cart/types';
 import { ShoppingCartIcon } from 'lucide-react';
 import Link from 'next/link';
-import { memo } from 'react';
 import styles from './CartList.module.scss';
 
-export interface CartListProps extends ItemHandlers {
-  cartItems: CartItem[];
+interface CartTableProps {
+  cartItems: CartList;
   isAllChecked: boolean;
   checkedItems: { [cartId: string]: boolean };
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-interface ItemProps extends ItemHandlers {
-  item: CartItem;
-  checkedItems: { [cartId: string]: boolean };
+  onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
+  onQuantityChange: (cartItemId: string, quantity: number) => void;
+  onDelete: (cartItemId: string) => void;
+  onCreateOrderSheetForSingleProduct: (cartItemId: string) => void;
 }
 
 interface HeaderProps {
@@ -24,14 +21,16 @@ interface HeaderProps {
   onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-type ItemHandlers = {
+interface TableRowProps {
+  item: CartItem;
+  checkedItems: { [cartId: string]: boolean };
   onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
-  onQuantityChange: QuantityHandlerType;
-  onDelete: (id: string) => void;
+  onQuantityChange: (cartItemId: string, quantity: number) => void;
+  onDelete: (cartItemId: string) => void;
   onCreateOrderSheetForSingleProduct: (cartItemId: string) => void;
-};
+}
 
-export default function CartList(props: CartListProps) {
+export function CartTable(props: CartTableProps) {
   const { isAllChecked, cartItems, checkedItems, onToggleAll, ...rest } = props;
 
   const headerProps = { isAllChecked, onToggleAll };
@@ -51,7 +50,7 @@ export default function CartList(props: CartListProps) {
         />
       )}
       {cartItems.map((item) => (
-        <MemorizedItem key={item.cartItemId} {...itemProps} item={item} />
+        <TableRow key={item.cartItemId} {...itemProps} item={item} />
       ))}
     </div>
   );
@@ -69,54 +68,54 @@ function Header({ isAllChecked, onToggleAll }: HeaderProps) {
   );
 }
 
-function Item({
+function TableRow({
   item,
   checkedItems,
   onToggle,
   onQuantityChange,
   onDelete,
   onCreateOrderSheetForSingleProduct,
-}: ItemProps) {
+}: TableRowProps) {
+  const { cartItemId, productId, selectedOption, quantity, price } = item;
+
   return (
     <li className={styles.item}>
       <CheckBox
-        checked={checkedItems[item.cartItemId]}
-        onChange={(e) => onToggle(e, item.cartItemId)}
+        checked={checkedItems[cartItemId]}
+        onChange={(e) => onToggle(e, cartItemId)}
       />
 
-      <Link href={`/product/${item.productId}`} className={styles.item__info}>
-        <OrderProducts
-          item={{ ...item, size: item.selectedOption.size }}
+      <Link href={`/product/${productId}`} className={styles.item__info}>
+        <OrderProduct
+          product={{ ...item, size: selectedOption.size }}
           type="cart"
         />
       </Link>
 
       <div className={styles.item__quantity}>
         <QuantityController
-          id={item.cartItemId}
-          quantity={item.quantity}
-          inventory={item.selectedOption}
+          id={cartItemId}
+          quantity={quantity}
+          inventory={selectedOption}
           onQuantityChange={onQuantityChange}
         />
       </div>
 
       <div className={styles.item__price}>
-        <p>{(Number(item.price) * item.quantity).toLocaleString()}원</p>
+        <p>{(Number(price) * quantity).toLocaleString()}원</p>
       </div>
 
       <div className={styles.item__buttons}>
         <Button
           text="주문하기"
-          onClick={() => onCreateOrderSheetForSingleProduct(item.cartItemId)}
+          onClick={() => onCreateOrderSheetForSingleProduct(cartItemId)}
         />
         <Button
           text="삭제하기"
-          onClick={() => onDelete(item.cartItemId)}
+          onClick={() => onDelete(cartItemId)}
           variant="lined--r"
         />
       </div>
     </li>
   );
 }
-
-const MemorizedItem = memo(Item);

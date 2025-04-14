@@ -1,33 +1,7 @@
-import { createClient } from '@/lib/utils/supabase/server';
+import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
-export interface OrderSheetResponse {
-  orderSheetId: string;
-  orderSheetItems: OrderSheetItem[];
-  delivery: Address;
-}
-
-export interface Address {
-  addressId: string;
-  alias: string;
-  receiverName: string;
-  receiverPhone: string;
-  address: string;
-  message: string;
-  isDefault?: boolean;
-}
-
-export type OrderSheetItem = {
-  productId: string;
-  cartItemId: string;
-  title: string;
-  image: string;
-  size: string;
-  quantity: number;
-  price: number;
-};
-
-export type RawDelivery = {
+type RawDelivery = {
   address_id: number;
   alias: string;
   receiver_name: string;
@@ -121,7 +95,7 @@ export async function GET(
   const response = {
     orderSheetId,
     orderSheetItems,
-    delivery: {
+    deliveryAddress: {
       addressId: rawDelivery?.user_address?.address_id ?? null,
       alias: rawDelivery?.user_address?.alias ?? null,
       receiverName: rawDelivery?.user_address?.receiver_name ?? null,

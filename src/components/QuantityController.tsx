@@ -1,4 +1,4 @@
-import type { InventoryItem, QuantityHandlerType } from '@/lib/types';
+import type { InventoryItem } from '@/features/product/types';
 import Button from './Button';
 import styles from './QuantityController.module.scss';
 
@@ -6,7 +6,7 @@ export type QuantityControllerProps = {
   id: string;
   quantity: number;
   inventory: InventoryItem;
-  onQuantityChange: QuantityHandlerType;
+  onQuantityChange: (id: string, quantity: number) => void;
 };
 
 export default function QuantityController({

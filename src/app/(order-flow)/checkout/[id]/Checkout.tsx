@@ -1,11 +1,11 @@
 'use client';
-import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
+import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
 import CheckoutView from './CheckoutView';
 import useCheckout from './useCheckout';
 
 export default function Checkout({
   orderSheet,
-}: { orderSheet: OrderSheetResponse }) {
+}: { orderSheet: OrderSheetByIdResponse }) {
   const {
     defaultAddress,
     title,
@@ -15,6 +15,7 @@ export default function Checkout({
     totalPriceWithDeliveryFee,
     isMutatingOrderItems,
     modalView,
+    orderProducts,
     handleModal,
     handlePayment,
     handleModalView,
@@ -27,7 +28,7 @@ export default function Checkout({
     isModalOpen,
     isAllCheckedAgreement,
     totalPrice,
-    orderSheet,
+    orderProducts,
     totalPriceWithDeliveryFee,
     modalView,
     isMutatingOrderItems,

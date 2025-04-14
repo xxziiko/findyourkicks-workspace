@@ -1,4 +1,4 @@
-import { fetchProductById } from '@/lib/api';
+import { fetchProductById } from '@/features/product/apis';
 import { Detail } from './_features';
 
 export default async function DetailPage({

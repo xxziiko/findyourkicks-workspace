@@ -1,14 +1,15 @@
 'use client';
-import { addToCart } from '@/lib/api';
+import { addToCart } from '@/features/cart/apis';
+import type { ProductDetail, SelectedOption } from '@/features/product/types';
 import { isAuthenticatedAtom, userIdAtom } from '@/lib/store';
-import type { SelectedOption } from '@/lib/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import type { Detail } from './Detail';
 
-export default function useDetail({ data: product }: { data: Detail }) {
+export default function useDetail({
+  data: productDetail,
+}: { data: ProductDetail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function useDetail({ data: product }: { data: Detail }) {
   const handleQuantityChange = useCallback(
     (id: string, quantity: number) => {
       const initialStock =
-        product.inventory.find((item) => item.size === id)?.stock ?? 0;
+        productDetail.inventory.find((item) => item.size === id)?.stock ?? 0;
 
       if (quantity >= 1 && quantity <= initialStock) {
         setSelectedOptions((prev) =>
@@ -59,7 +60,7 @@ export default function useDetail({ data: product }: { data: Detail }) {
         );
       }
     },
-    [product],
+    [productDetail],
   );
 
   const resetSelectedOptions = () => {
@@ -68,8 +69,8 @@ export default function useDetail({ data: product }: { data: Detail }) {
 
   const createCart = () => {
     return selectedOptions.map((option) => ({
-      product_id: product.productId,
-      price: product.price,
+      product_id: productDetail.productId,
+      price: productDetail.price,
       ...option,
     }));
   };
@@ -89,7 +90,7 @@ export default function useDetail({ data: product }: { data: Detail }) {
 
   return {
     isMutatingCart,
-    product,
+    productDetail,
     selectedOptions,
     totalQuantity,
 

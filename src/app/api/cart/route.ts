@@ -1,5 +1,5 @@
-import type { AddCartRequest } from '@/lib/api';
-import { createClient } from '@/lib/utils/supabase/server';
+import type { CartList, CartListPayload } from '@/features/cart/types';
+import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 type RawCartItem = {
@@ -22,20 +22,6 @@ type RawCartItem = {
 type RawCartResponse = {
   cart_id: string;
   cart_items: RawCartItem[];
-};
-
-export type CartItem = {
-  cartItemId: string;
-  productId: string;
-  title: string;
-  image: string;
-  selectedOption: {
-    size: string;
-    stock: number;
-  };
-  quantity: number;
-  price: number;
-  addedAt: string;
 };
 
 export async function GET(req: Request) {
@@ -78,7 +64,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: '장바구니 조회 실패' }, { status: 500 });
   }
 
-  const flatItems: CartItem[] =
+  const flatItems: CartList =
     cart.cart_items
       .sort((a, b) => a.cart_item_id.localeCompare(b.cart_item_id))
       .map((item) => ({
@@ -97,7 +83,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const payload: AddCartRequest[] = await req.json();
+  const payload: CartListPayload = await req.json();
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
 

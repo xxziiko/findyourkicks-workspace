@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/utils/supabase/server';
+import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -11,6 +11,7 @@ export async function POST(req: Request) {
     userAddressId,
     termsAgreed,
     totalAmount,
+    deliveryAddress,
   } = payload;
 
   // 주문서 정보 업데이트
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
   if (payload.delivery) {
     const { error: updateDeliveryError } = await supabase
       .from('user_addresses')
-      .update(payload.delivery)
+      .update(deliveryAddress)
       .eq('address_id', userAddressId);
 
     if (updateDeliveryError) {

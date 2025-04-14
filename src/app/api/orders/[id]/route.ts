@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/utils/supabase/server';
+import { createClient } from '@/shared/utils/supabase/server';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 
@@ -8,6 +8,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const supabase = await createClient();
+
   const { data: payment, error } = await supabase
     .from('payments')
     .select('*')

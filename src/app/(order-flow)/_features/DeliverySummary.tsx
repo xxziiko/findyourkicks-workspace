@@ -1,7 +1,7 @@
 'use client';
 
-import type { Address } from '@/app/api/checkout/[id]/route';
 import { Dropdown, NoData } from '@/components';
+import type { UserAddress } from '@/features/user/address/types';
 import { CircleAlertIcon } from 'lucide-react';
 import { useDeliverySummary } from '.';
 import styles from './DeliverySummary.module.scss';
@@ -13,7 +13,9 @@ const DELIVERY_TEXT = [
   '직접 입력',
 ] as const;
 
-export default function DeliverySummary({ data }: { data: Address | null }) {
+export default function DeliverySummary({
+  data,
+}: { data: UserAddress | null }) {
   const { address, deliveryMessage, setDeliveryMessage } =
     useDeliverySummary(data);
 

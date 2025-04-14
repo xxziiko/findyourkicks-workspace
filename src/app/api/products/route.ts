@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/utils/supabase/server';
+import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -28,5 +28,17 @@ export async function GET(request: Request) {
     .order('product_id', { ascending: true });
 
   if (error) return NextResponse.json({ error }, { status: 500 });
-  return NextResponse.json(products);
+
+  const response = products.map(
+    ({ product_id, title, price, image, brand, category }) => ({
+      productId: product_id,
+      title,
+      price,
+      image,
+      brand: brand[0]?.name ?? '',
+      category: category[0]?.name ?? '',
+    }),
+  );
+
+  return NextResponse.json(response);
 }

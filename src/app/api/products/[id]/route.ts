@@ -1,5 +1,4 @@
-import type { Detail } from '@/app/product/[id]/_features/Detail';
-import { createClient } from '@/lib/utils/supabase/server';
+import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 type RawProduct = {
@@ -40,7 +39,7 @@ export async function GET(
 
   if (error) return NextResponse.json({ error }, { status: 500 });
 
-  const flatProduct: Detail = {
+  const flatProduct = {
     productId: product.product_id,
     title: product.title,
     price: product.price,

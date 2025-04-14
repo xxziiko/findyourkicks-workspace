@@ -1,17 +1,11 @@
 'use client';
 
 import { DetailView, useDetail } from '@/app/product/[id]/_features';
-import type { ProductItem } from '@/app/product/_features/ProductListView';
-import type { InventoryItem } from '@/lib/types';
+import type { ProductDetail } from '@/features/product/types';
 
-export type Detail = ProductItem & {
-  description: string;
-  inventory: InventoryItem[];
-};
-
-export default function Detail({ data }: { data: Detail }) {
+export default function Detail({ data }: { data: ProductDetail }) {
   const {
-    product,
+    productDetail,
     selectedOptions,
     totalQuantity,
     isMutatingCart,
@@ -23,7 +17,7 @@ export default function Detail({ data }: { data: Detail }) {
   } = useDetail({ data });
 
   const props = {
-    product,
+    productDetail,
     totalQuantity,
     selectedOptions,
     isMutatingCart,

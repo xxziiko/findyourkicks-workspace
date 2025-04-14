@@ -1,9 +1,5 @@
 import { QuantityController } from '@/components';
-import type {
-  InventoryItem,
-  QuantityHandlerType,
-  SelectedOption,
-} from '@/lib/types';
+import type { InventoryItem, SelectedOption } from '@/features/product/types';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';
@@ -12,7 +8,7 @@ interface OptionProps extends SelectedOption {
   price: number;
   inventory: InventoryItem[];
   onDelete: (id: string) => void;
-  onQuantityChange: QuantityHandlerType;
+  onQuantityChange: (id: string, quantity: number) => void;
 }
 
 const Option = ({

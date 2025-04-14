@@ -1,23 +1,11 @@
-import type { OrderSheetResponse } from '@/app/api/checkout/[id]/route';
-import { fetchDefaultUserAddress, requestPayments } from '@/lib/api';
+import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
+import { requestPayments } from '@/features/payment/apis';
+import { fetchDefaultUserAddress } from '@/features/user/address/apis';
 import { deliveryMessageAtom, isAllCheckedAgreementAtom } from '@/lib/store';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
-
-export interface RequestPaymentsPayload {
-  orderSheetId: string;
-  userAddressId: string;
-  delivery?: {
-    alias?: string;
-    receiverName?: string;
-    receiverPhone?: string;
-    address?: string;
-    message?: string;
-  };
-  termsAgreed: boolean;
-}
 
 interface TosspaymentsPayload {
   orderId: string;
@@ -28,10 +16,11 @@ interface TosspaymentsPayload {
   customerMobilePhone: string;
 }
 
-export default function useCheckout(orderSheet: OrderSheetResponse) {
+export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
+  const { orderSheetItems } = orderSheet;
 
   const totalPrice = orderSheet.orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -41,7 +30,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
 
   const { data: defaultAddress } = useSuspenseQuery({
     queryKey: ['defaultAddress'],
-    initialData: orderSheet.delivery,
+    initialData: orderSheet.deliveryAddress,
     queryFn: fetchDefaultUserAddress,
   });
 
@@ -50,20 +39,19 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
   );
   const title = modalView === 'form' ? '주소 입력' : '주소 변경';
 
+  // FIXME: 분리
   const { mutate: mutateOrderItems, isPending: isMutatingOrderItems } =
     useMutation({
       mutationFn: requestPayments,
       onSuccess: (response) => {
-        const paymentRequestBody = {
+        requestTossPayments({
           ...response,
           orderName:
-            orderSheet.orderSheetItems.length === 1
-              ? orderSheet.orderSheetItems[0].title
-              : `${orderSheet.orderSheetItems[0].title} 외 ${orderSheet.orderSheetItems.length - 1}건`,
+            orderSheetItems.length === 1
+              ? orderSheetItems[0].title
+              : `${orderSheetItems[0].title} 외 ${orderSheetItems.length - 1}건`,
           amount: totalPriceWithDeliveryFee,
-        };
-
-        requestTossPayments(paymentRequestBody);
+        });
       },
     });
 
@@ -71,7 +59,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
     const payload = {
       orderSheetId: orderSheet.orderSheetId,
       userAddressId: defaultAddress.addressId,
-      delivery: { message: deliveryMessage },
+      deliveryAddress: { message: deliveryMessage },
       termsAgreed: isAllCheckedAgreement,
     };
 
@@ -127,6 +115,7 @@ export default function useCheckout(orderSheet: OrderSheetResponse) {
 
   return {
     defaultAddress,
+    orderProducts: orderSheetItems,
     title,
     totalPrice,
     totalPriceWithDeliveryFee,

@@ -1,4 +1,4 @@
-import { fetchOrder } from '@/lib/api';
+import { getOrderById } from '@/features/order/apis';
 import Complete from './Complete';
 
 export default async function CompletePage({
@@ -7,7 +7,7 @@ export default async function CompletePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const order = await fetchOrder(id);
+  const order = await getOrderById(id);
 
   return <Complete order={order} />;
 }

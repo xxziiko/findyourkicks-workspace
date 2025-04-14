@@ -1,7 +1,7 @@
 'use client';
 
 import { userAtom } from '@/lib/store';
-import { createClient } from '@/lib/utils/supabase/client';
+import { createClient } from '@/shared/utils/supabase/client';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
