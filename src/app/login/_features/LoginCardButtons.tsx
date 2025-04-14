@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components';
-import { GoogleLogo, KakaoLogo } from '@/components/icons';
 import { signInWithGoogle, signInWithKakao } from '@/features/auth/apis';
+import { Button } from '@/shared/components';
+import { GoogleLogo, KakaoLogo } from '@/shared/components/icons';
 import { useRouter } from 'next/navigation';
 
 export function LoginCardButtons() {
