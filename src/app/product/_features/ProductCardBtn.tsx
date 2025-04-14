@@ -1,4 +1,4 @@
-import { Image } from '@/components';
+import { Image } from '@/shared/components';
 import React from 'react';
 import styles from './ProductCardBtn.module.scss';
 

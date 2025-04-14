@@ -1,7 +1,7 @@
 'use client';
 
-import { Dropdown, NoData } from '@/components';
 import type { UserAddress } from '@/features/user/address/types';
+import { Dropdown, NoData } from '@/shared/components';
 import { CircleAlertIcon } from 'lucide-react';
 import { useDeliverySummary } from '.';
 import styles from './DeliverySummary.module.scss';

@@ -1,4 +1,4 @@
-import styles from '@/components/Button.module.scss';
+import styles from '@/shared/components/Button.module.scss';
 import { Loader } from 'lucide-react';
 
 type Variant =

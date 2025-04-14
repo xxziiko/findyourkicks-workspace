@@ -1,8 +1,8 @@
 'use client';
 
 import Loading from '@/app/loading';
-import { Button } from '@/components';
 import type { CartList } from '@/features/cart/types';
+import { Button } from '@/shared/components';
 import { CheckoutSummary } from '../../_features';
 import styles from '../page.module.scss';
 import { CartTable } from './CartTable';

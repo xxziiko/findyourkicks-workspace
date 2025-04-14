@@ -1,5 +1,5 @@
-import { QuantityController } from '@/components';
 import type { InventoryItem, SelectedOption } from '@/features/product/types';
+import { QuantityController } from '@/shared/components';
 import { CircleX } from 'lucide-react';
 import { memo } from 'react';
 import styles from './Option.module.scss';

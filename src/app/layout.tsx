@@ -1,5 +1,5 @@
 import '@/lib/styles/global.scss';
-import { Header } from '@/components/layouts';
+import { Header } from '@/shared/components/layouts';
 import { createClient } from '@/shared/utils/supabase/server';
 import { Provider } from 'jotai';
 import type { Metadata } from 'next';

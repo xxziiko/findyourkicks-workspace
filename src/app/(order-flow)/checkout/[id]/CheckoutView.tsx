@@ -1,8 +1,8 @@
 'use client';
-import { Button } from '@/components';
-import { CardLayout, Modal } from '@/components/layouts';
 import type { OrderProductItem } from '@/features/order-sheet/types';
 import type { UserAddress } from '@/features/user/address/types';
+import { Button } from '@/shared/components';
+import { CardLayout, Modal } from '@/shared/components/layouts';
 import {
   AddressForm,
   AddressList,

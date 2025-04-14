@@ -1,6 +1,11 @@
 import { OrderProduct } from '@/app/(order-flow)/_features';
-import { Button, CheckBox, NoData, QuantityController } from '@/components';
 import type { CartItem, CartList } from '@/features/cart/types';
+import {
+  Button,
+  CheckBox,
+  NoData,
+  QuantityController,
+} from '@/shared/components';
 import { ShoppingCartIcon } from 'lucide-react';
 import Link from 'next/link';
 import styles from './CartList.module.scss';

@@ -1,5 +1,5 @@
 import type { Products } from '@/features/product/types';
-import useIntersectionObserver from '@/hooks/useIntersectionObserver';
+import { useIntersectionObserver } from '@/shared/hooks';
 import { useEffect, useRef } from 'react';
 import useFetchProductsQuery from './useFetchProductsQuery';
 

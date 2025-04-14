@@ -1,9 +1,9 @@
 'use client';
 
-import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
 import { fetchCartList } from '@/features/cart/apis';
 import type { CartList } from '@/features/cart/types';
 import { userIdAtom } from '@/lib/store';
+import { useCheckBoxGroup } from '@/shared/components/checkbox/useCheckboxGrop';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useCallback } from 'react';

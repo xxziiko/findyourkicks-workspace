@@ -1,7 +1,7 @@
 'use client';
 
-import { CartNavLink } from '@/components';
-import useHeader from '@/components/layouts/header/useHeader';
+import { CartNavLink } from '@/shared/components';
+import useHeader from '@/shared/components/layouts/header/useHeader';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Header.module.scss';

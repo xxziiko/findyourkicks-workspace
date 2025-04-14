@@ -1,5 +1,5 @@
-import { Image } from '@/components';
 import type { OrderProductItem } from '@/features/order-sheet/types';
+import { Image } from '@/shared/components';
 import styles from './OrderProduct.module.scss';
 
 interface OrderProductProps {

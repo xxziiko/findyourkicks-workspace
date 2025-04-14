@@ -1,6 +1,7 @@
 'use client';
-import { Button } from '@/components';
-import Modal from '@/components/layouts/Modal';
+
+import { Button } from '@/shared/components';
+import Modal from '@/shared/components/layouts/Modal';
 import styles from './AddressForm.module.scss';
 import useAddressForm from './useAddressForm';
 

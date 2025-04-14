@@ -1,4 +1,4 @@
-import { Modal } from '@/components/layouts';
+import { Modal } from '@/shared/components/layouts';
 import styles from './AddressList.module.scss';
 import useAddressList from './useAddressList';
 

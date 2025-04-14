@@ -1,7 +1,7 @@
-import { CheckBox } from '@/components';
-import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
-import { CardLayout } from '@/components/layouts';
 import { isAllCheckedAgreementAtom } from '@/lib/store';
+import { CheckBox } from '@/shared/components';
+import { useCheckBoxGroup } from '@/shared/components/checkbox/useCheckboxGrop';
+import { CardLayout } from '@/shared/components/layouts';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import styles from './CheckoutSummary.module.scss';

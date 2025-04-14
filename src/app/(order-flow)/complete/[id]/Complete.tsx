@@ -1,7 +1,7 @@
 'use client';
-import { Button } from '@/components';
-import { CardLayout } from '@/components/layouts';
 import type { Order } from '@/features/order/types';
+import { Button } from '@/shared/components';
+import { CardLayout } from '@/shared/components/layouts';
 import { CircleCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';

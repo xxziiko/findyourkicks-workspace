@@ -1,11 +1,5 @@
 import { assert } from '@/shared/utils/';
 
-interface ApiResponse<T> {
-  data: T;
-  status: number;
-  message?: string;
-}
-
 interface ApiError {
   message: string;
   status: number;
@@ -19,7 +13,7 @@ async function request<Response, Body = void>(
   method: string,
   endpoint: string,
   body?: Body,
-): Promise<ApiResponse<Response>> {
+): Promise<Response> {
   const options: RequestInit = {
     method,
     headers: {

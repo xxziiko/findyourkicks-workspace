@@ -1,8 +1,8 @@
 'use client';
 
 import Loading from '@/app/loading';
-import { Button, Image } from '@/components';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
+import { Button, Image } from '@/shared/components';
 import styles from './DetailView.module.scss';
 import Option from './Option';
 
