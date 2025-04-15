@@ -1,0 +1,8 @@
+.tab {
+  display: flex;
+  gap: 0.5rem; // gap-2
+  position: relative;
+  font-size: $font-sm;
+  font-weight: 500;
+  cursor: pointer;
+}

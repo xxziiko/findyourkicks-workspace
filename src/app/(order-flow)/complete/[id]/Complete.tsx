@@ -1,27 +1,11 @@
 'use client';
-import { Button } from '@/components';
-import { CardLayout } from '@/components/layouts';
+import type { Order } from '@/features/order/types';
+import { Button } from '@/shared/components';
+import { CardLayout } from '@/shared/components/layouts';
 import { CircleCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import styles from './page.module.scss';
-
-interface Order {
-  orderId: string;
-  orderDate: string;
-  payment: {
-    paymentMethod: string;
-    paymentEasypayProvider: string;
-    amount: number;
-    orderName: string;
-  };
-  address: {
-    receiverName: string;
-    receiverPhone: string;
-    address: string;
-    message: string;
-  };
-}
 
 interface InfoItem {
   title: string;
@@ -31,31 +15,31 @@ interface InfoItem {
 const PAYMENT_INFO: InfoItem[] = [
   {
     title: '결제수단',
-    getContent: (order) =>
-      `${order.payment.paymentMethod}(${order.payment.paymentEasypayProvider})`,
+    getContent: ({ payment }) =>
+      `${payment.paymentMethod}(${payment.paymentEasypayProvider})`,
   },
   {
     title: '결제금액',
-    getContent: (order) => `${order.payment.amount.toLocaleString()}원`,
+    getContent: ({ payment }) => `${payment.amount.toLocaleString()}원`,
   },
 ];
 
 const ORDER_INFO: InfoItem[] = [
   {
     title: '주문번호',
-    getContent: (order) => order.orderId,
+    getContent: (order) => <p>{order.orderId}</p>,
   },
   {
     title: '주문일시',
-    getContent: (order) => order.orderDate,
+    getContent: (order) => <p>{order.orderDate}</p>,
   },
   {
     title: '주문상품',
-    getContent: (order) => order.payment.orderName,
+    getContent: (order) => <p>{order.payment.orderName}</p>,
   },
   {
     title: '주문자명',
-    getContent: (order) => order.address.receiverName,
+    getContent: (order) => <p>{order.address.receiverName}</p>,
   },
   {
     title: '배송정보',
@@ -96,40 +80,38 @@ export default function Complete({ order }: { order: Order }) {
       <CardLayout title="주문 정보">
         <div className={styles.complete__info}>
           <h5>결제정보</h5>
-          <div className={styles.complete__info__wrapper}>
-            <div className={styles.complete__info__wrapper__item}>
+          <div className={styles.complete__wrapper}>
+            <div className={styles.complete__items}>
               {PAYMENT_INFO.map((item) => (
                 <div key={item.title}>
-                  <p className={styles.complete__info__item__title}>
-                    {item.title}
-                  </p>
+                  <p className={styles.complete__subtitle}>{item.title}</p>
                   <p>{item.getContent(order)}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className={styles.complete__info__wrapper}>
+          <div className={styles.complete__wrapper}>
             {ORDER_INFO.map((item) => (
-              <div key={item.title} className={styles.complete__info__item}>
+              <div key={item.title} className={styles.complete__item}>
                 <h5>{item.title}</h5>
-                <p>{item.getContent(order)}</p>
+                <div>{item.getContent(order)}</div>
               </div>
             ))}
           </div>
 
-          <div className={styles.complete__info__wrapper}>
+          <div className={styles.complete__wrapper}>
             {TOTAL_INFO.map((item) => (
-              <div key={item.title} className={styles.complete__info__item}>
+              <div key={item.title} className={styles.complete__item}>
                 <h5>{item.title}</h5>
                 <p>{item.getContent(order)}</p>
               </div>
             ))}
           </div>
 
-          <div className={styles.complete__info__item}>
+          <div className={styles.complete__item}>
             <h5>총 결제 금액</h5>
-            <p className={styles.complete__info__item__total}>
+            <p className={styles.complete__total}>
               {order.payment.amount.toLocaleString()}원
             </p>
           </div>

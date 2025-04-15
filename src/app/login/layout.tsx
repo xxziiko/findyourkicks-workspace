@@ -1,4 +1,4 @@
-import { CardLayout } from '@/components/layouts';
+import { CardLayout } from '@/shared/components/layouts';
 import styles from './layout.module.scss';
 
 export const dynamic = 'force-static';

@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckoutSteps } from '@/components';
+import { CheckoutSteps } from '@/shared/components';
 import { usePathname } from 'next/navigation';
 
 const steps = ['/cart', '/checkout', '/complete'];

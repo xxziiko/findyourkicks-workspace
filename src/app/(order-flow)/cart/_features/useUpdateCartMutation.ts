@@ -1,5 +1,5 @@
-import type { CartItem } from '@/app/api/cart/route';
-import { updateCartQuantity } from '@/lib/api';
+import { updateCartQuantity } from '@/features/cart/apis';
+import type { CartList } from '@/features/cart/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useUpdateCartMutation() {
@@ -8,9 +8,9 @@ export default function useUpdateCartMutation() {
   return useMutation({
     mutationFn: updateCartQuantity,
     onMutate: async ({ cartItemId, quantity }) => {
-      const previousCart = queryClient.getQueryData<CartItem[]>(['cart']);
+      const previousCart = queryClient.getQueryData<CartList>(['cart']);
 
-      queryClient.setQueryData(['cart'], (old: CartItem[]) =>
+      queryClient.setQueryData(['cart'], (old: CartList) =>
         old.map((item) =>
           item.cartItemId === cartItemId ? { ...item, quantity } : item,
         ),
@@ -19,7 +19,7 @@ export default function useUpdateCartMutation() {
       return { previousCart };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData<CartItem[]>(['cart'], context?.previousCart);
+      queryClient.setQueryData<CartList>(['cart'], context?.previousCart);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });

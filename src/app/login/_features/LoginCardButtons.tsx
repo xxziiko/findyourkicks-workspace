@@ -1,22 +1,23 @@
 'use client';
 
-import { Button } from '@/components';
-import { GoogleLogo, KakaoLogo } from '@/components/icons';
-import useLoginCardButtons from './useLoginCardButtons';
+import { signInWithGoogle, signInWithKakao } from '@/features/auth/apis';
+import { Button } from '@/shared/components';
+import { GoogleLogo, KakaoLogo } from '@/shared/components/icons';
+import { useRouter } from 'next/navigation';
 
-export default function LoginCardButtons() {
-  const { handleLoginWithKakao, handleLoginWithGoogle } = useLoginCardButtons();
+export function LoginCardButtons() {
+  const router = useRouter();
 
   return (
     <>
       <Button
         icon={<KakaoLogo />}
-        onClick={handleLoginWithKakao}
+        onClick={async () => router.push(await signInWithKakao())}
         text="카카오계정으로 로그인"
         variant="kakao"
       />
       <Button
-        onClick={handleLoginWithGoogle}
+        onClick={async () => router.push(await signInWithGoogle())}
         icon={<GoogleLogo />}
         text="구글계정으로 로그인"
         variant="google"

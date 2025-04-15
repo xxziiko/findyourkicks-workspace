@@ -1,20 +1,18 @@
 'use client';
 
-import type { CartItem } from '@/app/api/cart/route';
-import { useCheckBoxGroup } from '@/components/checkbox/useCheckboxGrop';
-import { fetchCartItems } from '@/lib/api';
-import { userIdAtom } from '@/lib/store';
+import { fetchCartList } from '@/features/cart/apis';
+import type { CartList } from '@/features/cart/types';
+import { useCheckBoxGroup } from '@/shared/components/checkbox/useCheckboxGrop';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import { useDeleteCartMutation, useUpdateCartMutation } from '.';
 import { useCreateOrderSheetMutation } from '../../_features';
 
 export default function useCart() {
-  const userId = useAtomValue(userIdAtom);
   const { data: cartItems } = useSuspenseQuery({
     queryKey: ['cart'],
-    queryFn: async () => await fetchCartItems(userId),
+    queryFn: fetchCartList,
+    staleTime: 60,
   });
 
   const {
@@ -55,8 +53,8 @@ export default function useCart() {
     [mutateDeleteCartItem, handleDeleteItem],
   );
 
-  const mapCartItemsToCheckoutRequest = (cartItems: CartItem[]) => {
-    return cartItems.map((item: CartItem) => ({
+  const mapCartItemsToCheckoutRequest = (cartItems: CartList) => {
+    return cartItems.map((item) => ({
       productId: item.productId,
       size: item.selectedOption.size,
       price: item.price,
@@ -69,16 +67,15 @@ export default function useCart() {
     const filteredCart = cartItems.filter(
       (item) => checkedItems[item.cartItemId],
     );
-    const body = mapCartItemsToCheckoutRequest(filteredCart);
-    mutateCreateOrderSheet({ userId, body });
+    mutateCreateOrderSheet(mapCartItemsToCheckoutRequest(filteredCart));
   };
 
   const handleOrderSheetForSingleProduct = (cartItemId: string) => {
     const filteredCart = cartItems.filter(
       (item) => item.cartItemId === cartItemId,
     );
-    const body = mapCartItemsToCheckoutRequest(filteredCart);
-    mutateCreateOrderSheet({ userId, body });
+
+    mutateCreateOrderSheet(mapCartItemsToCheckoutRequest(filteredCart));
   };
 
   return {

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/utils/supabase/server';
+import { createClient } from '@/shared/utils/supabase/server';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -52,7 +52,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '주소 생성 실패' }, { status: 500 });
   }
 
-  return NextResponse.json(newAddress);
+  const response = {
+    message: '주소 생성 성공',
+    // newAddress,
+  };
+
+  return NextResponse.json(response);
 }
 
 export async function GET(req: NextRequest) {
@@ -67,14 +72,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: '주소 조회 실패' }, { status: 500 });
   }
 
-  const response = addresses.map((address) => ({
-    addressId: address.address_id,
-    receiverName: address.receiver_name,
-    receiverPhone: address.receiver_phone,
-    alias: address.alias,
-    address: address.address,
-    isDefault: address.is_default,
-  }));
+  const response = addresses
+    .sort((a, b) => b.is_default - a.is_default)
+    .map(
+      ({
+        address_id,
+        receiver_name,
+        receiver_phone,
+        alias,
+        address,
+        message,
+        is_default,
+      }) => ({
+        addressId: address_id,
+        receiverName: receiver_name,
+        receiverPhone: receiver_phone,
+        alias,
+        address,
+        message,
+        isDefault: is_default,
+      }),
+    );
 
   return NextResponse.json(response);
 }

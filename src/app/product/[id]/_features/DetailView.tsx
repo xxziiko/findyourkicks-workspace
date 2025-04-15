@@ -1,31 +1,35 @@
 'use client';
 
 import Loading from '@/app/loading';
-import { Button, Image } from '@/components';
-import type { EventHandlers, SelectedOption } from '@/lib/types';
-import type { Detail } from './Detail';
+import type { ProductDetail, SelectedOption } from '@/features/product/types';
+import { Button, Image } from '@/shared/components';
 import styles from './DetailView.module.scss';
 import Option from './Option';
 
-export type DetailViewProps = DetailViewBase & EventHandlers;
-
-interface DetailViewBase {
-  product: Detail;
+interface DetailViewProps {
+  productDetail: ProductDetail;
   totalQuantity: number;
   isMutatingCart: boolean;
   selectedOptions: SelectedOption[];
   onCartButton: () => void;
   onDelete: (id: string) => void;
   getCurrentQuantity: (id: string) => number;
+  onSelectSize: (id: string) => void;
+  onQuantityChange: (id: string, quantity: number) => void;
 }
 
 export default function DetailView(props: DetailViewProps) {
-  const { product } = props;
+  const { productDetail } = props;
 
   return (
     <article className={styles.detail}>
       <figure className={styles.image__box}>
-        <Image src={product.image} alt="product" width="24rem" height="24rem" />
+        <Image
+          src={productDetail.image}
+          alt="product"
+          width="24rem"
+          height="24rem"
+        />
       </figure>
 
       <div className={styles.detail__divider} />
@@ -35,18 +39,19 @@ export default function DetailView(props: DetailViewProps) {
   );
 }
 
-function Content(props: DetailViewProps) {
-  const {
-    product,
-    totalQuantity,
-    selectedOptions,
-    isMutatingCart,
-    onSelectSize,
-    onDelete,
-    onQuantityChange,
-    onCartButton,
-    getCurrentQuantity,
-  } = props;
+function Content({
+  productDetail,
+  totalQuantity,
+  selectedOptions,
+  isMutatingCart,
+  onSelectSize,
+  onDelete,
+  onQuantityChange,
+  onCartButton,
+  getCurrentQuantity,
+}: DetailViewProps) {
+  const { brand, price, title, description, inventory, category } =
+    productDetail;
 
   return isMutatingCart ? (
     <Loading />
@@ -54,23 +59,23 @@ function Content(props: DetailViewProps) {
     <section className={styles.content}>
       <div className={styles.content__top}>
         <div>
-          <p className={styles['content__top_text--brand']}>{product.brand}</p>
+          <p className={styles['content__top_text--brand']}>{brand}</p>
           <p className={styles['content__top_text--price']}>
-            {Number(product.price).toLocaleString()} 원
+            {Number(price).toLocaleString()} 원
           </p>
         </div>
 
         <div>
-          <p>{product.title}</p>
+          <p>{title}</p>
           <p
             className={styles['content__top_text--subtitle']}
-          >{`${product.brand} > ${product.category}`}</p>
+          >{`${brand} > ${category}`}</p>
 
-          <p className={styles.content__top_text}>{product.description}</p>
+          <p className={styles.content__top_text}>{description}</p>
         </div>
 
         <div className={styles.content__top_options}>
-          {product.inventory.map(({ size, stock }) => (
+          {inventory.map(({ size, stock }) => (
             <Button
               key={size}
               variant="lined"
@@ -87,8 +92,8 @@ function Content(props: DetailViewProps) {
               key={size}
               size={size}
               quantity={quantity}
-              price={product.price}
-              inventory={product.inventory}
+              price={price}
+              inventory={inventory}
               onQuantityChange={onQuantityChange}
               onDelete={onDelete}
             />
@@ -100,7 +105,7 @@ function Content(props: DetailViewProps) {
         <div className={styles.content__bottom_wrapper}>
           <p className={styles['content__bottom_wrapper--total']}>합계</p>
           <p className={styles['content__bottom_wrapper--price']}>
-            {(totalQuantity * product.price).toLocaleString()}원
+            {(totalQuantity * price).toLocaleString()}원
           </p>
         </div>
 
