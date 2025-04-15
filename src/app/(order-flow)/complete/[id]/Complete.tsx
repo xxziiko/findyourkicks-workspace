@@ -27,19 +27,19 @@ const PAYMENT_INFO: InfoItem[] = [
 const ORDER_INFO: InfoItem[] = [
   {
     title: '주문번호',
-    getContent: (order) => order.orderId,
+    getContent: (order) => <p>{order.orderId}</p>,
   },
   {
     title: '주문일시',
-    getContent: (order) => order.orderDate,
+    getContent: (order) => <p>{order.orderDate}</p>,
   },
   {
     title: '주문상품',
-    getContent: (order) => order.payment.orderName,
+    getContent: (order) => <p>{order.payment.orderName}</p>,
   },
   {
     title: '주문자명',
-    getContent: (order) => order.address.receiverName,
+    getContent: (order) => <p>{order.address.receiverName}</p>,
   },
   {
     title: '배송정보',
@@ -95,7 +95,7 @@ export default function Complete({ order }: { order: Order }) {
             {ORDER_INFO.map((item) => (
               <div key={item.title} className={styles.complete__item}>
                 <h5>{item.title}</h5>
-                <p>{item.getContent(order)}</p>
+                <div>{item.getContent(order)}</div>
               </div>
             ))}
           </div>
