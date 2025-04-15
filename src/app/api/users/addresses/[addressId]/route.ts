@@ -2,12 +2,12 @@ import { createClient } from '@/shared/utils/supabase/server';
 import { type NextRequest, NextResponse } from 'next/server';
 
 type Params = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ addressId: string }>;
 };
 
 export async function PATCH(req: NextRequest, { params }: Params) {
   const supabase = await createClient();
-  const { id } = await params;
+  const { addressId } = await params;
   const { data: user } = await supabase.auth.getUser();
 
   const { error } = await supabase
@@ -27,7 +27,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const { error: updateDefaultAddressError } = await supabase
     .from('user_addresses')
     .update({ is_default: true })
-    .eq('address_id', id);
+    .eq('address_id', addressId);
 
   if (updateDefaultAddressError) {
     console.error('기본 배송지 설정 실패', updateDefaultAddressError);

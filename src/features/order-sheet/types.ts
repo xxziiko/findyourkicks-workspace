@@ -1,10 +1,5 @@
 import type { UserAddress } from '@/features/user/address/types';
 
-export interface OrderSheetRequest {
-  userId: string;
-  body: OrderSheetList;
-}
-
 export interface OrderSheetByIdResponse {
   orderSheetId: string;
   orderSheetItems: OrderProductItem[];

@@ -1,13 +1,13 @@
 import type {
   OrderSheetByIdResponse,
-  OrderSheetRequest,
+  OrderSheetList,
 } from '@/features/order-sheet/types';
 import { api } from '@/shared/utils/api';
 
-export const createOrderSheet = async ({ userId, body }: OrderSheetRequest) => {
-  return await api.post<{ orderSheetId: string }, OrderSheetRequest>(
+export const createOrderSheet = async (body: OrderSheetList) => {
+  return await api.post<{ orderSheetId: string }, OrderSheetList>(
     '/order-sheet',
-    { userId, body },
+    body,
   );
 };
 

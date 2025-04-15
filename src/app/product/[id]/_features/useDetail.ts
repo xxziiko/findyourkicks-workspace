@@ -13,7 +13,6 @@ export default function useDetail({
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const router = useRouter();
-  const userId = useAtomValue(userIdAtom);
 
   const queryClient = useQueryClient();
   const { mutate: mutateCart, isPending: isMutatingCart } = useMutation({
@@ -79,7 +78,7 @@ export default function useDetail({
     if (isAuthenticated) {
       const cartItems = createCart();
 
-      mutateCart({ body: cartItems, userId });
+      mutateCart(cartItems);
       resetSelectedOptions();
       //TODO: modal
       return;

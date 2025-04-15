@@ -4,15 +4,15 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ orderId: string }> },
 ) {
-  const { id } = await params;
+  const { orderId } = await params;
   const supabase = await createClient();
 
   const { data: payment, error } = await supabase
     .from('payments')
     .select('*')
-    .eq('order_id', id);
+    .eq('order_id', orderId);
 
   if (error) {
     return NextResponse.json({ error: '결제 정보 조회 실패' }, { status: 500 });
@@ -21,7 +21,7 @@ export async function GET(
   const { data: orders, error: ordersError } = await supabase
     .from('orders')
     .select('*')
-    .eq('order_id', id);
+    .eq('order_id', orderId);
 
   if (ordersError) {
     return NextResponse.json(
@@ -41,8 +41,7 @@ export async function GET(
   }
 
   const response = {
-    orderId: id,
-    totalAmount: orders[0].total_amount,
+    orderId,
     orderDate: dayjs(orders[0].order_date).format('YYYY-MM-DD HH:mm:ss'),
 
     payment: {

@@ -2,12 +2,12 @@ import { createClient } from '@/shared/utils/supabase/server';
 import { type NextRequest, NextResponse } from 'next/server';
 
 type Params = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ cartItemId: string }>;
 };
 
 export async function PATCH(req: NextRequest, { params }: Params) {
   const supabase = await createClient();
-  const { id } = await params;
+  const { cartItemId } = await params;
   const { quantity } = await req.json();
 
   if (typeof quantity !== 'number' || quantity < 1) {
@@ -20,7 +20,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const { data, error } = await supabase
     .from('cart_items')
     .update({ quantity, added_at: new Date().toISOString() })
-    .eq('cart_item_id', id)
+    .eq('cart_item_id', cartItemId)
     .select()
     .single();
 
@@ -39,12 +39,12 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
 export async function DELETE(_: NextRequest, { params }: Params) {
   const supabase = await createClient();
-  const { id } = await params;
+  const { cartItemId } = await params;
 
   const { error } = await supabase
     .from('cart_items')
     .delete()
-    .eq('cart_item_id', id);
+    .eq('cart_item_id', cartItemId);
 
   if (error) {
     return NextResponse.json(

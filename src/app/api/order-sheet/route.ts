@@ -1,12 +1,21 @@
-import type { OrderSheetRequest } from '@/features/order-sheet/types';
+import type { OrderSheetList } from '@/features/order-sheet/types';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const request = (await req.json()) as OrderSheetRequest;
+  const body = (await req.json()) as OrderSheetList;
 
-  const { userId, body } = request;
+  const { data } = await supabase.auth.getUser();
+  const userId = data.user?.id;
+
+  if (!userId) {
+    return NextResponse.json(
+      { error: '로그인이 필요합니다.' },
+      { status: 401 },
+    );
+  }
+
   // 요청
 
   const { data: defaultAddress } = await supabase

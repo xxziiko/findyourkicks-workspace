@@ -26,14 +26,13 @@ type RawCartResponse = {
 
 export async function GET(req: Request) {
   const supabase = await createClient();
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('userId');
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (!userId) {
-    return NextResponse.json(
-      { error: 'userId가 필요합니다.' },
-      { status: 400 },
-    );
+  if (authError || !user) {
+    return NextResponse.json([]);
   }
 
   const { data: cart, error: cartError } = await supabase
@@ -57,11 +56,11 @@ export async function GET(req: Request) {
         )
       )
     `)
-    .eq('user_id', userId)
+    .eq('user_id', user.id)
     .single<RawCartResponse>();
 
   if (cartError || !cart) {
-    return NextResponse.json({ error: '장바구니 조회 실패' }, { status: 500 });
+    return NextResponse.json([]);
   }
 
   const flatItems: CartList =
@@ -84,30 +83,32 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const supabase = await createClient();
   const payload: CartListPayload = await req.json();
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('userId');
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (!userId) {
+  if (authError || !user) {
     return NextResponse.json(
-      { error: 'userId가 필요합니다.' },
-      { status: 400 },
+      { error: '로그인이 필요합니다.' },
+      { status: 401 },
     );
   }
 
   // 1. 사용자 cart 확인 또는 생성
   const { data: existingCart } = await supabase
     .from('cart')
-    .select('*')
-    .eq('user_id', userId)
+    .select('cart_id')
+    .eq('user_id', user.id)
     .maybeSingle();
 
-  let cartId = existingCart?.cart_id;
+  let cartId = existingCart;
 
   if (!cartId) {
     const { data: newCart, error: newCartError } = await supabase
       .from('cart')
       .insert({
-        user_id: userId,
+        user_id: user.id,
         create_at: new Date().toISOString(),
       })
       .select()
