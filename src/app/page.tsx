@@ -1,7 +1,6 @@
+import { ProductList, ProductListLoading } from '@/features/product';
 import { fetchProducts } from '@/features/product/apis';
 import { Suspense } from 'react';
-import ProductListLoading from './ProductListLoading';
-import ProductList from './product/_features/ProductList';
 
 export default async function Home() {
   return (

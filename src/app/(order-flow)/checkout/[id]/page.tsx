@@ -1,6 +1,6 @@
+import { Checkout } from '@/features/order';
 import { fetchOrderSheetById } from '@/features/order-sheet/apis';
 import { redirect } from 'next/navigation';
-import Checkout from './Checkout';
 
 export default async function CheckoutPage({
   params,
