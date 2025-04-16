@@ -1,5 +1,5 @@
+import { Complete } from '@/features/order';
 import { getOrderById } from '@/features/order/apis';
-import Complete from './Complete';
 
 export default async function CompletePage({
   params,

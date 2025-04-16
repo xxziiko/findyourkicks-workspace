@@ -1,6 +1,6 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import styles from './page.module.scss';
+import styles from '@/features/order/components/CheckoutView.module.scss';
 
 export default function LoadingCheckout() {
   return (
