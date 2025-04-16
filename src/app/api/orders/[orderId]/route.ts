@@ -1,5 +1,6 @@
 import { createClient } from '@/shared/utils/supabase/server';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -42,7 +43,9 @@ export async function GET(
 
   const response = {
     orderId,
-    orderDate: dayjs(orders[0].order_date).format('YYYY-MM-DD HH:mm:ss'),
+    orderDate: format(orders[0].order_date, 'YYYY-MM-DD HH:mm:ss', {
+      locale: ko,
+    }),
 
     payment: {
       paymentKey: payment[0].payment_key,
