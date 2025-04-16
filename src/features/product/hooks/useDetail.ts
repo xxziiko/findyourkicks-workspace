@@ -1,8 +1,8 @@
 'use client';
-import { addToCart } from '@/features/cart/apis';
+
+import { useCartItemMutation } from '@/features/cart';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
-import { isAuthenticatedAtom, userIdAtom } from '@/lib/store';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { isAuthenticatedAtom } from '@/lib/store';
 import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
@@ -12,15 +12,10 @@ export default function useDetail({
 }: { data: ProductDetail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
-  const router = useRouter();
 
-  const queryClient = useQueryClient();
-  const { mutate: mutateCart, isPending: isMutatingCart } = useMutation({
-    mutationFn: addToCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-    },
-  });
+  const { mutate: mutateCart, isPending: isMutatingCart } =
+    useCartItemMutation();
+  const router = useRouter();
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,

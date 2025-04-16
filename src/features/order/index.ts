@@ -5,6 +5,8 @@ export { default as CheckoutView } from './components/CheckoutView';
 export { default as Complete } from './components/Complete';
 
 export { default as useCheckout } from './hooks/useCheckout';
+export { default as useOrderItemsMutation } from './hooks/useOrderItemsMutation';
+export { default as useTossPayments } from './hooks/useTossPayments';
 
 export * from './types';
 export * from './apis';

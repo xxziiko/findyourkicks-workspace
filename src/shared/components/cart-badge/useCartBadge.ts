@@ -1,4 +1,4 @@
-import { fetchCartList } from '@/features/cart/apis';
+import { cartQueries } from '@/features/cart';
 import { userIdAtom } from '@/lib/store';
 import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
@@ -8,12 +8,10 @@ export default function useCartBadge() {
 
   // FIXME: 장바구니 개수 api 만들기
   const { data: badgeCount } = useQuery({
-    queryKey: ['cart'],
-    queryFn: fetchCartList,
+    ...cartQueries.list(),
     enabled: !!userId,
-    staleTime: 60,
-    select: (data) => data.length ?? 0,
+    select: (data) => data.length,
   });
 
-  return { badgeCount, userId };
+  return { badgeCount };
 }

@@ -1,7 +1,8 @@
 import {
-  fetchUserAddresses,
+  addressKeys,
+  addressQueries,
   updateUserAddress,
-} from '@/features/user/address/apis';
+} from '@/features/user/address';
 import {
   useMutation,
   useQueryClient,
@@ -10,19 +11,16 @@ import {
 
 export default function useAddressList(onClose: () => void) {
   const queryClient = useQueryClient();
-  const { data: addresses } = useSuspenseQuery({
-    queryKey: ['addresses'],
-    queryFn: fetchUserAddresses,
-  });
+  const { data: addresses } = useSuspenseQuery(addressQueries.list());
 
   const { mutate: mutateDefaultAddress } = useMutation({
     mutationFn: updateUserAddress,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['addresses'],
+        queryKey: addressKeys.list(),
       });
       queryClient.invalidateQueries({
-        queryKey: ['defaultAddress'],
+        queryKey: addressKeys.default(),
       });
       onClose();
     },

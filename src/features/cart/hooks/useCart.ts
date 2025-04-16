@@ -1,22 +1,18 @@
 'use client';
 
 import {
-  fetchCartList,
+  cartQueries,
   useDeleteCartMutation,
   useUpdateCartMutation,
 } from '@/features/cart';
 import type { CartList } from '@/features/cart/types';
-import { useCreateOrderSheetMutation } from '@/features/user/address';
+import { useCreateOrderSheetMutation } from '@/features/order-sheet';
 import { useCheckBoxGroup } from '@/shared/components/checkbox/useCheckboxGrop';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 export default function useCart() {
-  const { data: cartItems } = useSuspenseQuery({
-    queryKey: ['cart'],
-    queryFn: fetchCartList,
-    staleTime: 60,
-  });
+  const { data: cartItems } = useSuspenseQuery<CartList>(cartQueries.list());
 
   const {
     isAllChecked,
@@ -90,7 +86,6 @@ export default function useCart() {
     totalPrice,
     totalPriceWithDeliveryFee,
     handleToggle,
-
     handleToggleAll,
     handleQuantityChange,
     handleDelete,
