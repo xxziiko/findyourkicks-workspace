@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import styles from './layout.module.scss';
 import { Providers } from './providers';
+
 export const metadata: Metadata = {
   title: 'SHOP | findyourkicks',
   description: 'find your kicks',
