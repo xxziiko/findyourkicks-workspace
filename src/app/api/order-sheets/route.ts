@@ -6,30 +6,38 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const body = (await req.json()) as OrderSheetList;
 
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-  if (!userId) {
+  if (authError || !user) {
     return NextResponse.json(
       { error: '로그인이 필요합니다.' },
-      { status: 401 },
+      { status: authError?.status },
     );
   }
 
-  // 요청
-
-  const { data: defaultAddress } = await supabase
+  const { data: defaultAddress, error: defaultAddressError } = await supabase
     .from('user_addresses')
     .select('address_id')
-    .eq('user_id', userId)
+    .eq('user_id', user.id)
     .eq('is_default', true)
     .single();
+
+  if (defaultAddressError) {
+    console.error('defaultAddressError', defaultAddressError);
+    return NextResponse.json(
+      { error: '기본 배송지 조회 실패' },
+      { status: 500 },
+    );
+  }
 
   // 1. 주문서 생성
   const { data: orderSheet, error: orderSheetError } = await supabase
     .from('order_sheets')
     .insert({
-      user_id: userId,
+      user_id: user.id,
       status: 'pending',
       user_address_id: defaultAddress?.address_id,
       created_at: new Date().toISOString(),
@@ -38,6 +46,7 @@ export async function POST(req: Request) {
     .single();
 
   if (orderSheetError || !orderSheet) {
+    console.error('orderSheetError', orderSheetError);
     return NextResponse.json({ error: '주문서 생성 실패' }, { status: 500 });
   }
 
@@ -61,6 +70,7 @@ export async function POST(req: Request) {
     .insert(orderItems);
 
   if (insertError) {
+    console.error('insertError', insertError);
     return NextResponse.json(
       { error: '주문 아이템 생성 실패' },
       { status: 500 },
