@@ -1,17 +1,5 @@
-export const handleError = <T>({
-  data,
-  error,
-}: { data: T; error: unknown }) => {
-  if (!data || error) throw error;
+export * from './assert';
+export * from './error';
+export * from './isAuthPath';
 
-  return data;
-};
-
-export const assert: (
-  condition: unknown,
-  message: string,
-) => asserts condition = (condition: unknown, message: string) => {
-  if (!condition) {
-    throw new Error(message);
-  }
-};
+export * from './api';
