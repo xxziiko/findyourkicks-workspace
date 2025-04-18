@@ -1,5 +1,8 @@
-import { Complete } from '@/features/order';
-import { getOrderById } from '@/features/order/apis';
+import { Complete, getOrderById } from '@/features/order';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+
+export const dynamic = 'force-static';
 
 export default async function CompletePage({
   params,
@@ -7,7 +10,14 @@ export default async function CompletePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const order = await getOrderById(id);
+  const response = await getOrderById(id);
+
+  const order = {
+    ...response,
+    orderDate: format(response.orderDate, 'yyyy-MM-dd HH:mm:ss', {
+      locale: ko,
+    }),
+  };
 
   return <Complete order={order} />;
 }

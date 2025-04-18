@@ -32,7 +32,10 @@ export async function GET(req: Request) {
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    return NextResponse.json([]);
+    return NextResponse.json(
+      { error: '로그인이 필요합니다.' },
+      { status: 401 },
+    );
   }
 
   const { data: cart, error: cartError } = await supabase
@@ -91,7 +94,7 @@ export async function POST(req: Request) {
   if (authError || !user) {
     return NextResponse.json(
       { error: '로그인이 필요합니다.' },
-      { status: 401 },
+      { status: authError?.status },
     );
   }
 
@@ -102,7 +105,7 @@ export async function POST(req: Request) {
     .eq('user_id', user.id)
     .maybeSingle();
 
-  let cartId = existingCart;
+  let cartId = existingCart?.cart_id;
 
   if (!cartId) {
     const { data: newCart, error: newCartError } = await supabase
@@ -148,7 +151,7 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (existingItem) {
-      await supabase
+      const { error: updateError } = await supabase
         .from('cart_items')
         .update({
           quantity: existingItem.quantity + item.quantity,
@@ -158,11 +161,18 @@ export async function POST(req: Request) {
         .select()
         .single();
 
+      if (updateError) {
+        return NextResponse.json(
+          { error: '장바구니 업데이트 실패', updateError },
+          { status: 500 },
+        );
+      }
+
       // if (updated) insertedItems.push(updated);
       continue;
     }
 
-    await supabase
+    const { error: insertError } = await supabase
       .from('cart_items')
       .insert({
         cart_id: cartId,
@@ -174,6 +184,13 @@ export async function POST(req: Request) {
       })
       .select()
       .single();
+
+    if (insertError) {
+      return NextResponse.json(
+        { error: '장바구니 추가 실패', insertError },
+        { status: 500 },
+      );
+    }
 
     // if (inserted) insertedItems.push(inserted);
   }

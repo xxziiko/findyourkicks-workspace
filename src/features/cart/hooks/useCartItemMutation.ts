@@ -1,5 +1,4 @@
-import { addToCart } from '@/features/cart';
-import { cartKeys } from '@/features/cart';
+import { addToCart, cartKeys } from '@/features/cart';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useCartItemMutation() {
@@ -8,7 +7,6 @@ export default function useCartItemMutation() {
   return useMutation({
     mutationFn: addToCart,
     onSuccess: () => {
-      console.log('onSuccess');
       queryClient.invalidateQueries({ queryKey: cartKeys.list() });
     },
   });
