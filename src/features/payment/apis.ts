@@ -1,3 +1,4 @@
+import { ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/utils/api';
 
 interface Payments {
@@ -21,5 +22,5 @@ interface PaymentsResponse {
 }
 
 export const requestPayments = async (body: Payments) => {
-  return await api.post<PaymentsResponse, Payments>('/payments', body);
+  return await api.post<PaymentsResponse, Payments>(ENDPOINTS.payments, body);
 };

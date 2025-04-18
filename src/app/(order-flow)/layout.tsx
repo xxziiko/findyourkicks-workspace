@@ -1,9 +1,10 @@
 'use client';
 
 import { CheckoutSteps } from '@/shared/components';
+import { PATH } from '@/shared/constants/path';
 import { usePathname } from 'next/navigation';
 
-const steps = ['/cart', '/checkout', '/complete'];
+const steps = [PATH.cart, PATH.checkout, PATH.complete] as const;
 
 export default function CheckoutLayout({
   children,
