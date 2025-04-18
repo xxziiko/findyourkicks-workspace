@@ -1,3 +1,4 @@
+import { ProductListLoading } from '@/features/product';
 import type { Products } from '@/features/product/types';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
@@ -9,35 +10,43 @@ export type ProductListProps = {
   isFetchingNextPage: boolean;
   loadMoreRef: Ref<HTMLDivElement | null>;
   products: Products;
+  allLoaded: boolean;
+  onAllImageLoad: () => void;
 };
 
 export default function ProductListView({
   isFetchingNextPage,
   loadMoreRef,
   products,
+  allLoaded,
+  onAllImageLoad,
 }: ProductListProps) {
   return (
-    <div>
-      <section className={styles.list}>
-        {products.map(({ productId, image, brand, title, price }) => (
-          <Link href={`/product/${productId}`} key={productId}>
-            <ProductCardBtn
-              src={image}
-              brand={brand}
-              title={title}
-              price={price}
-            />
-          </Link>
-        ))}
-      </section>
+    <>
+      {!allLoaded && <ProductListLoading />}
+      <div>
+        <section className={styles.list}>
+          {products.map(({ productId, image, brand, title, price }) => (
+            <Link href={`/product/${productId}`} key={productId}>
+              <ProductCardBtn
+                src={image}
+                brand={brand}
+                title={title}
+                price={price}
+                onAllImageLoad={onAllImageLoad}
+              />
+            </Link>
+          ))}
+        </section>
 
-      {isFetchingNextPage && (
-        <div className={styles.loading}>
-          <Loader className={styles.loading__loader} />
-        </div>
-      )}
+        {isFetchingNextPage && (
+          <div className={styles.loading}>
+            <Loader className={styles.loading__loader} />
+          </div>
+        )}
 
-      <div ref={loadMoreRef} />
-    </div>
+        <div ref={loadMoreRef} />
+      </div>
+    </>
   );
 }

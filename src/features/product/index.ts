@@ -4,7 +4,7 @@ export { default as ProductList } from './components/ProductList';
 export { default as ProductListView } from './components/ProductListView';
 export { default as ProductCardBtn } from './components/ProductCardBtn';
 export { default as Option } from './components/Option';
-export { default as ProductListLoading } from './components/ProductListLoading';
+export { ProductListLoading } from './components/ProductListLoading';
 
 export { default as useFetchProductsQuery } from './hooks/useFetchProductsQuery';
 export { default as useProductList } from './hooks/useProductList';
