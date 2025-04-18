@@ -8,8 +8,8 @@ interface TosspaymentsPayload {
 }
 
 export default function useOrderItemsMutation({
-  restTossPaymentsPayload,
-}: { restTossPaymentsPayload: TosspaymentsPayload }) {
+  paymentSummary,
+}: { paymentSummary: TosspaymentsPayload }) {
   const { requestTossPayments } = useTossPayments();
 
   return useMutation({
@@ -17,7 +17,7 @@ export default function useOrderItemsMutation({
     onSuccess: (response) => {
       requestTossPayments({
         ...response,
-        ...restTossPaymentsPayload,
+        ...paymentSummary,
       });
     },
   });

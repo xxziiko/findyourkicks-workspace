@@ -14,7 +14,7 @@ import styles from './CheckoutView.module.scss';
 interface CheckoutViewProps {
   defaultAddress: UserAddress;
   orderProducts: OrderProductItem[];
-  title: string;
+  addressModalTitle: string;
   modalView: 'form' | 'list';
   isModalOpen: boolean;
   isMutatingOrderItems: boolean;
@@ -29,7 +29,7 @@ interface CheckoutViewProps {
 
 export default function CheckoutView({
   defaultAddress,
-  title,
+  addressModalTitle,
   isModalOpen,
   modalView,
   orderProducts,
@@ -47,7 +47,12 @@ export default function CheckoutView({
       <div className={styles.layout__left}>
         <CardLayout
           title="배송 정보"
-          label={<CardLayout.Label text={title} onClick={onModalControl} />}
+          label={
+            <CardLayout.Label
+              text={addressModalTitle}
+              onClick={onModalControl}
+            />
+          }
         >
           <DeliverySummary data={defaultAddress} />
         </CardLayout>
@@ -81,7 +86,7 @@ export default function CheckoutView({
       </div>
 
       {isModalOpen && (
-        <Modal title={title}>
+        <Modal title={addressModalTitle}>
           {modalView === 'list' ? (
             <div>
               <Button

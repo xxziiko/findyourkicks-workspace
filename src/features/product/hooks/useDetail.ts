@@ -22,6 +22,7 @@ export default function useDetail({
 
   const handleSelectSize = useCallback((id: string) => {
     setSelectedOptions((prev) => {
+      //FIXME: 네이밍, 메서드 변경 (findIndex -> find)
       const index = prev.findIndex((option) => option.size === id);
       if (index !== -1) {
         return prev.map((option, i) =>
@@ -56,25 +57,15 @@ export default function useDetail({
     setSelectedOptions([]);
   };
 
-  const createCart = () => {
-    return selectedOptions.map((option) => ({
+  const handleCartButton = () => {
+    const cartItems = selectedOptions.map((option) => ({
       product_id: productDetail.productId,
       price: productDetail.price,
       ...option,
     }));
-  };
 
-  const handleCartButton = () => {
-    if (isAuthenticated) {
-      const cartItems = createCart();
-
-      mutateCart(cartItems);
-      resetSelectedOptions();
-      //TODO: modal
-      return;
-    }
-
-    router.push('/login');
+    mutateCart(cartItems);
+    resetSelectedOptions();
   };
 
   return {
@@ -87,7 +78,6 @@ export default function useDetail({
     handleDeleteButton,
     handleQuantityChange,
     resetSelectedOptions,
-    createCart,
     handleCartButton,
     getCurrentQuantity,
   };

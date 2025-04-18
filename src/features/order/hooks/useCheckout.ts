@@ -2,6 +2,7 @@
 
 import { useOrderItemsMutation } from '@/features/order';
 import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
+import { getOrderSheetSummary } from '@/features/order/hooks/getOrderSheetSummary';
 import { addressQueries } from '@/features/user/address';
 import { deliveryMessageAtom, isAllCheckedAgreementAtom } from '@/lib/store';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -10,9 +11,10 @@ import { useState } from 'react';
 
 export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
   const { orderSheetItems, orderSheetId, deliveryAddress } = orderSheet;
-  const { data: defaultAddress } = useSuspenseQuery(
-    addressQueries.default(deliveryAddress),
-  );
+  const { data: defaultAddress } = useSuspenseQuery({
+    ...addressQueries.default(),
+    initialData: deliveryAddress,
+  });
 
   const deliveryMessage = useAtomValue(deliveryMessageAtom);
   const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
@@ -20,22 +22,18 @@ export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
   const [modalView, setModalView] = useState<'form' | 'list'>(
     defaultAddress.addressId ? 'list' : 'form',
   );
+  const { totalPrice, totalPriceWithDeliveryFee, orderName } =
+    getOrderSheetSummary(orderSheetItems);
 
-  const itemPrices = orderSheetItems.map((item) => item.price * item.quantity);
-  const totalPrice = itemPrices.reduce((acc, price) => acc + price, 0);
-  const totalPriceWithDeliveryFee = totalPrice + 3000;
-  const title = modalView === 'form' ? '주소 입력' : '주소 변경';
+  const addressModalTitle = modalView === 'form' ? '주소 입력' : '주소 변경';
 
-  const restTossPaymentsPayload = {
-    orderName:
-      orderSheetItems.length === 1
-        ? orderSheetItems[0].title
-        : `${orderSheetItems[0].title} 외 ${orderSheetItems.length - 1}건`,
+  const paymentSummary = {
+    orderName,
     amount: totalPriceWithDeliveryFee,
   };
 
   const { mutate: mutateOrderItems, isPending: isMutatingOrderItems } =
-    useOrderItemsMutation({ restTossPaymentsPayload });
+    useOrderItemsMutation({ paymentSummary });
 
   const handlePayment = () => {
     mutateOrderItems({
@@ -59,7 +57,7 @@ export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
   return {
     defaultAddress,
     orderProducts: orderSheetItems,
-    title,
+    addressModalTitle,
     totalPrice,
     totalPriceWithDeliveryFee,
     isModalOpen,
