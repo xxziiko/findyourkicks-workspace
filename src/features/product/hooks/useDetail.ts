@@ -2,20 +2,15 @@
 
 import { useCartItemMutation } from '@/features/cart';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
-import { isAuthenticatedAtom } from '@/lib/store';
-import { useAtomValue } from 'jotai';
-import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 export default function useDetail({
   data: productDetail,
 }: { data: ProductDetail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
-  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
 
   const { mutate: mutateCart, isPending: isMutatingCart } =
     useCartItemMutation();
-  const router = useRouter();
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,

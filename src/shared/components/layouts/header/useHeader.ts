@@ -1,9 +1,8 @@
 import { signOutUser } from '@/features/auth/apis';
-import { userAtom } from '@/lib/store';
-import { useAtom } from 'jotai';
+import { useUser } from '@/features/user/hooks';
 
 export default function useHeader() {
-  const [user, setUser] = useAtom(userAtom);
+  const { user, setUser } = useUser();
   const userEmail = user?.email ?? '';
 
   const handleLogout = async () => {
