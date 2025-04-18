@@ -2,12 +2,16 @@
 
 import { useCartItemMutation } from '@/features/cart';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
+import { useUser } from '@/features/user/hooks';
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 export default function useDetail({
   data: productDetail,
 }: { data: ProductDetail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
+  const router = useRouter();
+  const { isAuthenticated } = useUser();
 
   const { mutate: mutateCart, isPending: isMutatingCart } =
     useCartItemMutation();
@@ -58,6 +62,11 @@ export default function useDetail({
   };
 
   const handleCartButton = () => {
+    if (!isAuthenticated) {
+      goToLogin();
+      return;
+    }
+
     const cartItems = selectedOptions.map((option) => ({
       product_id: productDetail.productId,
       price: productDetail.price,
@@ -66,6 +75,10 @@ export default function useDetail({
 
     mutateCart(cartItems);
     resetSelectedOptions();
+  };
+
+  const goToLogin = () => {
+    router.push('/login');
   };
 
   return {

@@ -1,28 +1,6 @@
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
-type RawDelivery = {
-  address_id: number;
-  alias: string;
-  receiver_name: string;
-  receiver_phone: string;
-  address: string;
-  message: string;
-  is_default: boolean;
-};
-
-interface RawOrderSheetItem {
-  product_id: string;
-  cart_item_id: string;
-  size: string;
-  quantity: number;
-  price: number;
-  product: {
-    title: string;
-    image: string;
-  };
-}
-
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ orderSheetId: string }> },
@@ -32,24 +10,14 @@ export async function GET(
 
   //FIXME: 서버 컴포넌트에서 사용하는 경우 header에 토큰이 없음.
   // const { data: user } = await supabase.auth.getUser();
-
+  // console.log('user', user);
   // 2. 주문 아이템 조회
-  const { data: rawOrderSheetItems, error: itemsError } = await supabase
-    .from('order_sheet_items')
-    .select(`
-        product_id,
-        size,
-        quantity,
-        price,
-        cart_item_id,
-        product:product_id (
-          title,
-          image
-        )
-      `)
+  const { data: orderSheetItems, error: itemsError } = await supabase
+    .from('order_sheet_item_with_details')
+    .select('*')
     .eq('order_sheet_id', orderSheetId);
 
-  if (itemsError || !rawOrderSheetItems) {
+  if (itemsError || !orderSheetItems) {
     console.error('주문 아이템 조회 실패:', itemsError);
     return NextResponse.json(
       { error: '주문 아이템을 찾을 수 없습니다.' },
@@ -58,21 +26,22 @@ export async function GET(
   }
 
   // 3. 배송 정보 조회
-  const { data: rawDelivery, error: deliveryError } = await supabase
-    .from('order_sheets')
-    .select(`
-        user_address:user_address_id (
-          address_id,
-          alias,
-          receiver_name,
-          receiver_phone,
-          address,
-          message,
-          is_default
-        )
-      `)
+  const {
+    data: {
+      address_id,
+      receiver_name,
+      receiver_phone,
+      is_default,
+      alias,
+      address,
+      message,
+    },
+    error: deliveryError,
+  } = await supabase
+    .from('order_sheet_with_address')
+    .select('*')
     .eq('order_sheet_id', orderSheetId)
-    .single<{ user_address: RawDelivery }>();
+    .single();
 
   if (deliveryError) {
     console.error('배송 정보 조회 실패', deliveryError);
@@ -82,29 +51,34 @@ export async function GET(
     );
   }
 
-  const orderSheetItems = (
-    rawOrderSheetItems as unknown as RawOrderSheetItem[]
-  ).map((item) => ({
-    productId: item.product_id,
-    cartItemId: item.cart_item_id,
-    size: item.size,
-    quantity: item.quantity,
-    price: item.price,
-    title: item.product.title,
-    image: item.product.image,
-  }));
-
   const response = {
     orderSheetId,
-    orderSheetItems,
+    orderSheetItems: orderSheetItems.map(
+      ({
+        user_id,
+        product_id,
+        cart_item_id,
+        added_at,
+        size,
+        quantity,
+        ...item
+      }) => ({
+        ...item,
+        productId: product_id,
+        cartItemId: cart_item_id,
+        addedAt: added_at,
+        size,
+        quantity,
+      }),
+    ),
     deliveryAddress: {
-      addressId: rawDelivery?.user_address?.address_id ?? null,
-      alias: rawDelivery?.user_address?.alias ?? null,
-      receiverName: rawDelivery?.user_address?.receiver_name ?? null,
-      receiverPhone: rawDelivery?.user_address?.receiver_phone ?? null,
-      address: rawDelivery?.user_address?.address ?? null,
-      message: rawDelivery?.user_address?.message ?? null,
-      isDefault: rawDelivery?.user_address?.is_default ?? null,
+      addressId: address_id,
+      receiverName: receiver_name,
+      receiverPhone: receiver_phone,
+      isDefault: is_default,
+      alias,
+      address,
+      message,
     },
   };
 

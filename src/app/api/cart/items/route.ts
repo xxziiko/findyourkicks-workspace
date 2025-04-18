@@ -1,28 +1,19 @@
-import type { CartList, CartListPayload } from '@/features/cart/types';
+import type { CartListPayload } from '@/features/cart/types';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
-type RawCartItem = {
+interface CartItemsResponse {
   cart_item_id: string;
   product_id: string;
   inventory_id: string;
   quantity: number;
   price: number;
   added_at: string;
-  inventory: {
-    size: string;
-    stock: number;
-  };
-  product: {
-    title: string;
-    image: string;
-  };
-};
-
-type RawCartResponse = {
-  cart_id: string;
-  cart_items: RawCartItem[];
-};
+  size: string;
+  stock: number;
+  title: string;
+  image: string;
+}
 
 export async function GET(req: Request) {
   const supabase = await createClient();
@@ -38,49 +29,42 @@ export async function GET(req: Request) {
     );
   }
 
-  const { data: cart, error: cartError } = await supabase
-    .from('cart')
-    .select(`
-      cart_id,
-      cart_items (
-        cart_item_id,
-        product_id,
-        inventory_id,
-        quantity,
-        price,
-        added_at,
-        inventory:inventory (
-          size,
-          stock
-        ),
-        product:products (
-          title,
-          image
-        )
-      )
-    `)
-    .eq('user_id', user.id)
-    .single<RawCartResponse>();
+  const { data: cartItems, error: cartError } = await supabase
+    .from('cart_items_with_details')
+    .select('*')
+    .eq('user_id', user.id);
 
-  if (cartError || !cart) {
+  if (cartError || !cartItems) {
+    console.error('장바구니 조회 실패', cartError);
     return NextResponse.json([]);
   }
 
-  const flatItems: CartList =
-    cart.cart_items
+  const response =
+    cartItems
       .sort((a, b) => a.cart_item_id.localeCompare(b.cart_item_id))
-      .map((item) => ({
-        cartItemId: item.cart_item_id,
-        productId: item.product_id,
-        title: item.product?.title,
-        image: item.product?.image,
-        selectedOption: item.inventory,
-        quantity: item.quantity,
-        price: item.price,
-        addedAt: item.added_at,
-      })) ?? [];
+      .map(
+        ({
+          user_id,
+          product_id,
+          cart_item_id,
+          added_at,
+          size,
+          stock,
+          ...item
+        }) => ({
+          userId: user_id,
+          productId: product_id,
+          cartItemId: cart_item_id,
+          addedAt: added_at,
+          selectedOption: {
+            size,
+            stock,
+          },
+          ...item,
+        }),
+      ) ?? [];
 
-  return NextResponse.json(flatItems);
+  return NextResponse.json(response);
 }
 
 export async function POST(req: Request) {

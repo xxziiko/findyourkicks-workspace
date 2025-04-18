@@ -1,10 +1,10 @@
 'use client';
 
-import { CardSkeleton } from '@/shared/components';
-import useImagesLoaded from '@/shared/hooks/useImagesLoaded';
 import Image from 'next/image';
 import { memo } from 'react';
 import styles from './Image.module.scss';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 interface ImageComponentProps {
   src: string;
   alt: string;
@@ -19,22 +19,10 @@ const ImageComponent = ({
   onAllImageLoad = () => {},
   ...props
 }: ImageComponentProps) => {
-  const { allLoaded, handleImageLoad } = useImagesLoaded(1);
-
   return (
     <>
-      {!allLoaded && <CardSkeleton />}
       <figure className={styles.image} style={{ width, height }}>
-        <Image
-          {...props}
-          fill
-          sizes="100%"
-          onLoad={() => {
-            handleImageLoad();
-            onAllImageLoad();
-          }}
-          priority
-        />
+        <Image {...props} fill sizes="100%" onLoad={onAllImageLoad} priority />
       </figure>
     </>
   );

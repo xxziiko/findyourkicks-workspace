@@ -62,7 +62,7 @@ export default function CheckoutView({
             {orderProducts.map((product) => (
               <OrderProduct
                 product={product}
-                key={`${product.productId}-${product.size}-${product.quantity}`}
+                key={product.cartItemId}
                 type="checkout"
               />
             ))}
