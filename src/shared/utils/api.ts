@@ -6,23 +6,26 @@ interface ApiError {
   code?: string;
 }
 
-const getApiUrl = (endpoint: string) =>
-  `${process.env.NEXT_PUBLIC_API_URL}/api${endpoint}`;
-
-async function request<Response, Body = void>(
+export async function request<Response, Body = void>(
   method: string,
   endpoint: string,
   body?: Body,
+  headers?: HeadersInit,
 ): Promise<Response> {
   const options: RequestInit = {
     method,
+    credentials: 'include',
     headers: {
+      ...headers,
       'Content-Type': 'application/json',
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
   };
 
-  const res = await fetch(getApiUrl(endpoint), options);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api${endpoint}`,
+    options,
+  );
   const responseData = await res.json();
 
   const error: ApiError = {
@@ -31,16 +34,20 @@ async function request<Response, Body = void>(
     code: responseData.code,
   };
 
-  assert(res.ok, `${error.status}, ${error.message}`);
+  assert(res.ok, `${error.status}, ${error}`);
 
   return responseData;
 }
 
+function createApiMethod(method: 'GET' | 'POST' | 'PATCH' | 'DELETE') {
+  return <Response, Body = void>(endpoint: string, body?: Body) => {
+    return request<Response, Body>(method, endpoint, body);
+  };
+}
+
 export const api = {
-  get: <Response>(endpoint: string) => request<Response>('GET', endpoint),
-  post: <Response, Body = void>(endpoint: string, body?: Body) =>
-    request<Response, Body>('POST', endpoint, body),
-  patch: <Response, Body = void>(endpoint: string, body?: Body) =>
-    request<Response, Body>('PATCH', endpoint, body),
-  delete: <Response>(endpoint: string) => request<Response>('DELETE', endpoint),
+  get: createApiMethod('GET'),
+  post: createApiMethod('POST'),
+  patch: createApiMethod('PATCH'),
+  delete: createApiMethod('DELETE'),
 };
