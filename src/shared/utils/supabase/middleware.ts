@@ -1,33 +1,14 @@
-import { createServerClient } from '@supabase/ssr';
+import { isAuthPath } from '@/shared/utils';
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  const supabaseResponse = NextResponse.next();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          );
-        },
-      },
-    },
-  );
+  const supabase = createMiddlewareClient({
+    req: request,
+    res: supabaseResponse,
+  });
 
   // Do not run code between createServerClient and
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
@@ -39,10 +20,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && !request.nextUrl.pathname.startsWith('/login')) {
-    // no user, potentially respond by redirecting the user to the login page
+  // 인증되지 않은 사용자가 보호된 페이지에 접근할 경우 로그인 페이지로 리디렉션
+  // 공개 경로는 인증 없이 접근 가능
+  if (!user && isAuthPath(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
+    return NextResponse.redirect(url);
+  }
+
+  // 인증된 사용자가 로그인 페이지에 접근할 경우 홈페이지로 리디렉션
+  if (user && request.nextUrl.pathname.startsWith('/login')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
     return NextResponse.redirect(url);
   }
 
