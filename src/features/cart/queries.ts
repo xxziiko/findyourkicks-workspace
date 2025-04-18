@@ -1,4 +1,4 @@
-import { fetchCartList } from './apis';
+import { fetchCartList } from '@/features/cart/apis';
 
 export const cartKeys = {
   all: ['cart'] as const,
@@ -10,5 +10,6 @@ export const cartQueries = {
     queryKey: cartKeys.list(),
     queryFn: fetchCartList,
     staleTime: 60,
+    refetchOnWindowFocus: false,
   }),
 } as const;
