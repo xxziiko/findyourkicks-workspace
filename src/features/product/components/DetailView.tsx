@@ -1,9 +1,9 @@
 'use client';
 
-import Loading from '@/app/loading';
 import { Option } from '@/features/product';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
 import { Button, Image } from '@/shared/components';
+import { useRouter } from 'next/navigation';
 import styles from './DetailView.module.scss';
 
 interface DetailViewProps {
@@ -52,6 +52,7 @@ function Content({
 }: DetailViewProps) {
   const { brand, price, title, description, inventory, category } =
     productDetail;
+  const router = useRouter();
 
   return (
     <section className={styles.content}>
@@ -110,7 +111,10 @@ function Content({
         <div className={styles.content__bottom_buttons}>
           <Button
             text="장바구니"
-            onClick={onCartButton}
+            onClick={() => {
+              onCartButton();
+              router.push('/cart');
+            }}
             isLoading={isMutatingCart}
           />
 

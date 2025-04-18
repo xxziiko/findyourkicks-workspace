@@ -4,10 +4,12 @@ import { CartNavLink } from '@/shared/components';
 import useHeader from '@/shared/components/layouts/header/useHeader';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './Header.module.scss';
 
 export default function Header() {
   const { userEmail, handleLogout } = useHeader();
+  const router = useRouter();
 
   return (
     <header className={styles.header}>
@@ -25,7 +27,13 @@ export default function Header() {
         )}
 
         {userEmail && (
-          <button onClick={handleLogout} type="button">
+          <button
+            onClick={() => {
+              handleLogout();
+              router.push('/');
+            }}
+            type="button"
+          >
             LOGOUT
           </button>
         )}
