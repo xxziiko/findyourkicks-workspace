@@ -2,6 +2,7 @@ import {
   fetchDefaultUserAddress,
   fetchUserAddresses,
 } from '@/features/user/address/apis';
+import type { UserAddress } from '@/features/user/address/types';
 
 export const addressKeys = {
   all: ['address'] as const,
@@ -10,11 +11,11 @@ export const addressKeys = {
 };
 
 export const addressQueries = {
-  default: () => ({
+  default: (deliveryAddress: UserAddress) => ({
     queryKey: addressKeys.default(),
     queryFn: fetchDefaultUserAddress,
-    staleTime: 60 * 5,
     refetchOnWindowFocus: false,
+    initialData: deliveryAddress,
   }),
   list: () => ({
     queryKey: addressKeys.list(),

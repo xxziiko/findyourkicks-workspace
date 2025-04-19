@@ -1,12 +1,10 @@
 import { cartQueries } from '@/features/cart';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useUser } from '@/features/user/hooks';
+import { useQuery } from '@tanstack/react-query';
 
 export default function useCartBadge() {
-  // FIXME: 장바구니 개수 api 만들기
-  const { data: badgeCount } = useSuspenseQuery({
-    ...cartQueries.list(),
-    select: (data) => data.length,
-  });
+  const { userId } = useUser();
+  const { data: cartCount } = useQuery(cartQueries.count(userId));
 
-  return { badgeCount };
+  return { badgeCount: cartCount?.count ?? 0 };
 }

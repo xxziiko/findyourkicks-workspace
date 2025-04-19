@@ -1,4 +1,4 @@
-import '@/lib/styles/global.scss';
+import '@/shared/styles/global.scss';
 import { AuthListener } from '@/features/auth';
 import { Header } from '@/shared/components/layouts';
 import type { Metadata } from 'next';

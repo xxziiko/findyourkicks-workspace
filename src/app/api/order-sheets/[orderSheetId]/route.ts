@@ -25,52 +25,61 @@ export async function GET(
     );
   }
 
+  const orderSheetItemsResponse = orderSheetItems.map(
+    ({
+      user_id,
+      product_id,
+      cart_item_id,
+      added_at,
+      size,
+      quantity,
+      ...item
+    }) => ({
+      ...item,
+      productId: product_id,
+      cartItemId: cart_item_id,
+      addedAt: added_at,
+      size,
+      quantity,
+    }),
+  );
+
   // 3. 배송 정보 조회
-  const {
-    data: {
-      address_id,
-      receiver_name,
-      receiver_phone,
-      is_default,
-      alias,
-      address,
-      message,
-    },
-    error: deliveryError,
-  } = await supabase
+  const { data: addressData, error: deliveryError } = await supabase
     .from('order_sheet_with_address')
     .select('*')
     .eq('order_sheet_id', orderSheetId)
-    .single();
+    .maybeSingle();
 
   if (deliveryError) {
     console.error('배송 정보 조회 실패', deliveryError);
-    return NextResponse.json(
-      { error: '배송 정보가 존재하지 않습니다.' },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      error: '배송 정보를 찾을 수 없습니다.',
+      status: 404,
+    });
   }
 
-  const response = {
+  if (!addressData) {
+    return NextResponse.json({
+      orderSheetId,
+      orderSheetItems: orderSheetItemsResponse,
+      deliveryAddress: null,
+    });
+  }
+
+  const {
+    address_id,
+    receiver_name,
+    receiver_phone,
+    is_default,
+    alias,
+    address,
+    message,
+  } = addressData;
+
+  return NextResponse.json({
     orderSheetId,
-    orderSheetItems: orderSheetItems.map(
-      ({
-        user_id,
-        product_id,
-        cart_item_id,
-        added_at,
-        size,
-        quantity,
-        ...item
-      }) => ({
-        ...item,
-        productId: product_id,
-        cartItemId: cart_item_id,
-        addedAt: added_at,
-        size,
-        quantity,
-      }),
-    ),
+    orderSheetItems: orderSheetItemsResponse,
     deliveryAddress: {
       addressId: address_id,
       receiverName: receiver_name,
@@ -80,7 +89,5 @@ export async function GET(
       address,
       message,
     },
-  };
-
-  return NextResponse.json(response);
+  });
 }

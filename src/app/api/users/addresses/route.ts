@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       is_default: true,
       user_id: user.user?.id,
     })
-    .eq('address_id', addressId)
+    .select('address_id')
     .single();
 
   if (newAddressError) {
