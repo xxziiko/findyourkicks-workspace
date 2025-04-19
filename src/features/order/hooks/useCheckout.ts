@@ -10,22 +10,20 @@ import { useState } from 'react';
 
 export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
   const { orderSheetItems, orderSheetId, deliveryAddress } = orderSheet;
-  const { data: defaultAddress } = useSuspenseQuery({
-    ...addressQueries.default(),
-    initialData: deliveryAddress,
-  });
+  const { data: defaultAddress } = useSuspenseQuery(
+    addressQueries.default(deliveryAddress),
+  );
 
   const { deliveryMessage } = useDeliveryMessage();
   const { isAllCheckedAgreement } = useCheckoutAgreement();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalView, setModalView] = useState<'form' | 'list'>(
-    defaultAddress.addressId ? 'list' : 'form',
+    !defaultAddress ? 'form' : 'list',
   );
   const { totalPrice, totalPriceWithDeliveryFee, orderName } =
     getOrderSheetSummary(orderSheetItems);
 
   const addressModalTitle = modalView === 'form' ? '주소 입력' : '주소 변경';
-
   const paymentSummary = {
     orderName,
     amount: totalPriceWithDeliveryFee,

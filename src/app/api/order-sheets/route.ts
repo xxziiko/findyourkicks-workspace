@@ -26,11 +26,8 @@ export async function POST(req: Request) {
     .single();
 
   if (defaultAddressError) {
+    // 없으면 초기 고객
     console.error('defaultAddressError', defaultAddressError);
-    return NextResponse.json(
-      { error: '기본 배송지 조회 실패' },
-      { status: 500 },
-    );
   }
 
   // 1. 주문서 생성
