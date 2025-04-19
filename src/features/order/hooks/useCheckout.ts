@@ -4,9 +4,8 @@ import { useOrderItemsMutation } from '@/features/order';
 import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
 import { getOrderSheetSummary } from '@/features/order/hooks/getOrderSheetSummary';
 import { addressQueries } from '@/features/user/address';
-import { deliveryMessageAtom, isAllCheckedAgreementAtom } from '@/lib/store';
+import { useCheckoutAgreement, useDeliveryMessage } from '@/shared/hooks';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 
 export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
@@ -16,8 +15,8 @@ export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
     initialData: deliveryAddress,
   });
 
-  const deliveryMessage = useAtomValue(deliveryMessageAtom);
-  const isAllCheckedAgreement = useAtomValue(isAllCheckedAgreementAtom);
+  const { deliveryMessage } = useDeliveryMessage();
+  const { isAllCheckedAgreement } = useCheckoutAgreement();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalView, setModalView] = useState<'form' | 'list'>(
     defaultAddress.addressId ? 'list' : 'form',

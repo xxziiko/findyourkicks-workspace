@@ -1,9 +1,9 @@
 'use client';
-import { isAllCheckedAgreementAtom } from '@/lib/store';
+
 import { CheckBox } from '@/shared/components';
 import { useCheckBoxGroup } from '@/shared/components/checkbox/useCheckboxGrop';
 import { CardLayout } from '@/shared/components/layouts';
-import { useSetAtom } from 'jotai';
+import { useCheckoutAgreement } from '@/shared/hooks';
 import { useEffect } from 'react';
 import styles from './CheckoutSummary.module.scss';
 
@@ -53,7 +53,7 @@ const AGREEMENT_TEXT = [
 function AgreementSection() {
   const { isAllChecked, checkedItems, handleToggleAll, handleToggle } =
     useCheckBoxGroup(AGREEMENT_TEXT, false);
-  const setIsAllCheckedAgreement = useSetAtom(isAllCheckedAgreementAtom);
+  const { setIsAllCheckedAgreement } = useCheckoutAgreement();
 
   useEffect(() => {
     setIsAllCheckedAgreement(isAllChecked);
