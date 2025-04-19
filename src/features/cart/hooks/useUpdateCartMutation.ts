@@ -26,6 +26,7 @@ export default function useUpdateCartMutation() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: cartKeys.list() });
+      queryClient.invalidateQueries({ queryKey: cartKeys.count() });
     },
   });
 }

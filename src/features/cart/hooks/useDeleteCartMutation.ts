@@ -24,6 +24,7 @@ export default function useDeleteCartMutation() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: cartKeys.list() });
+      queryClient.invalidateQueries({ queryKey: cartKeys.count() });
     },
   });
 }

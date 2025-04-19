@@ -28,3 +28,7 @@ export const updateCartQuantity = async ({
 export const deleteCartItem = async (cartItemId: string) => {
   return await api.delete<CartList>(`${ENDPOINTS.cartItems}/${cartItemId}`);
 };
+
+export const fetchCartCount = async () => {
+  return await api.get<{ count: number }>(ENDPOINTS.cartCount);
+};
