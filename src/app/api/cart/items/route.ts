@@ -1,28 +1,19 @@
-import type { CartList, CartListPayload } from '@/features/cart/types';
+import type { CartListPayload } from '@/features/cart/types';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
-type RawCartItem = {
+interface CartItemsResponse {
   cart_item_id: string;
   product_id: string;
   inventory_id: string;
   quantity: number;
   price: number;
   added_at: string;
-  inventory: {
-    size: string;
-    stock: number;
-  };
-  product: {
-    title: string;
-    image: string;
-  };
-};
-
-type RawCartResponse = {
-  cart_id: string;
-  cart_items: RawCartItem[];
-};
+  size: string;
+  stock: number;
+  title: string;
+  image: string;
+}
 
 export async function GET(req: Request) {
   const supabase = await createClient();
@@ -32,52 +23,48 @@ export async function GET(req: Request) {
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
+    return NextResponse.json(
+      { error: '로그인이 필요합니다.' },
+      { status: 401 },
+    );
+  }
+
+  const { data: cartItems, error: cartError } = await supabase
+    .from('cart_items_with_details')
+    .select('*')
+    .eq('user_id', user.id);
+
+  if (cartError || !cartItems) {
+    console.error('장바구니 조회 실패', cartError);
     return NextResponse.json([]);
   }
 
-  const { data: cart, error: cartError } = await supabase
-    .from('cart')
-    .select(`
-      cart_id,
-      cart_items (
-        cart_item_id,
-        product_id,
-        inventory_id,
-        quantity,
-        price,
-        added_at,
-        inventory:inventory (
-          size,
-          stock
-        ),
-        product:products (
-          title,
-          image
-        )
-      )
-    `)
-    .eq('user_id', user.id)
-    .single<RawCartResponse>();
-
-  if (cartError || !cart) {
-    return NextResponse.json([]);
-  }
-
-  const flatItems: CartList =
-    cart.cart_items
+  const response =
+    cartItems
       .sort((a, b) => a.cart_item_id.localeCompare(b.cart_item_id))
-      .map((item) => ({
-        cartItemId: item.cart_item_id,
-        productId: item.product_id,
-        title: item.product?.title,
-        image: item.product?.image,
-        selectedOption: item.inventory,
-        quantity: item.quantity,
-        price: item.price,
-        addedAt: item.added_at,
-      })) ?? [];
+      .map(
+        ({
+          user_id,
+          product_id,
+          cart_item_id,
+          added_at,
+          size,
+          stock,
+          ...item
+        }) => ({
+          userId: user_id,
+          productId: product_id,
+          cartItemId: cart_item_id,
+          addedAt: added_at,
+          selectedOption: {
+            size,
+            stock,
+          },
+          ...item,
+        }),
+      ) ?? [];
 
-  return NextResponse.json(flatItems);
+  return NextResponse.json(response);
 }
 
 export async function POST(req: Request) {
@@ -91,7 +78,7 @@ export async function POST(req: Request) {
   if (authError || !user) {
     return NextResponse.json(
       { error: '로그인이 필요합니다.' },
-      { status: 401 },
+      { status: authError?.status },
     );
   }
 
@@ -102,7 +89,7 @@ export async function POST(req: Request) {
     .eq('user_id', user.id)
     .maybeSingle();
 
-  let cartId = existingCart;
+  let cartId = existingCart?.cart_id;
 
   if (!cartId) {
     const { data: newCart, error: newCartError } = await supabase
@@ -148,7 +135,7 @@ export async function POST(req: Request) {
       .maybeSingle();
 
     if (existingItem) {
-      await supabase
+      const { error: updateError } = await supabase
         .from('cart_items')
         .update({
           quantity: existingItem.quantity + item.quantity,
@@ -158,11 +145,18 @@ export async function POST(req: Request) {
         .select()
         .single();
 
+      if (updateError) {
+        return NextResponse.json(
+          { error: '장바구니 업데이트 실패', updateError },
+          { status: 500 },
+        );
+      }
+
       // if (updated) insertedItems.push(updated);
       continue;
     }
 
-    await supabase
+    const { error: insertError } = await supabase
       .from('cart_items')
       .insert({
         cart_id: cartId,
@@ -174,6 +168,13 @@ export async function POST(req: Request) {
       })
       .select()
       .single();
+
+    if (insertError) {
+      return NextResponse.json(
+        { error: '장바구니 추가 실패', insertError },
+        { status: 500 },
+      );
+    }
 
     // if (inserted) insertedItems.push(inserted);
   }

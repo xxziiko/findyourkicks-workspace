@@ -1,4 +1,6 @@
+'use client';
 import { createOrderSheet } from '@/features/order-sheet/apis';
+import { PATH } from '@/shared/constants/path';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
@@ -8,7 +10,7 @@ export default function useCreateOrderSheetMutation() {
   return useMutation({
     mutationFn: createOrderSheet,
     onSuccess: (response: { orderSheetId: string }) => {
-      router.push(`/checkout/${response.orderSheetId}`);
+      router.push(`${PATH.checkout}/${response.orderSheetId}`);
     },
   });
 }

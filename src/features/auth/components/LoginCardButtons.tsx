@@ -1,6 +1,6 @@
 'use client';
 
-import { signInWithGoogle, signInWithKakao } from '@/features/auth/apis';
+import { signInWithGoogle, signInWithKakao } from '@/features/auth';
 import { Button } from '@/shared/components';
 import { GoogleLogo, KakaoLogo } from '@/shared/components/icons';
 import { useRouter } from 'next/navigation';

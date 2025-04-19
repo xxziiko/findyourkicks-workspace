@@ -7,7 +7,7 @@ export default function Checkout({
 }: { orderSheet: OrderSheetByIdResponse }) {
   const {
     defaultAddress,
-    title,
+    addressModalTitle,
     isModalOpen,
     isAllCheckedAgreement,
     totalPrice,
@@ -23,7 +23,7 @@ export default function Checkout({
 
   const props = {
     defaultAddress,
-    title,
+    addressModalTitle,
     isModalOpen,
     isAllCheckedAgreement,
     totalPrice,

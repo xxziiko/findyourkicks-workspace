@@ -1,7 +1,7 @@
 'use client';
 
 import type { Products } from '@/features/product/types';
-import { useIntersectionObserver } from '@/shared/hooks';
+import { useImagesLoaded, useIntersectionObserver } from '@/shared/hooks';
 import { useEffect, useRef } from 'react';
 import useFetchProductsQuery from './useFetchProductsQuery';
 
@@ -15,6 +15,8 @@ export default function useProductList({
     hasNextPage,
     fetchNextPage,
   } = useFetchProductsQuery({ initialValues });
+
+  const { allLoaded, handleImageLoad } = useImagesLoaded(products.length);
 
   const observe = useIntersectionObserver(
     () => {
@@ -35,5 +37,7 @@ export default function useProductList({
     products,
     isFetchingNextPage,
     loadMoreRef,
+    onAllImageLoad: handleImageLoad,
+    allLoaded,
   };
 }

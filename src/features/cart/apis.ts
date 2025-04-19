@@ -1,12 +1,13 @@
 import type { CartList, CartListPayload } from '@/features/cart/types';
+import { ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/utils/api';
 
 export const addToCart = async (body: CartListPayload) => {
-  return await api.post<CartList, CartListPayload>('/cart/items', body);
+  return await api.post<CartList, CartListPayload>(ENDPOINTS.cartItems, body);
 };
 
 export const fetchCartList = async () => {
-  return await api.get<CartList>('/cart/items');
+  return await api.get<CartList>(ENDPOINTS.cartItems);
 };
 
 export const updateCartQuantity = async ({
@@ -17,7 +18,7 @@ export const updateCartQuantity = async ({
   quantity: number;
 }) => {
   return await api.patch<CartList, { quantity: number }>(
-    `/cart/items/${cartItemId}`,
+    `${ENDPOINTS.cartItems}/${cartItemId}`,
     {
       quantity,
     },
@@ -25,5 +26,5 @@ export const updateCartQuantity = async ({
 };
 
 export const deleteCartItem = async (cartItemId: string) => {
-  return await api.delete<CartList>(`/cart/items/${cartItemId}`);
+  return await api.delete<CartList>(`${ENDPOINTS.cartItems}/${cartItemId}`);
 };

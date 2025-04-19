@@ -1,5 +1,6 @@
 import { createClient } from '@/shared/utils/supabase/server';
-import dayjs from 'dayjs';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -36,14 +37,13 @@ export async function GET(
     .eq('address_id', orders[0].address_id);
 
   if (addressesError) {
-    console.log('addressesError', addressesError);
+    console.error('addressesError', addressesError);
     return NextResponse.json({ error: '주문 주소 조회 실패' }, { status: 500 });
   }
 
   const response = {
     orderId,
-    orderDate: dayjs(orders[0].order_date).format('YYYY-MM-DD HH:mm:ss'),
-
+    orderDate: orders[0].order_date,
     payment: {
       paymentKey: payment[0].payment_key,
       paymentMethod: payment[0].payment_method,

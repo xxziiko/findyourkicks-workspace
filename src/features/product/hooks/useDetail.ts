@@ -1,9 +1,8 @@
 'use client';
-import { addToCart } from '@/features/cart/apis';
+
+import { useCartItemMutation } from '@/features/cart';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
-import { isAuthenticatedAtom, userIdAtom } from '@/lib/store';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
+import { useUser } from '@/features/user/hooks';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
@@ -11,16 +10,11 @@ export default function useDetail({
   data: productDetail,
 }: { data: ProductDetail }) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
-  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const router = useRouter();
+  const { isAuthenticated } = useUser();
 
-  const queryClient = useQueryClient();
-  const { mutate: mutateCart, isPending: isMutatingCart } = useMutation({
-    mutationFn: addToCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-    },
-  });
+  const { mutate: mutateCart, isPending: isMutatingCart } =
+    useCartItemMutation();
 
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
@@ -32,6 +26,7 @@ export default function useDetail({
 
   const handleSelectSize = useCallback((id: string) => {
     setSelectedOptions((prev) => {
+      //FIXME: 네이밍, 메서드 변경 (findIndex -> find)
       const index = prev.findIndex((option) => option.size === id);
       if (index !== -1) {
         return prev.map((option, i) =>
@@ -66,24 +61,23 @@ export default function useDetail({
     setSelectedOptions([]);
   };
 
-  const createCart = () => {
-    return selectedOptions.map((option) => ({
+  const handleCartButton = () => {
+    if (!isAuthenticated) {
+      goToLogin();
+      return;
+    }
+
+    const cartItems = selectedOptions.map((option) => ({
       product_id: productDetail.productId,
       price: productDetail.price,
       ...option,
     }));
+
+    mutateCart(cartItems);
+    resetSelectedOptions();
   };
 
-  const handleCartButton = () => {
-    if (isAuthenticated) {
-      const cartItems = createCart();
-
-      mutateCart(cartItems);
-      resetSelectedOptions();
-      //TODO: modal
-      return;
-    }
-
+  const goToLogin = () => {
     router.push('/login');
   };
 
@@ -97,7 +91,6 @@ export default function useDetail({
     handleDeleteButton,
     handleQuantityChange,
     resetSelectedOptions,
-    createCart,
     handleCartButton,
     getCurrentQuantity,
   };

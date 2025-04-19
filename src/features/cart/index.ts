@@ -5,6 +5,8 @@ export { default as Cart } from './components/Cart';
 export { default as useCart } from './hooks/useCart';
 export { default as useDeleteCartMutation } from './hooks/useDeleteCartMutation';
 export { default as useUpdateCartMutation } from './hooks/useUpdateCartMutation';
+export { default as useCartItemMutation } from './hooks/useCartItemMutation';
 
 export * from './types';
 export * from './apis';
+export * from './queries';

@@ -7,13 +7,20 @@ interface Card {
   brand: string;
   title: string;
   price: number;
+  onAllImageLoad: () => void;
 }
 
-const Card = ({ title, src, brand, price }: Card) => {
+const Card = ({ title, src, brand, price, onAllImageLoad }: Card) => {
   return (
     <button type="button" className={styles.card}>
       <div className={styles.card__content}>
-        <Image src={src} alt="product" width="13rem" height="13rem" />
+        <Image
+          src={src}
+          alt="product"
+          width="13rem"
+          height="13rem"
+          onAllImageLoad={onAllImageLoad}
+        />
         <div className={styles.card__details}>
           <p className={styles['card__details--brand']}>{brand}</p>
           <p>{title.replace(/(<b>|<\/b>)/g, '')}</p>

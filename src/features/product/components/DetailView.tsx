@@ -1,10 +1,9 @@
 'use client';
 
-import Loading from '@/app/loading';
+import { Option } from '@/features/product';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
 import { Button, Image } from '@/shared/components';
 import styles from './DetailView.module.scss';
-import Option from './Option';
 
 interface DetailViewProps {
   productDetail: ProductDetail;
@@ -53,9 +52,7 @@ function Content({
   const { brand, price, title, description, inventory, category } =
     productDetail;
 
-  return isMutatingCart ? (
-    <Loading />
-  ) : (
+  return (
     <section className={styles.content}>
       <div className={styles.content__top}>
         <div>
@@ -110,13 +107,13 @@ function Content({
         </div>
 
         <div className={styles.content__bottom_buttons}>
-          <Button text="장바구니" onClick={onCartButton} />
-          {/* <Button
-            text="구매하기"
-            onClick={() => {}}
-            variant="lined--r"
-            disabled={totalQuantity === 0}
-            /> */}
+          <Button
+            text="장바구니"
+            onClick={onCartButton}
+            isLoading={isMutatingCart}
+          />
+
+          {/* <Button text="구매하기" onClick={onCartButton} /> */}
         </div>
       </div>
     </section>

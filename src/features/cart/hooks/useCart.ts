@@ -1,21 +1,19 @@
 'use client';
 
 import {
-  fetchCartList,
+  cartQueries,
   useDeleteCartMutation,
   useUpdateCartMutation,
 } from '@/features/cart';
-import type { CartList } from '@/features/cart/types';
-import { useCreateOrderSheetMutation } from '@/features/user/address';
+import type { CartItem, CartList } from '@/features/cart/types';
+import { useCreateOrderSheetMutation } from '@/features/order-sheet';
 import { useCheckBoxGroup } from '@/shared/components/checkbox/useCheckboxGrop';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 export default function useCart() {
-  const { data: cartItems } = useSuspenseQuery({
-    queryKey: ['cart'],
-    queryFn: fetchCartList,
-    staleTime: 60,
+  const { data: cartItems } = useSuspenseQuery<CartList>({
+    ...cartQueries.list(),
   });
 
   const {
@@ -56,29 +54,27 @@ export default function useCart() {
     [mutateDeleteCartItem, handleDeleteItem],
   );
 
-  const mapCartItemsToCheckoutRequest = (cartItems: CartList) => {
-    return cartItems.map((item) => ({
+  const createOrderSheetFrom = (filterFn: (item: CartItem) => boolean) => {
+    const filteredCart = cartItems.filter(filterFn);
+    const payload = filteredCart.map((item) => ({
       productId: item.productId,
       size: item.selectedOption.size,
       price: item.price,
       quantity: item.quantity,
       cartItemId: item.cartItemId,
     }));
+
+    mutateCreateOrderSheet(payload);
   };
 
+  const isCheckedItem = (item: CartItem) => !!checkedItems[item.cartItemId];
+
   const handleOrderSheet = () => {
-    const filteredCart = cartItems.filter(
-      (item) => checkedItems[item.cartItemId],
-    );
-    mutateCreateOrderSheet(mapCartItemsToCheckoutRequest(filteredCart));
+    createOrderSheetFrom(isCheckedItem);
   };
 
   const handleOrderSheetForSingleProduct = (cartItemId: string) => {
-    const filteredCart = cartItems.filter(
-      (item) => item.cartItemId === cartItemId,
-    );
-
-    mutateCreateOrderSheet(mapCartItemsToCheckoutRequest(filteredCart));
+    createOrderSheetFrom((item) => item.cartItemId === cartItemId);
   };
 
   return {
@@ -90,7 +86,6 @@ export default function useCart() {
     totalPrice,
     totalPriceWithDeliveryFee,
     handleToggle,
-
     handleToggleAll,
     handleQuantityChange,
     handleDelete,
