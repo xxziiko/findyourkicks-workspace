@@ -1,7 +1,6 @@
 export { default as DetailView } from './components/DetailView';
 export { default as Detail } from './components/Detail';
 export { default as ProductList } from './components/ProductList';
-export { default as ProductListView } from './components/ProductListView';
 export { default as ProductCardBtn } from './components/ProductCardBtn';
 export { default as Option } from './components/Option';
 export { ProductListLoading } from './components/ProductListLoading';

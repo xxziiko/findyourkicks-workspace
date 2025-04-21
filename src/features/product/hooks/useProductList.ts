@@ -1,8 +1,8 @@
 'use client';
 
 import type { Products } from '@/features/product/types';
-import { useImagesLoaded, useIntersectionObserver } from '@/shared/hooks';
-import { useEffect, useRef } from 'react';
+import { useImagesLoaded } from '@/shared/hooks';
+import { useRef } from 'react';
 import useFetchProductsQuery from './useFetchProductsQuery';
 
 export default function useProductList({
@@ -10,34 +10,25 @@ export default function useProductList({
 }: { initialValues: Products }) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const {
-    data: products,
+    data: productList,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
   } = useFetchProductsQuery({ initialValues });
 
-  const { allLoaded, handleImageLoad } = useImagesLoaded(products.length);
+  const { allLoaded, handleImageLoad } = useImagesLoaded(productList.length);
 
-  const observe = useIntersectionObserver(
-    () => {
-      if (!isFetchingNextPage && hasNextPage) fetchNextPage();
-    },
-    { threshold: 1 },
-  );
-
-  useEffect(() => {
-    const currentRef = loadMoreRef.current;
-    if (currentRef) {
-      observe(currentRef);
-      return () => observe(currentRef);
-    }
-  }, [observe]);
+  const handleFetchNextPage = () => {
+    if (isFetchingNextPage || !hasNextPage) return;
+    fetchNextPage();
+  };
 
   return {
-    products,
+    productList,
+    allLoaded,
     isFetchingNextPage,
     loadMoreRef,
     onAllImageLoad: handleImageLoad,
-    allLoaded,
+    onFetchNextPage: handleFetchNextPage,
   };
 }
