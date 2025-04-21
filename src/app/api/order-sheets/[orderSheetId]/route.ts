@@ -1,16 +1,23 @@
+import { getCookieString } from '@/shared/utils';
 import { createClient } from '@/shared/utils/supabase/server';
+import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ orderSheetId: string }> },
 ) {
-  const supabase = await createClient();
   const { orderSheetId } = await params;
+  const supabase = await createClient();
 
-  //FIXME: 서버 컴포넌트에서 사용하는 경우 header에 토큰이 없음.
-  // const { data: user } = await supabase.auth.getUser();
-  // console.log('user', user);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
   // 2. 주문 아이템 조회
   const { data: orderSheetItems, error: itemsError } = await supabase
     .from('order_sheet_item_with_details')
