@@ -1,4 +1,3 @@
-import { getCookieString } from '@/shared/utils';
 import { createClient } from '@/shared/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
