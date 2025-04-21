@@ -19,7 +19,8 @@ const Card = ({ title, src, brand, price, onAllImageLoad }: Card) => {
           alt="product"
           width="13rem"
           height="13rem"
-          onAllImageLoad={onAllImageLoad}
+          priority
+          onLoad={onAllImageLoad}
         />
         <div className={styles.card__details}>
           <p className={styles['card__details--brand']}>{brand}</p>
