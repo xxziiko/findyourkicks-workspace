@@ -1,6 +1,4 @@
 import { createClient } from '@/shared/utils/supabase/server';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import { NextResponse } from 'next/server';
 
 export async function GET(
