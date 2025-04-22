@@ -8,10 +8,10 @@ import { usePathname } from 'next/navigation';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function AuthListener() {
-  const { setUser } = useUser();
+export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
   const pathname = usePathname();
+  const { setUser } = useUser();
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -20,9 +20,12 @@ export default function AuthListener() {
           redirect(PATH.login);
         }
 
+        if (session?.access_token && pathname === PATH.login) {
+          redirect('/');
+        }
+
         if (event === 'SIGNED_OUT') {
           setUser(null);
-          return;
         }
 
         setUser(session?.user ?? null);
@@ -32,7 +35,7 @@ export default function AuthListener() {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [setUser, supabase, pathname]);
+  }, [supabase, pathname, setUser]);
 
-  return null;
+  return children;
 }

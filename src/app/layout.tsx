@@ -1,5 +1,5 @@
 import '@/shared/styles/global.scss';
-import { AuthListener } from '@/features/auth';
+import { AuthGuard } from '@/features/auth';
 import { Header } from '@/shared/components/layouts';
 import type { Metadata } from 'next';
 import Image from 'next/image';
@@ -21,12 +21,13 @@ export default async function RootLayout({
       <body>
         <div id="modal-root" />
         <Providers>
-          <AuthListener />
-          <Header />
+          <AuthGuard>
+            <Header />
 
-          <main className={styles.main}>{children}</main>
+            <main className={styles.main}>{children}</main>
 
-          <Footer />
+            <Footer />
+          </AuthGuard>
         </Providers>
       </body>
     </html>
