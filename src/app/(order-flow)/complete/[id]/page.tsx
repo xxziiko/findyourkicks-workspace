@@ -1,10 +1,10 @@
-import { Complete, getOrderById } from '@/features/order';
+import { OrderComplete, getOrderById } from '@/features/order';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
 export const dynamic = 'force-static';
 
-export default async function CompletePage({
+export default async function OrderCompletePage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -19,5 +19,5 @@ export default async function CompletePage({
     }),
   };
 
-  return <Complete order={order} />;
+  return <OrderComplete order={order} />;
 }

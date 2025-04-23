@@ -1,4 +1,4 @@
-.complete {
+.order {
   max-width: 703px;
   margin: 0 auto;
   padding-bottom: 10rem;
@@ -10,16 +10,27 @@
     padding: 5rem 0;
   }
 
-  &__info {
+  &__content {
     @include flex-col;
   }
 
-  &__wrapper {
+  h5 {
+    width: 30%;
+  }
+}
+
+.address {
+  padding-bottom: 0.4rem;
+  font-size: $font-s;
+}
+
+.content {
+  & {
     @include flex-col;
     border-bottom: 1px solid $primary;
 
-    p {
-      font-size: $font-s;
+    &:last-child {
+      border-bottom: none;
     }
   }
 
@@ -32,6 +43,12 @@
     }
   }
 
+  &__subtitle {
+    color: $gray-dark;
+    width: 30%;
+    font-size: $font-s;
+  }
+
   &__item {
     @include flex-item;
     padding: 1.2rem 0;
@@ -42,27 +59,18 @@
     }
   }
 
-  &__subtitle {
-    color: $gray-dark;
-    width: 30%;
+  &__text {
+    font-size: $font-s;
   }
 
-  &__total {
+  &__total-price {
     font-size: $font-xl;
     font-weight: 600;
   }
-
-  &__button {
-    @include flex-center;
-    gap: 0.75rem;
-    padding: 2rem 0;
-  }
-
-  h5 {
-    width: 30%;
-  }
 }
 
-.address {
-  padding-bottom: 0.4rem;
+.buttons {
+  @include flex-center;
+  gap: 0.75rem;
+  padding: 2rem 0;
 }
