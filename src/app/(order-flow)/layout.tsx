@@ -1,20 +1,11 @@
-'use client';
-
-import { CheckoutSteps } from '@/shared/components';
-import { PATH } from '@/shared/constants/path';
-import { usePathname } from 'next/navigation';
-
-const steps = [PATH.cart, PATH.checkout, PATH.complete] as const;
+import { CheckoutSteps } from '@/shared/components/layouts';
 
 export default function CheckoutLayout({
   children,
 }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const currentStep = steps.findIndex((step) => pathname.startsWith(step));
-
   return (
     <div>
-      {currentStep !== -1 && <CheckoutSteps currentStep={currentStep} />}
+      <CheckoutSteps />
       {children}
     </div>
   );

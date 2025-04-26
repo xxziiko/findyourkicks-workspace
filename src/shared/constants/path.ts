@@ -1,4 +1,5 @@
 export const PATH = {
+  home: '/',
   cart: '/cart',
   checkout: '/checkout',
   complete: '/complete',

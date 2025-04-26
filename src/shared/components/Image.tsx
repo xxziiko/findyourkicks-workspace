@@ -10,19 +10,15 @@ interface ImageComponentProps {
   alt: string;
   width: string;
   height: string;
-  onAllImageLoad?: () => void;
+  onLoad?: () => void;
+  priority?: boolean;
 }
 
-const ImageComponent = ({
-  width,
-  height,
-  onAllImageLoad = () => {},
-  ...props
-}: ImageComponentProps) => {
+const ImageComponent = ({ width, height, ...props }: ImageComponentProps) => {
   return (
     <>
       <figure className={styles.image} style={{ width, height }}>
-        <Image {...props} fill sizes="100%" onLoad={onAllImageLoad} priority />
+        <Image {...props} fill sizes="100%" />
       </figure>
     </>
   );

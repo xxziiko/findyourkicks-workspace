@@ -1,3 +1,3 @@
-export { default as AuthListener } from './hooks/AuthListener';
+export { default as AuthGuard } from './components/AuthGuard';
 
 export * from './apis';

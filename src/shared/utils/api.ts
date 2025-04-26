@@ -10,13 +10,13 @@ export async function request<Response, Body = void>(
   method: string,
   endpoint: string,
   body?: Body,
-  headers?: HeadersInit,
+  options?: RequestInit,
 ): Promise<Response> {
-  const options: RequestInit = {
+  const fetchOptions: RequestInit = {
     method,
     credentials: 'include',
     headers: {
-      ...headers,
+      ...options?.headers,
       'Content-Type': 'application/json',
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
@@ -24,7 +24,7 @@ export async function request<Response, Body = void>(
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api${endpoint}`,
-    options,
+    fetchOptions,
   );
   const responseData = await res.json();
 
@@ -39,14 +39,24 @@ export async function request<Response, Body = void>(
   return responseData;
 }
 
-function createApiMethod(method: 'GET' | 'POST' | 'PATCH' | 'DELETE') {
-  return <Response, Body = void>(endpoint: string, body?: Body) => {
-    return request<Response, Body>(method, endpoint, body);
+function createApiMethod(method: 'POST' | 'PATCH' | 'DELETE') {
+  return <Response, Body = void>(
+    endpoint: string,
+    body?: Body,
+    options?: RequestInit,
+  ) => {
+    return request<Response, Body>(method, endpoint, body, options);
+  };
+}
+
+function createApiMethodWithHeaders(method: 'GET') {
+  return <Response>(endpoint: string, options?: RequestInit) => {
+    return request<Response>(method, endpoint, undefined, options);
   };
 }
 
 export const api = {
-  get: createApiMethod('GET'),
+  get: createApiMethodWithHeaders('GET'),
   post: createApiMethod('POST'),
   patch: createApiMethod('PATCH'),
   delete: createApiMethod('DELETE'),
