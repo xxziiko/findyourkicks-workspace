@@ -4,7 +4,7 @@ import styles from './OrderProduct.module.scss';
 
 interface OrderProductProps {
   product: OrderProductItem;
-  type: 'checkout' | 'cart';
+  type: 'order' | 'cart';
 }
 
 export default function OrderProduct({ product, type }: OrderProductProps) {
@@ -18,7 +18,7 @@ export default function OrderProduct({ product, type }: OrderProductProps) {
         <p>{title}</p>
         <p>{size}</p>
         <p>{price.toLocaleString()}원</p>
-        {type === 'checkout' && <p>수량: {quantity}개</p>}
+        {type === 'order' && <p>수량: {quantity}개</p>}
       </div>
     </div>
   );

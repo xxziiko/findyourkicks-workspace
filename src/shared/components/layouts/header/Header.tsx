@@ -2,6 +2,7 @@
 
 import { CartNavLink } from '@/shared/components';
 import useHeader from '@/shared/components/layouts/header/useHeader';
+import { PATH } from '@/shared/constants/path';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,7 +22,7 @@ export default function Header() {
         {userEmail && (
           <div className={styles.tabs}>
             <p>{userEmail.split('@')[0]}님</p>
-            <p>마이페이지</p>
+            <Link href={PATH.myOrders}>마이페이지</Link>
             <CartNavLink />
           </div>
         )}
@@ -30,7 +31,7 @@ export default function Header() {
           <button
             onClick={() => {
               handleLogout();
-              router.push('/');
+              router.push(PATH.home);
             }}
             type="button"
           >
@@ -40,7 +41,7 @@ export default function Header() {
 
         {!userEmail && (
           <div className={styles['tabs__tab--bold']}>
-            <Link href="/login">LOGIN</Link>
+            <Link href={PATH.login}>LOGIN</Link>
           </div>
         )}
       </div>

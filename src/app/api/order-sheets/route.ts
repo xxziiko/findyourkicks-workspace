@@ -50,17 +50,15 @@ export async function POST(req: Request) {
   const orderSheetId = orderSheet.order_sheet_id;
 
   // 2. 주문 아이템 생성
-  const orderItems = body.map(
-    ({ productId, cartItemId, size, price, quantity }) => ({
-      order_sheet_id: orderSheetId,
-      product_id: productId,
-      cart_item_id: cartItemId,
-      size,
-      price,
-      quantity,
-      created_at: new Date().toISOString(),
-    }),
-  );
+  const orderItems = body.map(({ productId, id, size, price, quantity }) => ({
+    order_sheet_id: orderSheetId,
+    product_id: productId,
+    cart_item_id: id,
+    size,
+    price,
+    quantity,
+    created_at: new Date().toISOString(),
+  }));
 
   const { error: insertError } = await supabase
     .from('order_sheet_items')

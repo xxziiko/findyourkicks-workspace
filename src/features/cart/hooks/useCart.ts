@@ -61,7 +61,7 @@ export default function useCart() {
       size: item.selectedOption.size,
       price: item.price,
       quantity: item.quantity,
-      cartItemId: item.cartItemId,
+      id: item.cartItemId,
     }));
 
     mutateCreateOrderSheet(payload);

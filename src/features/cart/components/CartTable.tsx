@@ -92,7 +92,7 @@ function TableRow({
 
       <Link href={`/product/${productId}`} className={styles.item__info}>
         <OrderProduct
-          product={{ ...item, size: selectedOption.size }}
+          product={{ ...item, size: selectedOption.size, id: cartItemId }}
           type="cart"
         />
       </Link>

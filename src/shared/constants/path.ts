@@ -6,6 +6,8 @@ export const PATH = {
   confirm: '/confirm',
   login: '/login',
   product: '/products',
+  my: '/my',
+  myOrders: '/my/orders',
 } as const;
 
 export const AUTH_PATHS = [
