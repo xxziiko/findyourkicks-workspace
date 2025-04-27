@@ -2,7 +2,7 @@ import { Image } from '@/shared/components';
 import React from 'react';
 import styles from './ProductCardBtn.module.scss';
 
-interface Card {
+interface ProductCardBtnProps {
   src: string;
   brand: string;
   title: string;
@@ -10,7 +10,13 @@ interface Card {
   onAllImageLoad: () => void;
 }
 
-const Card = ({ title, src, brand, price, onAllImageLoad }: Card) => {
+const ProductCardBtn = ({
+  title,
+  src,
+  brand,
+  price,
+  onAllImageLoad,
+}: ProductCardBtnProps) => {
   return (
     <button type="button" className={styles.card}>
       <div className={styles.card__content}>
@@ -33,4 +39,4 @@ const Card = ({ title, src, brand, price, onAllImageLoad }: Card) => {
   );
 };
 
-export default React.memo(Card);
+export default React.memo(ProductCardBtn);
