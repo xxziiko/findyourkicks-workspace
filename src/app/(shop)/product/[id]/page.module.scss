@@ -1,0 +1,20 @@
+.detail {
+  @include split-layout(3rem, 10rem 0, 1024px);
+
+  &__divider {
+    @media (min-width: 1024px) {
+      border-left: 1px solid #dedede;
+    }
+  }
+}
+
+.image__box {
+  @include sticky-base(10rem);
+  align-self: flex-start;
+
+  @media (max-width: 1024px) {
+    @include flex-center;
+    position: inherit;
+    width: 100%;
+  }
+}

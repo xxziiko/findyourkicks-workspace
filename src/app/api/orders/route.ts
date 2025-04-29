@@ -219,6 +219,21 @@ export async function POST(req: Request) {
     console.error('장바구니 아이템 삭제 실패:', deleteError);
   }
 
+  // 8. 재고 감소
+  if (paymentResult.status === 'paid') {
+    for (const item of items) {
+      const { error: inventoryError } = await supabase
+        .from('inventory')
+        .update({ stock: -item.quantity })
+        .eq('product_id', item.product_id)
+        .eq('size', item.size);
+
+      if (inventoryError) {
+        console.error('재고 감소 실패:', inventoryError);
+      }
+    }
+  }
+
   return NextResponse.json({
     message: '결제 및 주문 완료',
     orderId: newOrder.order_id,

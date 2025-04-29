@@ -1,28 +1,36 @@
 'use client';
 
-import { useCartItemMutation } from '@/features/cart';
 import type { ProductDetail, SelectedOption } from '@/features/product/types';
-import { useUser } from '@/features/user/hooks';
-import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
-export default function useDetail({
-  data: productDetail,
-}: { data: ProductDetail }) {
+export default function useProductOption({
+  productDetail,
+}: {
+  productDetail: ProductDetail;
+}) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
-  const router = useRouter();
-  const { isAuthenticated } = useUser();
-
-  const { mutate: mutateCart, isPending: isMutatingCart } =
-    useCartItemMutation();
-
   const totalQuantity = selectedOptions.reduce(
     (acc, cur) => acc + cur.quantity,
     0,
   );
 
-  const getCurrentQuantity = (selectedSize: string) =>
-    selectedOptions.find(({ size }) => size === selectedSize)?.quantity ?? 0;
+  const optionPayload = selectedOptions.map((option) => ({
+    product_id: productDetail.productId,
+    price: productDetail.price,
+    ...option,
+  }));
+
+  const isOutOfStock = ({
+    stock,
+    selectedSize,
+  }: {
+    stock: number;
+    selectedSize: string;
+  }) => {
+    const currentQuantity =
+      selectedOptions.find(({ size }) => size === selectedSize)?.quantity ?? 0;
+    return stock === currentQuantity;
+  };
 
   const handleSelectSize = useCallback((id: string) => {
     setSelectedOptions((prev) => {
@@ -57,41 +65,18 @@ export default function useDetail({
     [productDetail],
   );
 
-  const resetSelectedOptions = () => {
+  const resetOptions = () => {
     setSelectedOptions([]);
   };
 
-  const handleCartButton = () => {
-    if (!isAuthenticated) {
-      goToLogin();
-      return;
-    }
-
-    const cartItems = selectedOptions.map((option) => ({
-      product_id: productDetail.productId,
-      price: productDetail.price,
-      ...option,
-    }));
-
-    mutateCart(cartItems);
-    resetSelectedOptions();
-  };
-
-  const goToLogin = () => {
-    router.push('/login');
-  };
-
   return {
-    isMutatingCart,
-    productDetail,
     selectedOptions,
     totalQuantity,
-
+    optionPayload,
     handleSelectSize,
     handleDeleteButton,
     handleQuantityChange,
-    resetSelectedOptions,
-    handleCartButton,
-    getCurrentQuantity,
+    resetOptions,
+    isOutOfStock,
   };
 }
