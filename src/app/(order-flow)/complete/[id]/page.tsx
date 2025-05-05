@@ -1,6 +1,5 @@
 import { OrderComplete, getOrderById } from '@/features/order';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import { formatDateWithTime } from '@/shared/utils/date';
 
 export const dynamic = 'force-static';
 
@@ -14,9 +13,7 @@ export default async function OrderCompletePage({
 
   const order = {
     ...response,
-    orderDate: format(response.orderDate, 'yyyy-MM-dd HH:mm:ss', {
-      locale: ko,
-    }),
+    orderDate: formatDateWithTime(response.orderDate),
   };
 
   return <OrderComplete order={order} />;

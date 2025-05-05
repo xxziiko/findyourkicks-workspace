@@ -1,0 +1,28 @@
+.tab {
+  & {
+    @include sticky-base(112px);
+    align-self: flex-start;
+  }
+
+  &__head {
+    padding-bottom: 36px;
+    font-size: $font-2xl;
+    font-weight: 700;
+  }
+
+  &__section {
+    @include flex-col;
+
+    gap: 8px;
+
+    p {
+      font-size: $font-m;
+      padding: 8px 0;
+    }
+
+    &--active {
+      font-size: $font-xl;
+      font-weight: 600;
+    }
+  }
+}

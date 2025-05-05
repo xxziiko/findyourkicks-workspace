@@ -14,8 +14,8 @@ export interface OrderProductItem extends OrderSheetItem {
 }
 
 interface OrderSheetItem {
+  id: string;
   productId: string;
-  cartItemId: string;
   size: string;
   quantity: number;
   price: number;

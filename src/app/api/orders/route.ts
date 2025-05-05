@@ -1,5 +1,57 @@
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
+import { groupBy } from 'es-toolkit';
+
+export async function GET(req: Request) {
+  const supabase = await createClient();
+  const url = new URL(req.url);
+  const page = Number(url.searchParams.get('page')) || 1;
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (!user || userError) {
+    return NextResponse.json(
+      { error: '사용자 조회 실패', details: userError?.message },
+      { status: 500 },
+    );
+  }
+
+  const { data: orders, error: ordersError } = await supabase
+    .from('orders_view')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('order_date', { ascending: false })
+    .range((page - 1) * 5, page * 5);
+
+  if (ordersError) {
+    console.error('ordersError', ordersError);
+    return NextResponse.json(
+      { error: '주문 조회 실패', details: ordersError.message },
+      { status: 500 },
+    );
+  }
+
+  const ordersView = orders.map(
+    ({ order_id, order_date, order_item_id, ...product }) => ({
+      orderId: order_id,
+      orderDate: order_date,
+      product: {
+        id: order_item_id,
+        ...product,
+      },
+    }),
+  );
+
+  const groupedOrders = groupBy(ordersView, (orders) => orders.orderId);
+
+  return NextResponse.json({
+    orders: groupedOrders,
+    hasMore: orders.length === 6,
+  });
+}
 
 export async function POST(req: Request) {
   const supabase = await createClient();

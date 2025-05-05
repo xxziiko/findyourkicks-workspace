@@ -1,4 +1,5 @@
 'use client';
+import { PATH } from '@/shared/constants/path';
 import type { Order } from '@/features/order/types';
 import { Button } from '@/shared/components';
 import { CardLayout } from '@/shared/components/layouts';
@@ -95,7 +96,7 @@ export default function OrderComplete({ order }: { order: Order }) {
       </CardLayout>
 
       <div className={styles.buttons}>
-        <Button text="주문내역 확인하기" variant="lined--r" width="20%" />
+        <Button text="주문내역 확인하기" variant="lined--r" width="20%" onClick={() => router.push(PATH.myOrders)}/>
         <Button
           text="쇼핑 계속하기"
           width="20%"
