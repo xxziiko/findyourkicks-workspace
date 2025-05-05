@@ -1,4 +1,4 @@
-import { MyTabs } from '@/shared/components/layouts';
+import { MyTabs } from '@/features/user/my';
 import styles from './layout.module.scss';
 
 export default function MyPageLayout({

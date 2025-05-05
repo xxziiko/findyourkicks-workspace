@@ -3,10 +3,11 @@ import { PATH } from '@/shared/constants/path';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './MyTabs.module.scss';
+
 const TABS = ['주문/배송 내역'] as const;
 const TAB_PATHS = [PATH.myOrders] as const;
 
-export default function MyTabs() {
+export  function MyTabs() {
   const pathname = usePathname();
   const currentTab = TAB_PATHS.findIndex((tab) => pathname.startsWith(tab));
   const isActive = (index: number) => currentTab === index;
