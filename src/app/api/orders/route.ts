@@ -220,16 +220,21 @@ export async function POST(req: Request) {
   }
 
   // 8. 재고 감소
-  if (paymentResult.status === 'paid') {
+  console.log('paymentResult.status', paymentResult.status);
+  if (paymentResult.status === 'DONE') {
     for (const item of items) {
-      const { error: inventoryError } = await supabase
-        .from('inventory')
-        .update({ stock: -item.quantity })
-        .eq('product_id', item.product_id)
-        .eq('size', item.size);
+      const { data, error } = await supabase.rpc('decrease_stock', {
+        p_product_id: item.product_id,
+        p_size: item.size,
+        p_quantity: item.quantity,
+      });
 
-      if (inventoryError) {
-        console.error('재고 감소 실패:', inventoryError);
+      if (data) {
+        console.log('재고 감소 성공:', data);
+      }
+
+      if (error) {
+        console.error('재고 감소 실패:', error);
       }
     }
   }
