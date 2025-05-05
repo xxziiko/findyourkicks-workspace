@@ -1,0 +1,12 @@
+.error {
+  @include flex-center;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+}
+
+.error__content {
+  @include flex-center;
+  flex-direction: column;
+  gap: 8px;
+}

@@ -32,7 +32,7 @@ export default function ProductList({ products }: { products: Products }) {
           </Link>
         ))}
       </section>
-
+      //TODO: 직접 구현해보기
       <ImpressionArea
         onImpressionStart={onFetchNextPage}
         areaThreshold={0.2}

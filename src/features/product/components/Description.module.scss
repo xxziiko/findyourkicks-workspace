@@ -1,0 +1,21 @@
+.description {
+  font-size: $font-sm;
+  padding: 16px 0;
+
+  &__brand {
+    font-weight: 600;
+  }
+
+  &__price {
+    padding: 8px 0;
+    font-size: $font-3xl;
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    padding-bottom: 8px;
+    font-size: $font-s;
+    line-height: 1.5rem;
+    color: #a8a29e;
+  }
+}

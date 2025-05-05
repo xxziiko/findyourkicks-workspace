@@ -1,10 +1,7 @@
 import '@/shared/styles/global.scss';
-import { AuthGuard } from '@/features/auth';
-import { Header } from '@/shared/components/layouts';
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import styles from './layout.module.scss';
-import { Providers } from './providers';
+import { Providers } from './_layouts/providers';
+import { ClientLayout } from './_layouts/ClientLayout';
 
 export const metadata: Metadata = {
   title: 'SHOP | findyourkicks',
@@ -19,32 +16,10 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <div id="modal-root" />
         <Providers>
-          <AuthGuard>
-            <Header />
-
-            <main className={styles.main}>{children}</main>
-
-            <Footer />
-          </AuthGuard>
+          <ClientLayout>{children}</ClientLayout>
         </Providers>
       </body>
     </html>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className={styles.footer}>
-      <figure>
-        <Image
-          src="/findyourkicks-stroke.png"
-          width={170}
-          height={30}
-          alt="logo"
-        />
-      </figure>
-    </footer>
   );
 }

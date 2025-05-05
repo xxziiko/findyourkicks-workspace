@@ -1,10 +1,29 @@
-import { Detail, fetchProductById } from '@/features/product';
+import { DetailContent, fetchProductById } from '@/features/product';
+import { Image } from '@/shared/components';
+import styles from './page.module.scss';
 
 export default async function DetailPage({
   params,
-}: { params: Promise<{ id: string }> }) {
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
-  const data = await fetchProductById(id);
+  const productDetail = await fetchProductById(id);
 
-  return <Detail data={data} />;
+  return (
+    <article className={styles.detail}>
+      <figure className={styles.image__box}>
+        <Image
+          src={productDetail.image}
+          alt="product"
+          width="24rem"
+          height="24rem"
+        />
+      </figure>
+
+      <div className={styles.detail__divider} />
+
+      <DetailContent productDetail={productDetail} />
+    </article>
+  );
 }

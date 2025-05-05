@@ -43,7 +43,7 @@ export async function GET(
     }) => ({
       ...item,
       productId: product_id,
-      cartItemId: cart_item_id,
+      id: cart_item_id,
       addedAt: added_at,
       size,
       quantity,

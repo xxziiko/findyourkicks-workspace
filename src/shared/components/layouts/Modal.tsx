@@ -3,7 +3,8 @@
 import { useEffect } from 'react';
 import Button from '../Button';
 import styles from './Modal.module.scss';
-import Portal from './Portal';
+import { GlobalPortal } from '@/app/_layouts/GlobalPortal';
+
 interface ModalProps {
   title: string;
   children: React.ReactNode;
@@ -18,7 +19,7 @@ export default function Modal({ title, children }: ModalProps) {
   }, []);
 
   return (
-    <Portal>
+    <GlobalPortal.Consumer>
       <div className={styles.modal__overlay}>
         <div className={styles.modal__container}>
           <Header title={title} />
@@ -26,7 +27,7 @@ export default function Modal({ title, children }: ModalProps) {
           <div>{children}</div>
         </div>
       </div>
-    </Portal>
+    </GlobalPortal.Consumer>
   );
 }
 
@@ -41,7 +42,10 @@ function Header({ title }: { title: string }) {
 function Footer({
   onClose,
   type = 'default',
-}: { onClose: () => void; type?: 'default' | 'single' }) {
+}: {
+  onClose: () => void;
+  type?: 'default' | 'single';
+}) {
   return (
     <div className={styles.footer}>
       {type === 'default' && (

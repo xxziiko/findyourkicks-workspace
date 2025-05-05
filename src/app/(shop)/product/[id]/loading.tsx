@@ -1,7 +1,8 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import styles from './page.module.scss';
+import contentStyles from '@/features/product/components/DetailContent.module.scss';
 
-import styles from '@/features/product/components/DetailView.module.scss';
 
 export default function DetailLoading() {
   return (
@@ -19,29 +20,29 @@ export default function DetailLoading() {
 
 function ContentSkeleton() {
   return (
-    <div className={styles.content}>
-      <div className={styles.content__top}>
+    <div className={contentStyles.content}>
+      <div className={contentStyles.content__top}>
         <div>
-          <Skeleton className={styles['content__top_text--brand']} />
-          <Skeleton className={styles['content__top_text--price']} />
+          <Skeleton className={contentStyles['content__top_text--brand']} />
+          <Skeleton className={contentStyles['content__top_text--price']} />
         </div>
       </div>
 
       <div>
         <Skeleton />
-        <Skeleton className={styles['content__top_text--subtitle']} />
+        <Skeleton className={contentStyles['content__top_text--subtitle']} />
       </div>
 
-      <div className={styles.content__top_options}>
+      <div className={contentStyles.content__top_options}>
         <Skeleton width={608} height={106} />
       </div>
 
-      <div className={styles.content__bottom}>
-        <div className={styles.content__bottom_wrapper}>
+      <div className={contentStyles.content__bottom}>
+        <div className={contentStyles.content__bottom_wrapper}>
           <Skeleton width={608} height={64} />
         </div>
 
-        <div className={styles.content__bottom_buttons}>
+        <div className={contentStyles.content__bottom_buttons}>
           <Skeleton width={608} height={41} />
           <Skeleton width={608} height={41} />
         </div>

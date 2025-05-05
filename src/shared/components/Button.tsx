@@ -10,7 +10,7 @@ type Variant =
   | 'label';
 interface ButtonProps {
   key?: number | string;
-  text: string | number;
+  text?: string | number;
   variant?: Variant;
   icon?: React.ReactNode;
   width?: string;
@@ -18,6 +18,7 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   isLoading?: boolean;
   onClick?: (e: React.MouseEvent) => Promise<void> | void;
+  children?: React.ReactNode;
 }
 
 export default function Button({
@@ -26,6 +27,7 @@ export default function Button({
   variant,
   width,
   isLoading,
+  children,
   ...props
 }: ButtonProps) {
   return (
@@ -36,7 +38,7 @@ export default function Button({
     >
       {icon}
 
-      {isLoading ? <Loader className={styles.btn__loader} /> : <p>{text}</p>}
+      {isLoading ? <Loader className={styles.btn__loader} /> : <p>{children ?? text}</p>}
     </button>
   );
 }

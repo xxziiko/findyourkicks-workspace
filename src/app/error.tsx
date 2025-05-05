@@ -1,25 +1,26 @@
-'use client'; // Error boundaries must be Client Components
+'use client';
 
-import { useEffect } from 'react';
+import { Button } from '@/shared/components';
+import { CloudAlert } from 'lucide-react';
+import styles from './error.module.scss';
 
 export default function ErrorPage({
-  error,
   reset,
 }: {
-  error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button type="button" onClick={() => reset()}>
-        Try again
-      </button>
+    <div className={styles.error}>
+      <CloudAlert width={64} height={64} />
+      
+      <div className={styles.error__content}>
+        <h4>죄송합니다!</h4>
+        <p>잠시 후 다시 시도해주세요</p>
+      </div>
+
+      <Button type="button" onClick={reset}>
+        다시 시도
+      </Button>
     </div>
   );
 }
