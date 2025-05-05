@@ -1,14 +1,14 @@
 'use client';
 
 import { CartNavLink } from '@/shared/components';
-import useHeader from '@/shared/components/layouts/header/useHeader';
+import {useHeader} from './useHeader';
 import { PATH } from '@/shared/constants/path';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './Header.module.scss';
 
-export default function Header() {
+export  function Header() {
   const { userEmail, handleLogout } = useHeader();
   const router = useRouter();
 

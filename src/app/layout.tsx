@@ -1,8 +1,8 @@
 import '@/shared/styles/global.scss';
-import { AuthGuard } from '@/features/auth';
 import type { Metadata } from 'next';
-import { Providers } from './providers';
-import { ClientLayout } from './ClientLayout';
+import { Providers } from './_layouts/providers';
+import { ClientLayout } from './_layouts/ClientLayout';
+
 export const metadata: Metadata = {
   title: 'SHOP | findyourkicks',
   description: 'find your kicks',

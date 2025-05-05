@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Button from '../Button';
 import styles from './Modal.module.scss';
-import { GlobalPortal } from '@/app/GlobalPortal';
+import { GlobalPortal } from '@/app/_layouts/GlobalPortal';
 
 interface ModalProps {
   title: string;
