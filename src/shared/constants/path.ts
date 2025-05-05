@@ -1,3 +1,7 @@
+import { path } from '@/shared/utils';
+
+const ROOT_MY = '/my';
+
 export const PATH = {
   home: '/',
   cart: '/cart',
@@ -6,8 +10,8 @@ export const PATH = {
   confirm: '/confirm',
   login: '/login',
   product: '/products',
-  my: '/my',
-  myOrders: '/my/orders',
+  my: ROOT_MY,
+  myOrders: path(ROOT_MY, '/orders'),
 } as const;
 
 export const AUTH_PATHS = [
@@ -15,4 +19,6 @@ export const AUTH_PATHS = [
   PATH.checkout,
   PATH.complete,
   PATH.confirm,
+  PATH.my,
+  PATH.myOrders,
 ] as const;
