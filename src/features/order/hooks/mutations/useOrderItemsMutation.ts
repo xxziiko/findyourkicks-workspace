@@ -7,9 +7,11 @@ interface TosspaymentsPayload {
   amount: number;
 }
 
-export default function useOrderItemsMutation({
+export function useOrderItemsMutation({
   paymentSummary,
-}: { paymentSummary: TosspaymentsPayload }) {
+}: {
+  paymentSummary: TosspaymentsPayload;
+}) {
   const { requestTossPayments } = useTossPayments();
 
   return useMutation({

@@ -2,13 +2,13 @@
 
 import { useOrderItemsMutation } from '@/features/order';
 import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
-import { getOrderSheetSummary } from '@/features/order/hooks/getOrderSheetSummary';
+import { createOrderSheetSummary } from '@/features/order';
 import { addressQueries } from '@/features/user/address';
 import { useCheckoutAgreement, useDeliveryMessage } from '@/shared/hooks';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
+export function useCheckout(orderSheet: OrderSheetByIdResponse) {
   const { orderSheetItems, orderSheetId, deliveryAddress } = orderSheet;
   const { data: defaultAddress } = useSuspenseQuery(
     addressQueries.default(deliveryAddress),
@@ -21,7 +21,7 @@ export default function useCheckout(orderSheet: OrderSheetByIdResponse) {
     !defaultAddress ? 'form' : 'list',
   );
   const { totalPrice, totalPriceWithDeliveryFee, orderName } =
-    getOrderSheetSummary(orderSheetItems);
+    createOrderSheetSummary(orderSheetItems);
 
   const addressModalTitle = modalView === 'form' ? '주소 입력' : '주소 변경';
   const paymentSummary = {

@@ -2,7 +2,7 @@ import type { OrderProductItem } from '@/features/order-sheet/types';
 
 const DELIVERY_FEE = 3000;
 
-export function getOrderSheetSummary(orderSheetItems: OrderProductItem[]) {
+export function createOrderSheetSummary(orderSheetItems: OrderProductItem[]) {
   const totalPrice = orderSheetItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,

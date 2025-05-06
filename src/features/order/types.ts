@@ -32,14 +32,14 @@ export interface OrderResponse {
 export interface OrderListItem {
   orderId: string;
   orderDate: string;
-  product: OrderProductItem & {
+  products: (OrderProductItem & {
     id: string;
-  };
+  })[];
 }
 
-export type OrderList = Record<string, OrderListItem[]>;
-
-export interface OrderListResponse {
-  orders: OrderList;
-  hasMore: boolean;
+export interface OrderHistory {
+  orders: OrderListItem[];
+  lastPage: number;
+  currentPage: number;
+  hasNext: boolean;
 }
