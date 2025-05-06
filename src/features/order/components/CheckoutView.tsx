@@ -42,7 +42,7 @@ export default function CheckoutView({
   onAddressListOpen,
   onCloseModal,
 }: CheckoutViewProps) {
-  console.log(orderProducts);
+
   
   return (
     <div className={styles.layout}>
