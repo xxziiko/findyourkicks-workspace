@@ -7,13 +7,9 @@ export default async function MyOrdersPage() {
   const orderHistory = await getOrderHistory();
 
   return (
-    <div>
-      <h2>주문/배송 내역</h2>
-
       <Suspense fallback={<MyOrdersLoading />}>
         <OrderHistoryList history={orderHistory} />
       </Suspense>
-    </div>
   );
 }
 

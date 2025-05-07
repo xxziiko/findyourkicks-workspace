@@ -12,7 +12,7 @@ export default function OrderProduct({ product, type }: OrderProductProps) {
 
   return (
     <div className={styles.info}>
-      <Image src={image} alt="product" width="8rem" height="7rem" />
+      <Image src={image} alt="product" width="128px" height="128px" />
 
       <div className={styles.__inner}>
         <p>{title}</p>
