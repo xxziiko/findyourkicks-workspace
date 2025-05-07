@@ -1,0 +1,21 @@
+.article {
+  @include flex-col;
+  margin-top: 16px;
+  // gap: 18px;
+  min-height: 100vh;
+}
+
+.pagination {
+  @include flex-center;
+  gap: 24px;
+  padding: 48px 0;
+}
+
+.button__active {
+  font-weight: 700;
+}
+
+.button__disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

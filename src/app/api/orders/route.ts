@@ -1,8 +1,35 @@
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
+import type { OrderHistory } from '@/features/order';
 import { groupBy } from 'es-toolkit';
+import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 
-export async function GET(req: Request) {
+interface OrderListFromSupabase {
+  order_id: string;
+  order_date: string;
+  order_item_id: string;
+  product_id: string;
+  title: string;
+  image: string;
+  size: string;
+  price: number;
+  quantity: number;
+  total_count: number;
+}
+
+/**
+ * [GET] 주문 목록 조회
+ *
+ * - 인증된 사용자의 주문 목록을 페이지네이션하여 반환합니다.
+ * - Supabase의 RPC 함수 `get_order_list`를 호출하여 주문 및 상품 정보를 가져옵니다.
+ * - 주문 단위로 데이터를 그룹화하여 응답을 구성합니다.
+ *
+ * @param {Request} req - Next.js API Route 요청 객체
+ * @returns {NextResponse<OrderHistory | { error: string; details?: string }>} - 주문 목록, 현재 페이지, 마지막 페이지, 다음 페이지 여부 포함
+ */
+export async function GET(
+  req: Request,
+): Promise<NextResponse<OrderHistory | { error: string; details?: string }>> {
   const supabase = await createClient();
   const url = new URL(req.url);
   const page = Number(url.searchParams.get('page')) || 1;
@@ -19,43 +46,80 @@ export async function GET(req: Request) {
     );
   }
 
-  const { data: orders, error: ordersError } = await supabase
-    .from('orders_view')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('order_date', { ascending: false })
-    .range((page - 1) * 5, page * 5);
+  const {
+    data: orderList,
+    error,
+  }: PostgrestSingleResponse<OrderListFromSupabase[]> = await supabase.rpc(
+    'get_order_list',
+    {
+      p_user_id: user.id,
+      p_limit: 3,
+      p_page: page,
+    },
+  );
 
-  if (ordersError) {
-    console.error('ordersError', ordersError);
+  if (error) {
+    console.error('주문 조회 실패', error);
     return NextResponse.json(
-      { error: '주문 조회 실패', details: ordersError.message },
+      { error: '주문 조회 실패', details: error.message },
       { status: 500 },
     );
   }
 
-  const ordersView = orders.map(
-    ({ order_id, order_date, order_item_id, ...product }) => ({
-      orderId: order_id,
-      orderDate: order_date,
-      product: {
+  const grouped = groupBy(orderList, (row) => row.order_id);
+
+  const orders = Object.entries(grouped).map(([orderId, items]) => ({
+    orderId,
+    orderDate: items[0].order_date,
+    products: items.map(
+      ({ order_item_id, title, image, size, price, quantity, product_id }) => ({
         id: order_item_id,
-        ...product,
-      },
-    }),
-  );
+        productId: product_id,
+        title,
+        image,
+        size,
+        price,
+        quantity,
+        product_id,
+      }),
+    ),
+  }));
 
-  const groupedOrders = groupBy(ordersView, (orders) => orders.orderId);
+  const totalCount = orderList[0]?.total_count ?? 0;
+  const lastPage = Math.ceil(totalCount / 3);
 
-  return NextResponse.json({
-    orders: groupedOrders,
-    hasMore: orders.length === 6,
-  });
+  const response: OrderHistory = {
+    orders,
+    currentPage: page,
+    lastPage,
+    hasNext: page < lastPage,
+  };
+
+  return NextResponse.json(response);
 }
 
-export async function POST(req: Request) {
+/**
+ * [POST] 주문 결제 처리 및 주문 생성
+ *
+ * - 1. 주문서 조회 (order_sheets)
+ * - 2. TossPayments API를 통한 결제 승인 요청
+ * - 3. 결제 정보 저장 (payments 테이블)
+ * - 4. 주문 생성 (orders 테이블)
+ * - 5. 주문 아이템 생성 (order_items 테이블로 복사)
+ * - 6. 주문서 상태 업데이트 (completed)
+ * - 7. 장바구니 아이템 삭제 (cart_items)
+ * - 8. 재고 감소 처리 (decrease_stock RPC)
+ *
+ * @param {Request} req - 결제 요청 본문 (paymentKey, orderId, amount 포함)
+ * @returns {NextResponse} - 처리 성공 시 주문 ID 포함 메시지 반환
+ */
+export async function POST(req: Request): Promise<NextResponse> {
   const supabase = await createClient();
-  const { paymentKey, orderId, amount } = await req.json();
+  const {
+    paymentKey,
+    orderId,
+    amount,
+  }: { paymentKey: string; orderId: string; amount: number } = await req.json();
 
   // 1. 주문서 조회
   const { data: sheet, error: sheetError } = await supabase

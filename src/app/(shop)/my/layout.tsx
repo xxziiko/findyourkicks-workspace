@@ -7,7 +7,11 @@ export default function MyPageLayout({
   return (
     <div className={styles.layout}>
       <MyTabs />
-      <div>{children}</div>
+      <div>
+      <h2>주문/배송 내역</h2>
+        
+        <div>{children}</div>
+      </div>
     </div>
   );
 }

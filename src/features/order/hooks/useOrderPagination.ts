@@ -1,29 +1,52 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { orderQueries } from '../queries';
-import type { OrderListResponse } from '../types';
-import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import type { OrderHistory } from '../types';
+import {
+  useOrderHistoryQuery,
+  useCurrentPage,
+  orderQueries,
+} from '@/features/order';
+import { useEffect } from 'react';
 
-export default function useOrderPagination({
-  prefetchData,
+export function useOrderPagination({
+  initialOrderHistory,
 }: {
-  prefetchData: OrderListResponse;
+  initialOrderHistory: OrderHistory;
 }) {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
 
-  const { data: orderList } = useQuery(orderQueries.list(page, prefetchData));
+  const { currentPage: initialCurrentPage, lastPage: initialLastPage } =
+    initialOrderHistory;
+  const { currentPage, updateCurrentPage } = useCurrentPage(initialCurrentPage);
 
-  const handlePreviousPage = () => {
-    setPage((prev) => Math.max(prev - 1, 1));
-    queryClient.prefetchQuery(orderQueries.prefetchOrders(page - 1));
+  const { data: orderHistory } = useOrderHistoryQuery({
+    page: currentPage,
+    initialValues: initialOrderHistory,
+  });
+
+  const handlePageChange = (page: number) => {
+    updateCurrentPage(page);
+    queryClient.prefetchQuery(orderQueries.history(page));
+    queryClient.invalidateQueries({
+      queryKey: orderQueries.history(page).queryKey,
+    });
   };
 
   const handleNextPage = () => {
-    setPage((prev) => (orderList.hasMore ? prev + 1 : prev));
-    queryClient.prefetchQuery(orderQueries.prefetchOrders(page + 1));
+    handlePageChange(currentPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    handlePageChange(currentPage - 1);
+  };
+
+  const handleFirstPage = () => {
+    handlePageChange(1);
+  };
+
+  const handleLastPage = () => {
+    handlePageChange(initialLastPage);
   };
 
   useEffect(() => {
@@ -31,12 +54,14 @@ export default function useOrderPagination({
       top: 0,
       behavior: 'smooth',
     });
-  }, [page]);
+  }, [currentPage]);
 
   return {
-    page,
-    orderList,
-    handlePreviousPage,
+    orderHistory,
+    handlePageChange,
     handleNextPage,
+    handlePreviousPage,
+    handleFirstPage,
+    handleLastPage,
   };
 }
