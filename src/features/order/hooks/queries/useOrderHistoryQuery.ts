@@ -1,4 +1,4 @@
-import { useSuspenseQuery, keepPreviousData } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { orderQueries } from './orderQueries';
 import type { OrderHistory } from '@/features/order/types';
 import { handleError } from '@/shared/utils/error';
