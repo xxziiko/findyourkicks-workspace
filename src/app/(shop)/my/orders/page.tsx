@@ -2,14 +2,30 @@ import { OrderHistoryList, fetchOrderHistory } from '@/features/order';
 import { getCookieString } from '@/shared/utils';
 import { Suspense } from 'react';
 import MyOrdersLoading from '@/app/(shop)/my/loading';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorPage from '@/app/error';
+
+
 
 export default async function MyOrdersPage() {
   const orderHistory = await getOrderHistory();
 
   return (
-      <Suspense fallback={<MyOrdersLoading />}>
-        <OrderHistoryList history={orderHistory} />
-      </Suspense>
+    <QueryErrorResetBoundary>
+    {({ reset }) => (
+      <ErrorBoundary
+        onReset={reset}
+        fallbackRender={({ resetErrorBoundary }) => (
+          <ErrorPage reset={resetErrorBoundary} />
+        )}
+      >
+        <Suspense fallback={<MyOrdersLoading />}>
+          <OrderHistoryList history={orderHistory} />
+          </Suspense>
+      </ErrorBoundary>
+    )}
+  </QueryErrorResetBoundary>
   );
 }
 
