@@ -1,7 +1,6 @@
 'use client';
-import { OrderProduct, useOrderPagination } from '@/features/order';
+import { OrderProduct, useOrderPagination, OrderListLayout } from '@/features/order';
 import type { OrderHistory } from '@/features/order/types';
-import { formatDateDefault } from '@/shared/utils/date';
 import styles from './OrderHistoryList.module.scss';
 import { PATH } from '@/shared/constants/path';
 import { ChevronRight, ChevronLeft, ChevronLast, ChevronFirst } from 'lucide-react';
@@ -24,12 +23,7 @@ export default function OrderHistoryList({
     <div>
       <article className={styles.article}>
         {orders.map(({ orderDate, orderId, products }) => (
-          <OrderListLayout key={orderId}>
-            <OrderHead
-              orderDate={orderDate}
-              url={`${PATH.myOrders}/${orderId}`}
-            />
-
+          <OrderListLayout key={orderId} orderDate={orderDate} url={`${PATH.myOrders}/${orderId}`}>
             {products.map((product) => (
               <OrderProduct
                 product={product}
@@ -37,7 +31,7 @@ export default function OrderHistoryList({
                 key={product.id}
               />
             ))}
-          </OrderListLayout>
+          </OrderListLayout>                
         ))}
       </article>
 
@@ -79,15 +73,3 @@ export default function OrderHistoryList({
 }
 
 
-function OrderListLayout({ children }: { children: React.ReactNode }) {
-  return <section className={styles.section}>{children}</section>;
-}
-
-function OrderHead({ orderDate, url }: { orderDate: string; url: string }) {
-  return (
-    <div className={`${styles.section__head}`}>
-      <h4>{formatDateDefault(orderDate)}</h4>
-      {/* <Link href={url}>주문 상세</Link> */}
-    </div>
-  );
-}

@@ -4,6 +4,7 @@ export { default as OrderProduct } from './components/OrderProduct';
 export { default as CheckoutView } from './components/CheckoutView';
 export { default as OrderComplete } from './components/OrderComplete';
 export { default as OrderHistoryList } from './components/OrderHistoryList';
+export * from './components/layouts/OrderListLayout';
 
 export { default as useTossPayments } from './hooks/useTossPayments';
 export * from './hooks/useOrderPagination';
