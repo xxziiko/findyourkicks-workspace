@@ -1,0 +1,52 @@
+.list {
+  width: 100%;
+  border-bottom: 1px solid #dedede;
+
+  &__header {
+    @include flex-evenly;
+    padding: 1.25rem 1rem;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    font-weight: 500;
+    font-size: $font-sm;
+
+    p {
+      @include cell-base;
+      text-align: center;
+
+      &:nth-child(2) {
+        width: 40%;
+      }
+    }
+
+    div {
+      @include cell-base;
+    }
+  }
+}
+
+.item {
+  @include flex-item;
+  gap: 2rem;
+  padding: 1.5rem 1rem;
+
+  &__info {
+    width: 40%;
+  }
+
+  &__quantity {
+    @include cell-base();
+  }
+
+  &__price {
+    @include cell-base();
+    @include flex-center;
+    font-weight: 700;
+  }
+
+  &__buttons {
+    @include cell-base();
+    @include flex-col;
+    gap: 0.5rem;
+  }
+}

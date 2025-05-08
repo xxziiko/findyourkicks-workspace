@@ -1,0 +1,47 @@
+@mixin drop-down-default {
+  width: 80%;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.drop-down {
+  @include drop-down-default;
+
+  &__border {
+    @include drop-down-default;
+    border-radius: $radius-s;
+    border: 1px solid $gray-light;
+    padding: 1rem;
+
+    li {
+      @include flex-between;
+      align-items: center;
+      color: $primary;
+      padding: 0.5rem 0;
+    }
+  }
+
+  &__menu {
+    padding-top: 0.5rem;
+  }
+
+  &__trigger {
+    @include flex-between;
+    align-items: center;
+    color: $primary;
+    width: 100%;
+  }
+}
+
+.item {
+  list-style: none;
+
+  &:hover {
+    background-color: #ededed;
+    border-radius: $radius-xs;
+  }
+}
+
+.input {
+  width: 80%;
+}

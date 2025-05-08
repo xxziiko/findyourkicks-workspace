@@ -1,0 +1,76 @@
+.order {
+  max-width: 703px;
+  margin: 0 auto;
+  padding-bottom: 10rem;
+
+  &__title {
+    @include flex-center;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 5rem 0;
+  }
+
+  &__content {
+    @include flex-col;
+  }
+
+  h5 {
+    width: 30%;
+  }
+}
+
+.address {
+  padding-bottom: 0.4rem;
+  font-size: $font-s;
+}
+
+.content {
+  & {
+    @include flex-col;
+    border-bottom: 1px solid $primary;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__items {
+    padding: 1.2rem 0;
+
+    div {
+      @include flex-item;
+      padding-bottom: 0.4rem;
+    }
+  }
+
+  &__subtitle {
+    color: $gray-dark;
+    width: 30%;
+    font-size: $font-s;
+  }
+
+  &__item {
+    @include flex-item;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid $gray-light;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__text {
+    font-size: $font-s;
+  }
+
+  &__total-price {
+    font-size: $font-xl;
+    font-weight: 600;
+  }
+}
+
+.buttons {
+  @include flex-center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+}

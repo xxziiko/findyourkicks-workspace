@@ -1,0 +1,10 @@
+.main {
+  @include layout-root;
+  min-height: 80vh;
+}
+
+.footer {
+  @include flex-center;
+  padding: 4rem;
+  background-color: black;
+}

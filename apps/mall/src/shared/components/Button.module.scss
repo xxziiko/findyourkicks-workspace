@@ -1,0 +1,116 @@
+@mixin button-layout {
+  @include button-disabled;
+  display: flex;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  font-size: $font-sm;
+  border-radius: $radius-sm;
+  cursor: pointer;
+}
+
+@mixin button-default {
+  @include flex-center;
+  padding: 0.75rem 1rem;
+  border-radius: $radius-sm;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.65;
+  }
+}
+
+@mixin button-variant($color: white, $border: none, $shadow: none, $bg: none) {
+  color: $color;
+  background-color: $bg;
+  border: $border;
+  box-shadow: $shadow;
+}
+
+@mixin button-disabled {
+  &:disabled {
+    background-color: $gray-default;
+    color: $disabled;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-border-default {
+  @include button-disabled;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
+
+  &:hover {
+    opacity: 50%;
+  }
+}
+
+.btn {
+  @include button-layout;
+  @include button-default;
+  @include button-variant($secondary, none, none, $primary);
+
+  &-kakao {
+    @include button-layout;
+    @include button-variant($primary, none, none);
+    align-items: center;
+    background-color: #ffe603;
+
+    p {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  &-google {
+    @include button-layout;
+    @include button-variant($primary, thin solid #888, 1px 1px 1px #888);
+    white-space: nowrap;
+    align-items: center;
+
+    p {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  &-lined {
+    @include button-border-default;
+    @include flex-center;
+    padding: 0.75rem 1.25rem;
+    box-sizing: border-box;
+    font-size: $font-s;
+
+    &--small {
+      @include button-border-default;
+      padding: 0.15rem 0.65rem;
+    }
+
+    &--r {
+      @include button-layout;
+      @include button-default;
+      @include button-variant(
+        $primary,
+        1px solid $gray-light,
+        none,
+        $secondary
+      );
+    }
+  }
+
+  &-label {
+    padding: 0.35rem;
+    border-radius: $radius-s;
+    font-size: $font-xs;
+    background-color: #efefef;
+  }
+
+  p {
+    @include flex-center;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__loader {
+    @include loader-animation;
+  }
+}

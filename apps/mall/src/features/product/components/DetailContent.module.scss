@@ -1,0 +1,47 @@
+@mixin layout-base {
+  @include flex-col;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.content {
+  @include layout-base;
+
+  @media (min-width: 1024px) {
+    width: 50%;
+  }
+
+  &__top {
+    @include layout-base;
+  }
+
+  &__bottom {
+    @include layout-base;
+  }
+
+  &__wrapper {
+    @include flex-between;
+    align-items: center;
+
+    padding: 1rem 0;
+
+    &--total {
+      font-weight: 600;
+    }
+
+    &--price {
+      font-size: $font-2xl;
+      font-weight: 700;
+    }
+  }
+
+  &__buttons {
+    @include flex-col;
+    gap: 0.75rem;
+  }
+}
+
+.options {
+  @include flex-wrap;
+  gap: 1rem;
+}

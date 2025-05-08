@@ -1,0 +1,15 @@
+.list {
+  @include flex-wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding-bottom: 3rem;
+}
+
+.loading {
+  @include flex-center;
+  padding: 2rem 0;
+
+  &__loader {
+    @include loader-animation;
+  }
+}

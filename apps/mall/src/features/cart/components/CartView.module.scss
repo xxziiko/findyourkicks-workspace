@@ -1,0 +1,5 @@
+.section {
+  @include flex-col;
+  gap: 3rem;
+  padding-bottom: 5rem;
+}
