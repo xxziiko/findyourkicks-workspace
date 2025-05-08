@@ -46,7 +46,7 @@
 - 상품 목록/상세 페이지
 - 장바구니 담기 / 주문하기
 - 배송지 입력 및 관리
-- 주문 내역 조회 (진행중)
+- 주문 내역 조회
 
 ### **🛠️ 관리자(어드민) 기능 (진행중)**
 
@@ -172,10 +172,9 @@
 |----|----|
 | <img width="100%" alt="Image" src="https://github.com/user-attachments/assets/0b99240f-9744-429d-b419-b52b7e61247b" />|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/04a8cbb7-ebf4-4d5a-8a34-1b0703d92080" />
 
-|결제완료 페이지|
-|---|
-|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/621301e5-5d9b-451e-986e-c1bfeb0f11fa" />|
-
+|결제완료 페이지|주문 내역|
+|---|---|
+|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/621301e5-5d9b-451e-986e-c1bfeb0f11fa" />|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/9806f841-430f-4877-ab72-dcfc4deca2d7" />|
 
 <br/>
 
