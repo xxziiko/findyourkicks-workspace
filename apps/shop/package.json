@@ -1,0 +1,27 @@
+{
+  "name": "shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": "biome check --write --no-errors-on-unmatched"
+  },
+  "dependencies": {
+    "@findyourkicks/shared": "workspace:*",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "@tosspayments/tosspayments-sdk": "^2.3.4",
+    "next": "15.3.2",
+    "react-simplikit": "^0.0.30"
+  },
+  "devDependencies": {
+    "@findyourkicks/tsconfig": "workspace:*"
+  }
+}

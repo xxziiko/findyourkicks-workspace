@@ -1,0 +1,40 @@
+#!/usr/bin/env sh
+
+echo "🔍 commit 이전에 biome 규칙을 적용합니다..."
+if npx lint-staged; then
+  echo "✅ 모든 biome 규칙이 성공적으로 적용되었습니다."
+else
+  echo "❌ biome 규칙 검사에서 오류가 발생했습니다."
+  exit 1
+fi
+
+# 2. TypeScript 타입 체크
+echo "🔍 TypeScript 타입 체크를 시작합니다..."
+if npx tsc --noEmit; then
+  echo "✅ TypeScript 타입 체크가 성공적으로 완료되었습니다."
+else
+  echo "❌ TypeScript 타입 체크에서 오류가 발생했습니다."
+  exit 1
+fi
+
+# 3. 프로젝트 빌드
+echo "🔍 프로젝트 빌드를 시작합니다..."
+if pnpm run build; then
+  echo "✅ 프로젝트 빌드가 성공적으로 완료되었습니다."
+else
+  echo "❌ 프로젝트 빌드에서 오류가 발생했습니다."
+  exit 1
+fi
+
+# 4. 테스트 실행 
+#echo "🔍 테스트를 실행합니다..."
+#if pnpm test; then
+#  echo "✅ 모든 테스트가 성공적으로 통과했습니다."
+#else
+#  echo "❌ 테스트 실행에서 오류가 발생했습니다."
+#  exit 1
+#fi
+
+
+echo "🎉 모든 pre-commit 검사가 완료되었습니다!"
+exit 0
