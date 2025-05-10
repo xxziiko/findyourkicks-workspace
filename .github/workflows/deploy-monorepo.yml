@@ -1,0 +1,58 @@
+# ------------------------------------------------------------
+# 🧾 Monorepo 앱 변경 시 Vercel 자동 배포
+# 이 워크플로우는 main 브랜치에 코드가 push 되었을 때 실행됩니다.
+# `apps/shop` 또는 `apps/admin` 디렉토리 혹은 공통 패키지(`packages/shared`)에 변경사항이 감지되면,
+# 해당 앱만 선택적으로 빌드하고 Vercel에 배포합니다.
+#
+# dorny/paths-filter 액션을 사용해 변경된 경로를 감지하고,
+# pnpm + Turborepo를 통해 의존성 설치 및 앱 빌드를 수행합니다.
+# ------------------------------------------------------------
+
+
+name: Deploy Monorepo Apps
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shop_changed: ${{ steps.filter.outputs.shop }}
+      admin_changed: ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check changed paths
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            shop:
+              - 'apps/shop/**'
+              - 'packages/shared/**'
+            admin:
+              - 'apps/admin/**'
+              - 'packages/shared/**'
+
+  deploy-shop:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shop_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: pnpm install
+      - run: pnpm turbo run build --filter=shop...
+      - run: vercel deploy --prod --cwd apps/shop
+
+  deploy-admin:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.admin_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: pnpm install
+      - run: pnpm turbo run build --filter=admin...
+      - run: vercel deploy --prod --cwd apps/admin
+      

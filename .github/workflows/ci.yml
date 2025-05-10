@@ -9,7 +9,7 @@
 # 3. turbo의 빌드 캐시를 활용하여 이후 작업 속도 최적화
 # ───────────────────────────────────────────────────────────────
 
-name: Build & Deploy Monorepo
+name: Verify Monorepo Build (CI)
 
 on:
   push:
