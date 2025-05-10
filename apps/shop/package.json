@@ -19,7 +19,8 @@
     "@supabase/supabase-js": "^2.49.1",
     "@tosspayments/tosspayments-sdk": "^2.3.4",
     "next": "15.3.2",
-    "react-simplikit": "^0.0.30"
+    "react-simplikit": "^0.0.30",
+    "swiper": "^11.2.6"
   },
   "devDependencies": {
     "@findyourkicks/tsconfig": "workspace:*"

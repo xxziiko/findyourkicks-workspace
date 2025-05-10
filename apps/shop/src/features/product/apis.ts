@@ -10,3 +10,7 @@ export const fetchProducts = async (page = 1) => {
 export const fetchProductById = async (productId: string) => {
   return await api.get<ProductDetail>(`${ENDPOINTS.products}/${productId}`);
 };
+
+export const fetchProductsByBrand = async (brand: string) => {
+  return await api.get<Products>(`${ENDPOINTS.products}?brand=${brand}`);
+};

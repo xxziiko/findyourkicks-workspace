@@ -1,38 +1,69 @@
 'use client';
 import {
-  ProductCardBtn,
+  BannerSlide,
   ProductListLoading,
+  ProductSection,
   useProductList,
 } from '@/features/product';
-import type { Products } from '@/features/product/types';
+import type { ProductItem } from '@/features/product/types';
 import { Loader } from 'lucide-react';
-import Link from 'next/link';
 import { ImpressionArea } from 'react-simplikit';
 import styles from './ProductList.module.scss';
 
-export default function ProductList({ products }: { products: Products }) {
+const SECTION_TITLE = {
+  VANS: '언제 어디서나 함께, 반스 시리즈',
+  NIKE: 'Just Do It, Nike 시리즈',
+  ALL: '모든 신발 둘러보기',
+} as const;
+
+interface ProductListProps {
+  products: {
+    initialProducts: ProductItem[];
+    productsByVans: ProductItem[];
+    productsByNike: ProductItem[];
+  };
+}
+
+export default function ProductList({ products }: ProductListProps) {
+  const { initialProducts, productsByVans, productsByNike } = products;
   const { allLoaded, onAllImageLoad, onFetchNextPage, productList } =
     useProductList({
-      initialValues: products,
+      initialValues: initialProducts,
     });
+
+  const sections = [
+    {
+      title: SECTION_TITLE.VANS,
+      products: productsByVans,
+    },
+    {
+      title: SECTION_TITLE.NIKE,
+      products: productsByNike,
+    },
+    {
+      title: SECTION_TITLE.ALL,
+      products: productList,
+    },
+  ] as const;
 
   return (
     <>
       {!allLoaded && <ProductListLoading />}
-      <section className={styles.list}>
-        {productList.map(({ productId, image, brand, title, price }) => (
-          <Link href={`/product/${productId}`} key={productId}>
-            <ProductCardBtn
-              src={image}
-              brand={brand}
-              title={title}
-              price={price}
-              onAllImageLoad={onAllImageLoad}
-            />
-          </Link>
-        ))}
+
+      <section className={styles.banner}>
+        <BannerSlide />
       </section>
-      {/* //TODO: 직접 구현해보기 */}
+
+      {sections.map(({ title, products }) => (
+        <ProductSection
+          key={title}
+          title={title}
+          products={products}
+          onAllImageLoad={onAllImageLoad}
+        />
+      ))}
+
+      {/* TODO: 직접 구현 */}
       <ImpressionArea
         onImpressionStart={onFetchNextPage}
         areaThreshold={0.2}

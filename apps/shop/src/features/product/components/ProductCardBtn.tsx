@@ -23,8 +23,8 @@ const ProductCardBtn = ({
         <Image
           src={src}
           alt="product"
-          width="13rem"
-          height="13rem"
+          width="230px"
+          height="230px"
           priority
           onLoad={onAllImageLoad}
         />
