@@ -1,10 +1,23 @@
+# ───────────────────────────────────────────────────────────────
+# 📦 install-and-build
+# 이 워크플로우는 PR 생성 시 전체 프로젝트를 설치 및 빌드하여
+# 배포 가능한 상태인지 사전에 검증하고,
+# turbo 캐시를 활용하여 이후 빌드 성능을 최적화합니다.
+#
+# 1. PR 생성 시 자동 실행
+# 2. 모노레포 내 전체 앱/패키지(build script 보유한 모든 것)를 빌드
+# 3. turbo의 빌드 캐시를 활용하여 이후 작업 속도 최적화
+# ───────────────────────────────────────────────────────────────
+
 name: Build & Deploy Monorepo
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   install-and-build:
@@ -12,7 +25,6 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
     steps:
       - name: ⬇ Checkout repository
         uses: actions/checkout@v3
@@ -38,6 +50,11 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install
+      
+      - name: 📝 Create .env.production for shop
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
 
       - name: ⚡️ Build all apps/packages
         run: pnpm turbo run build --cache-dir=".turbo"
