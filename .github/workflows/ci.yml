@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
     steps:
       - name: ⬇ Checkout repository
         uses: actions/checkout@v3
@@ -43,7 +43,7 @@ jobs:
       - name: 📝 Create .env for shop
         run: |
           echo "SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> apps/shop/.env
-          echo "SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> apps/shop/.env
+          echo "SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> apps/shop/.env
 
       - name: ⚡️ Build all apps/packages
         run: pnpm turbo run build --cache-dir=".turbo"
