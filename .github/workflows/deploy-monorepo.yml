@@ -55,3 +55,4 @@ jobs:
       - run: pnpm install
       - run: pnpm turbo run build --filter=admin...
       - run: vercel deploy --prod --cwd apps/admin
+      
