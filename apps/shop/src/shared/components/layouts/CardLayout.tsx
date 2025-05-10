@@ -1,4 +1,4 @@
-import { Button } from '@findyourkicks/shared/components';
+import { Button } from '@findyourkicks/shared';
 import styles from './CardLayout.module.scss';
 
 export default function CardLayout({

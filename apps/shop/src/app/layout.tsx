@@ -1,4 +1,5 @@
 import '@findyourkicks/shared/styles/global.scss';
+
 import type { Metadata } from 'next';
 import { ClientLayout } from './_layouts/ClientLayout';
 
