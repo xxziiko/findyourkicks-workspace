@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect } from 'react';
 import styles from './Modal.module.scss';
 import { Button, GlobalPortal } from './index';

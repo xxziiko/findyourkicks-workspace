@@ -3,6 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts"
+    },
+    "./styles/*": "./styles/*"
+  },
+  "files": ["components", "styles", "utils", "types", "hooks", "index.ts"],
+
   "devDependencies": {
     "@findyourkicks/tsconfig": "workspace:*"
   }

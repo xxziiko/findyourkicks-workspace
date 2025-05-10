@@ -1,5 +1,11 @@
 {
   "extends": "@findyourkicks/tsconfig/react.json",
-  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"],
   "include": [".", "**/*.ts", "**/*.tsx", "**/*.scss"]
 }

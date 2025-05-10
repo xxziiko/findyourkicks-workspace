@@ -8,10 +8,6 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
-    "baseUrl": ".",
-    "paths": {
-      "@shared/*": ["packages/shared/*"]
-    }
+    "jsx": "preserve"
   }
 }
