@@ -1,34 +1,20 @@
 'use client';
 import {
-  ProductCardBtn,
+  BannerSlide,
   ProductListLoading,
+  ProductSection,
   useProductList,
 } from '@/features/product';
 import type { ProductItem } from '@/features/product/types';
 import { Loader } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { ImpressionArea } from 'react-simplikit';
-import { Autoplay } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import styles from './ProductList.module.scss';
-import 'swiper/css';
-import 'swiper/css/pagination';
 
-const BANNERS = [
-  {
-    src: '/images/banner1.webp',
-    alt: 'banner',
-  },
-  {
-    src: '/images/banner2.webp',
-    alt: 'banner',
-  },
-  {
-    src: '/images/banner3.webp',
-    alt: 'banner',
-  },
-] as const;
+const SECTION_TITLE = {
+  VANS: '언제 어디서나 함께, 반스 시리즈',
+  NIKE: 'Just Do It, Nike 시리즈',
+  ALL: '모든 신발 둘러보기',
+} as const;
 
 interface ProductListProps {
   products: {
@@ -47,15 +33,15 @@ export default function ProductList({ products }: ProductListProps) {
 
   const sections = [
     {
-      title: '언제 어디서나 함께, 반스 시리즈',
+      title: SECTION_TITLE.VANS,
       products: productsByVans,
     },
     {
-      title: 'Just Do It, Nike 시리즈',
+      title: SECTION_TITLE.NIKE,
       products: productsByNike,
     },
     {
-      title: '모든 신발 둘러보기',
+      title: SECTION_TITLE.ALL,
       products: productList,
     },
   ] as const;
@@ -67,33 +53,11 @@ export default function ProductList({ products }: ProductListProps) {
       ) : (
         <>
           <section className={styles.banner}>
-            <Swiper
-              className={styles.swiper}
-              slidesPerView={1}
-              loop={true}
-              modules={[Autoplay]}
-              centeredSlides={true}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
-            >
-              {BANNERS.map(({ src, alt }) => (
-                <SwiperSlide className={styles.swiper__slide} key={src}>
-                  <Image
-                    src={src}
-                    layout="responsive"
-                    alt={alt}
-                    width={1216}
-                    height={500}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            <BannerSlide />
           </section>
 
           {sections.map(({ title, products }) => (
-            <Section
+            <ProductSection
               key={title}
               title={title}
               products={products}
@@ -111,31 +75,6 @@ export default function ProductList({ products }: ProductListProps) {
           </ImpressionArea>
         </>
       )}
-    </>
-  );
-}
-
-function Section({
-  title,
-  products,
-  onAllImageLoad,
-}: { title: string; products: ProductItem[]; onAllImageLoad: () => void }) {
-  return (
-    <>
-      <h3 className={styles.title}>{title}</h3>
-      <section className={styles.list}>
-        {products.map(({ productId, image, brand, title, price }) => (
-          <Link href={`/product/${productId}`} key={productId}>
-            <ProductCardBtn
-              src={image}
-              brand={brand}
-              title={title}
-              price={price}
-              onAllImageLoad={onAllImageLoad}
-            />
-          </Link>
-        ))}
-      </section>
     </>
   );
 }
