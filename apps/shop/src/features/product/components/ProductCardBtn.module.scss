@@ -1,7 +1,7 @@
 .card {
   @include flex-col;
   text-align: left;
-  width: 13rem;
+  width: 230px;
   cursor: pointer;
 
   &__content {

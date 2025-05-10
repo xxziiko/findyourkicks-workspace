@@ -15,7 +15,12 @@ export function Header() {
   return (
     <header className={styles.header}>
       <Link href="/">
-        <Image src="/findyourkicks.png" width={200} height={30} alt="logo" />
+        <Image
+          src="/images/findyourkicks.png"
+          width={200}
+          height={30}
+          alt="logo"
+        />
       </Link>
 
       <div className={styles.tabs}>

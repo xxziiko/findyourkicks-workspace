@@ -1,8 +1,8 @@
 .list {
   @include flex-wrap;
-  justify-content: center;
-  gap: 1rem;
-  padding-bottom: 3rem;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 32px;
 }
 
 .loading {
@@ -12,4 +12,24 @@
   &__loader {
     @include loader-animation;
   }
+}
+
+.banner {
+  padding-bottom: 32px;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  font-weight: 700;
+  line-height: 1.5rem;
+  padding-bottom: 16px;
 }

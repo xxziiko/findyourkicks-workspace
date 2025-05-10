@@ -31,7 +31,7 @@ function Footer() {
     <footer className={styles.footer}>
       <figure>
         <Image
-          src="/findyourkicks-stroke.png"
+          src="/images/findyourkicks-stroke.png"
           width={170}
           height={30}
           alt="logo"

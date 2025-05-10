@@ -6,7 +6,7 @@ export function CardSkeleton() {
   return (
     <div className={cardStyles.card}>
       <div className={cardStyles.card__content}>
-        <Skeleton width="13rem" height="13rem" />
+        <Skeleton width="230px" height="230px" />
 
         <div className={cardStyles.card__details}>
           <Skeleton className={cardStyles['card__details--brand']} />

@@ -1,5 +1,6 @@
 import { ProductList, ProductListLoading } from '@/features/product';
 import { fetchProducts } from '@/features/product/apis';
+import { fetchProductsByBrand } from '@/features/product/apis';
 import { Suspense } from 'react';
 
 export const dynamic = 'force-dynamic';
@@ -13,7 +14,19 @@ export default async function Home() {
 }
 
 async function Products() {
-  const products = await fetchProducts();
+  const initialProducts = await fetchProducts();
+  const productsByVans = await fetchProductsByBrand('vans');
+  const productsByNike = await fetchProductsByBrand('nike');
+
+  console.log(initialProducts);
+  console.log(productsByVans);
+  console.log(productsByNike);
+
+  const products = {
+    initialProducts,
+    productsByVans,
+    productsByNike,
+  };
 
   return <ProductList products={products} />;
 }
