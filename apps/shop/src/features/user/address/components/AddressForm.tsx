@@ -1,7 +1,7 @@
 'use client';
 
 import { useAddressForm } from '@/features/user/address';
-import { Button, Modal } from '@findyourkicks/shared/components';
+import { Button, Modal } from '@findyourkicks/shared';
 import styles from './AddressForm.module.scss';
 
 const USER_INPUT_NAME = ['name', 'phone', 'alias'] as const;
