@@ -7,13 +7,16 @@
     "check-types": "tsc --noEmit",
     "dev": "turbo dev",
     "dev:shop": "turbo dev --filter=shop",
+    "dev:admin": "turbo dev --filter=admin",
     "test:e2e": "playwright test",
     "prepare": "husky",
     "test:e2e:mall": "playwright test --config=apps/mall/playwright.config.ts",
     "test:e2e:admin": "playwright test --config=apps/admin/playwright.config.ts",
     "format": "biome format --write",
     "lint": "biome lint",
-    "build": "turbo build"
+    "build": "turbo build",
+    "build:shop": "turbo build --filter=shop",
+    "build:admin": "turbo build --filter=admin"
   },
   "keywords": [],
   "author": "",
