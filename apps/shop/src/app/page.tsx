@@ -18,10 +18,6 @@ async function Products() {
   const productsByVans = await fetchProductsByBrand('vans');
   const productsByNike = await fetchProductsByBrand('nike');
 
-  console.log(initialProducts);
-  console.log(productsByVans);
-  console.log(productsByNike);
-
   const products = {
     initialProducts,
     productsByVans,
