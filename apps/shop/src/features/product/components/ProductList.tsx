@@ -48,33 +48,29 @@ export default function ProductList({ products }: ProductListProps) {
 
   return (
     <>
-      {!allLoaded ? (
-        <ProductListLoading />
-      ) : (
-        <>
-          <section className={styles.banner}>
-            <BannerSlide />
-          </section>
+      {!allLoaded && <ProductListLoading />}
 
-          {sections.map(({ title, products }) => (
-            <ProductSection
-              key={title}
-              title={title}
-              products={products}
-              onAllImageLoad={onAllImageLoad}
-            />
-          ))}
+      <section className={styles.banner}>
+        <BannerSlide />
+      </section>
 
-          {/* TODO: 직접 구현 */}
-          <ImpressionArea
-            onImpressionStart={onFetchNextPage}
-            areaThreshold={0.2}
-            className={styles.loading}
-          >
-            <Loader className={styles.loading__loader} />
-          </ImpressionArea>
-        </>
-      )}
+      {sections.map(({ title, products }) => (
+        <ProductSection
+          key={title}
+          title={title}
+          products={products}
+          onAllImageLoad={onAllImageLoad}
+        />
+      ))}
+
+      {/* TODO: 직접 구현 */}
+      <ImpressionArea
+        onImpressionStart={onFetchNextPage}
+        areaThreshold={0.2}
+        className={styles.loading}
+      >
+        <Loader className={styles.loading__loader} />
+      </ImpressionArea>
     </>
   );
 }
