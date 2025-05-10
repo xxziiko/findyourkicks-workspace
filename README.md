@@ -5,7 +5,7 @@
 <br/>
 <br/>
 
-> **신발 커머스 서비스 `findyourkicks`와 관리자 페이지를 함께 관리하는 모노레포 레포지토리입니다.**  
+> 신발 커머스 서비스 `findyourkicks`와 관리자 페이지를 함께 관리하는 레포지토리입니다. <br/>
 > 사용자 웹앱은 `Next.js App Router` 기반으로 제작되었고, 관리자(Admin) 웹앱은 `React + Vite`로 개발 중입니다.  
 > 인증부터 DB 설계, API 연동까지 `Supabase`를 기반으로 전체 흐름을 직접 구성했습니다.
 
