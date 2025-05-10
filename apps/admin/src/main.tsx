@@ -9,14 +9,14 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <GlobalPortal.Provider>
+    <GlobalPortal.Provider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
           <Suspense fallback={null}>
             <Routes />
           </Suspense>
-        </GlobalPortal.Provider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </GlobalPortal.Provider>
   </StrictMode>,
 );
