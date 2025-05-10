@@ -42,17 +42,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: pnpm install
-      - run: pnpm turbo run build --filter=shop...
-      - run: vercel deploy --prod --cwd apps/shop
 
+      - name: 🟣 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10  
+
+      - name: 🔵 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build shop app
+        run: pnpm turbo run build --filter=shop...
+
+      - name: 🚀 Deploy shop to Vercel
+        run: vercel deploy --prod --cwd apps/shop
+        
   deploy-admin:
     needs: detect-changes
     if: needs.detect-changes.outputs.admin_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: pnpm install
-      - run: pnpm turbo run build --filter=admin...
-      - run: vercel deploy --prod --cwd apps/admin
-      
+
+      - name: 🟣 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: 🔵 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build admin app
+        run: pnpm turbo run build --filter=admin...
+
+      - name: 🚀 Deploy admin to Vercel
+        run: vercel deploy --prod --cwd apps/admin
