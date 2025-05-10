@@ -1,0 +1,48 @@
+name: Build & Deploy Monorepo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  install-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🟣 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: 🔵 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: ♻️ Restore pnpm store cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: ⚡️ Build all apps/packages
+        run: pnpm turbo run build --cache-dir=".turbo"
+
+      - name: ♻️ Cache turbo build
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/package.json') }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
