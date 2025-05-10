@@ -33,7 +33,7 @@
 <br/>
 <br/>
 
-### 관리자 페이지 (`apps/admin`)
+## 관리자 페이지 (`apps/admin`)
 
 
 ### 작업기간
@@ -44,10 +44,11 @@
 <br/>
 <br/>
 
-### findyourkicks (`apps/shop`)
+## findyourkicks (`apps/shop`)
 
 >신발 커머스의 실제 사용자 흐름을 구현한 토이 프로젝트입니다. <br/>
->Next.js App Router와 Supabase를 활용하여 **상품 탐색부터 주문까지**의 구매 흐름을 클라이언트 중심으로 설계했습니다.
+>Next.js App Router와 Supabase를 활용하여 **상품 탐색부터 주문까지**의 구매 흐름을 클라이언트 중심으로 설계했습니다. <br/>
+>기존 서비스 개발 히스토리는 [findyourkicks 저장소](https://github.com/xxziiko/findyourkicks)에서 확인하실 수 있습니다.
 
 <br/>
 
