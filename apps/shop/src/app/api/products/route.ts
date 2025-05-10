@@ -13,6 +13,7 @@ export async function GET(request: Request) {
       .from('product_with_details')
       .select('*')
       .limit(10)
+      .order('product_id', { ascending: true })
       .eq('brand', brand);
 
     if (error) {

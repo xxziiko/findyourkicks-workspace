@@ -62,50 +62,55 @@ export default function ProductList({ products }: ProductListProps) {
 
   return (
     <>
-      {!allLoaded && <ProductListLoading />}
-      <section className={styles.banner}>
-        <Swiper
-          className={styles.swiper}
-          slidesPerView={1}
-          loop={true}
-          modules={[Autoplay]}
-          centeredSlides={true}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-        >
-          {BANNERS.map(({ src, alt }) => (
-            <SwiperSlide className={styles.swiper__slide} key={src}>
-              <Image
-                src={src}
-                layout="responsive"
-                alt={alt}
-                width={1216}
-                height={500}
-              />
-            </SwiperSlide>
+      {!allLoaded ? (
+        <ProductListLoading />
+      ) : (
+        <>
+          <section className={styles.banner}>
+            <Swiper
+              className={styles.swiper}
+              slidesPerView={1}
+              loop={true}
+              modules={[Autoplay]}
+              centeredSlides={true}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+            >
+              {BANNERS.map(({ src, alt }) => (
+                <SwiperSlide className={styles.swiper__slide} key={src}>
+                  <Image
+                    src={src}
+                    layout="responsive"
+                    alt={alt}
+                    width={1216}
+                    height={500}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+
+          {sections.map(({ title, products }) => (
+            <Section
+              key={title}
+              title={title}
+              products={products}
+              onAllImageLoad={onAllImageLoad}
+            />
           ))}
-        </Swiper>
-      </section>
 
-      {sections.map(({ title, products }) => (
-        <Section
-          key={title}
-          title={title}
-          products={products}
-          onAllImageLoad={onAllImageLoad}
-        />
-      ))}
-
-      {/* TODO: 직접 구현 */}
-      <ImpressionArea
-        onImpressionStart={onFetchNextPage}
-        areaThreshold={0.2}
-        className={styles.loading}
-      >
-        <Loader className={styles.loading__loader} />
-      </ImpressionArea>
+          {/* TODO: 직접 구현 */}
+          <ImpressionArea
+            onImpressionStart={onFetchNextPage}
+            areaThreshold={0.2}
+            className={styles.loading}
+          >
+            <Loader className={styles.loading__loader} />
+          </ImpressionArea>
+        </>
+      )}
     </>
   );
 }

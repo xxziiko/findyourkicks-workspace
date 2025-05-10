@@ -14,15 +14,20 @@ export default async function Home() {
 }
 
 async function Products() {
-  const initialProducts = await fetchProducts();
-  const productsByVans = await fetchProductsByBrand('vans');
-  const productsByNike = await fetchProductsByBrand('nike');
+  try {
+    const initialProducts = await fetchProducts();
+    const productsByVans = await fetchProductsByBrand('vans');
+    const productsByNike = await fetchProductsByBrand('nike');
 
-  const products = {
-    initialProducts,
-    productsByVans,
-    productsByNike,
-  };
+    const products = {
+      initialProducts,
+      productsByVans,
+      productsByNike,
+    };
 
-  return <ProductList products={products} />;
+    return <ProductList products={products} />;
+  } catch (error) {
+    console.error('error', error);
+    throw error;
+  }
 }
