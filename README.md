@@ -174,19 +174,19 @@
 ## 페이지
 |메인 페이지|상세 페이지|
 |----|----|
-|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/b1f1ab76-c23d-4296-aaa3-ff5d3c5e1f8f" />|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/460ae79e-da93-4ce5-a40c-838b8112e6fd" />|
+|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/36ed32a0-a88a-480e-8af5-770004186197" />|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/460ae79e-da93-4ce5-a40c-838b8112e6fd" />|
 
 |로그인 페이지|장바구니 페이지|
 |----|----|
-|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/665dd1f1-20bd-4e31-ac0f-dea4bba582aa" />|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/a541d0bc-8414-48ae-8640-61387d26434c" />|
+|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/665dd1f1-20bd-4e31-ac0f-dea4bba582aa" />|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/a541d0bc-8414-48ae-8640-61387d26434c" />|
 
 |주문 페이지|결제 페이지|
 |----|----|
-| <img width="100%" alt="Image" src="https://github.com/user-attachments/assets/0b99240f-9744-429d-b419-b52b7e61247b" />|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/04a8cbb7-ebf4-4d5a-8a34-1b0703d92080" />
+| <img width="500px" alt="Image" src="https://github.com/user-attachments/assets/0b99240f-9744-429d-b419-b52b7e61247b" />|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/04a8cbb7-ebf4-4d5a-8a34-1b0703d92080" />
 
 |결제완료 페이지|주문 내역|
 |---|---|
-|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/621301e5-5d9b-451e-986e-c1bfeb0f11fa" />|<img width="100%" alt="Image" src="https://github.com/user-attachments/assets/9806f841-430f-4877-ab72-dcfc4deca2d7" />|
+|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/621301e5-5d9b-451e-986e-c1bfeb0f11fa" />|<img width="500px" alt="Image" src="https://github.com/user-attachments/assets/9806f841-430f-4877-ab72-dcfc4deca2d7" />|
 
 <br/>
 
