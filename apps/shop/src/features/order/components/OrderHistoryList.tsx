@@ -1,4 +1,5 @@
 'use client';
+import MyOrdersLoading from '@/app/(shop)/my/orders/loading';
 import {
   OrderListLayout,
   OrderProduct,
@@ -12,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { Suspense } from 'react';
 import styles from './OrderHistoryList.module.scss';
 
 interface OrderHistoryListProps {
@@ -34,19 +36,21 @@ export default function OrderHistoryList({ history }: OrderHistoryListProps) {
 
   return (
     <div>
-      <article className={styles.article}>
-        {orders.map(({ orderDate, orderId, products }) => (
-          <OrderListLayout
-            key={orderId}
-            orderDate={orderDate}
-            url={`${PATH.myOrders}/${orderId}`}
-          >
-            {products.map((product) => (
-              <OrderProduct key={product.id} product={product} type="order" />
-            ))}
-          </OrderListLayout>
-        ))}
-      </article>
+      <Suspense fallback={<MyOrdersLoading />}>
+        <article className={styles.article}>
+          {orders.map(({ orderDate, orderId, products }) => (
+            <OrderListLayout
+              key={orderId}
+              orderDate={orderDate}
+              url={`${PATH.myOrders}/${orderId}`}
+            >
+              {products.map((product) => (
+                <OrderProduct key={product.id} product={product} type="order" />
+              ))}
+            </OrderListLayout>
+          ))}
+        </article>
+      </Suspense>
 
       <div className={styles.pagination}>
         <button

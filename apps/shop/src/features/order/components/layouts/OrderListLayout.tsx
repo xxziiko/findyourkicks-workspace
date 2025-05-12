@@ -14,10 +14,12 @@ export function OrderListLayout({
   url,
 }: OrderListLayoutProps) {
   return (
-    <section className={styles.section}>
-      <OrderHead orderDate={orderDate} url={url} />
-      {children}
-    </section>
+    <article className={styles.article}>
+      <section className={styles.section}>
+        <OrderHead orderDate={orderDate} url={url} />
+        {children}
+      </section>
+    </article>
   );
 }
 

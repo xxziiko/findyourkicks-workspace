@@ -3,8 +3,8 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function MyOrdersLoading() {
   return (
-    <>
-      {Array.from({ length: 10 }).map((_, index) => (
+    <div style={{ marginTop: '16px', minHeight: '80vh' }}>
+      {Array.from({ length: 7 }).map((_, index) => (
         <div
           key={index}
           style={{
@@ -24,6 +24,6 @@ export default function MyOrdersLoading() {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import MyOrdersLoading from '@/app/(shop)/my/loading';
+import MyOrdersLoading from '@/app/(shop)/my/orders/loading';
 import ErrorPage from '@/app/error';
 import { OrderHistoryList } from '@/features/order';
 import type { OrderHistory } from '@/features/order/types';
