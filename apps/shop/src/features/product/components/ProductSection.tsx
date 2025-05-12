@@ -9,11 +9,15 @@ export function ProductSection({
   onAllImageLoad,
 }: { title: string; products: ProductItem[]; onAllImageLoad: () => void }) {
   return (
-    <>
+    <section className={styles.section}>
       <h3 className={styles.title}>{title}</h3>
-      <section className={styles.list}>
+      <div className={styles.list}>
         {products.map(({ productId, image, brand, title, price }) => (
-          <Link href={`/product/${productId}`} key={productId}>
+          <Link
+            href={`/product/${productId}`}
+            key={productId}
+            className={styles.item}
+          >
             <ProductCardBtn
               src={image}
               brand={brand}
@@ -23,7 +27,7 @@ export function ProductSection({
             />
           </Link>
         ))}
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

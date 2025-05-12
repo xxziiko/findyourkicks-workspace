@@ -4,20 +4,24 @@
 
 @mixin card-default {
   border-radius: $radius-sm;
-  padding: 1.2rem;
+  padding: 20px;
 }
 
 .card {
   @include card-default();
   @include border-variant();
 
-  &_primary {
+  &__primary {
     @include card-default();
     @include border-variant($primary, 1.5px);
 
     &--bold {
       @include card-default();
       @include border-variant($primary, 2px);
+    }
+
+    @include tablet {
+      @include card-default();
     }
   }
 

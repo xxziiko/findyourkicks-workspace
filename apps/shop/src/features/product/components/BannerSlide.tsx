@@ -1,6 +1,6 @@
 'use client';
 
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -28,12 +28,13 @@ export function BannerSlide() {
       className={styles.swiper}
       slidesPerView={1}
       loop={true}
-      modules={[Autoplay]}
+      modules={[Autoplay, Pagination]}
       centeredSlides={true}
       autoplay={{
         delay: 3000,
         disableOnInteraction: false,
       }}
+      pagination={true}
     >
       {BANNERS.map(({ src, alt }) => (
         <SwiperSlide className={styles.swiper__slide} key={src}>

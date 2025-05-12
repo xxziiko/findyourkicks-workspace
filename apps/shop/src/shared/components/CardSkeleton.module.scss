@@ -1,0 +1,26 @@
+.card {
+  @include flex-center;
+  padding-bottom: 16px;
+}
+
+.card__content {
+  @include flex-col;
+  gap: 12px;
+}
+
+.card__image {
+  @include desktop {
+    width: 230px;
+    height: 230px;
+  }
+
+  @include tablet {
+    width: 200px;
+    height: 200px;
+  }
+
+  @include mobile {
+    width: 180px;
+    height: 180px;
+  }
+}

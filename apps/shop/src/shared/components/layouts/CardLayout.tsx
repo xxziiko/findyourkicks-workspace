@@ -13,7 +13,7 @@ export default function CardLayout({
   type?: string;
 }) {
   return (
-    <div className={styles[`card_${type}`] ?? styles.card}>
+    <div className={styles[`card__${type}`] ?? styles.card}>
       <div className={styles.card__title}>
         {title && <h4>{title}</h4>}
         {label}

@@ -1,5 +1,5 @@
 import { DetailContent, fetchProductById } from '@/features/product';
-import { Image } from '@/shared/components';
+import { ProductImage } from '@/features/product';
 import styles from './page.module.scss';
 
 export default async function DetailPage({
@@ -13,7 +13,7 @@ export default async function DetailPage({
   return (
     <article className={styles.detail}>
       <figure className={styles.image__box}>
-        <Image
+        <ProductImage
           src={productDetail.image}
           alt="product"
           width="24rem"

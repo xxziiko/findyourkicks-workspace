@@ -1,4 +1,4 @@
-import { Image } from '@/shared/components';
+import { ProductImage } from '@/features/product';
 import React from 'react';
 import styles from './ProductCardBtn.module.scss';
 
@@ -20,11 +20,9 @@ const ProductCardBtn = ({
   return (
     <button type="button" className={styles.card}>
       <div className={styles.card__content}>
-        <Image
+        <ProductImage
           src={src}
           alt="product"
-          width="230px"
-          height="230px"
           priority
           onLoad={onAllImageLoad}
         />

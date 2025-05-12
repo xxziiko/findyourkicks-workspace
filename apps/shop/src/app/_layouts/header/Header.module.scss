@@ -9,17 +9,25 @@
   @include layout-root;
   @include sticky-header;
   align-items: center;
-  height: 7rem; // h-20
+  height: 112px;
+
+  @include mobile {
+    @include flex-col;
+    justify-content: center;
+  }
 
   &__logo {
-    cursor: pointer;
+    @include mobile {
+      width: 110px;
+      height: 20px;
+    }
   }
 }
 
 .tabs {
   @include tab-base;
   display: flex;
-  gap: 0.5rem; // gap-2
+  gap: 10px;
 
   &__tab {
     @include tab-base;
@@ -28,6 +36,22 @@
     &--bold {
       @include tab-base;
       font-weight: 600;
+
+      @include mobile {
+        font-size: $font-lg;
+      }
+    }
+  }
+
+  @include mobile {
+    font-size: $font-lg;
+    font-weight: 700;
+    padding: 10px 0;
+  }
+
+  &__user {
+    @include mobile {
+      display: none;
     }
   }
 }

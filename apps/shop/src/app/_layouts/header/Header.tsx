@@ -20,14 +20,15 @@ export function Header() {
           width={200}
           height={30}
           alt="logo"
+          className={styles.header__logo}
         />
       </Link>
 
       <div className={styles.tabs}>
         {userEmail && (
           <div className={styles.tabs}>
-            <p>{userEmail.split('@')[0]}님</p>
-            <Link href={PATH.myOrders}>마이페이지</Link>
+            <p className={styles.tabs__user}>{userEmail.split('@')[0]}님</p>
+            <Link href={PATH.myOrders}>MY PAGE</Link>
             <CartNavLink />
           </div>
         )}

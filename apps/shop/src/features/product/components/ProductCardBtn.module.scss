@@ -1,15 +1,15 @@
 .card {
   @include flex-col;
   text-align: left;
-  width: 230px;
   cursor: pointer;
+  padding-bottom: 16px;
 
   &__content {
     @include flex-col;
 
-    gap: 0.75rem;
+    gap: 12px;
     height: 100%;
-    padding-bottom: 0.25rem;
+    padding-bottom: 6px;
   }
 
   &__details {

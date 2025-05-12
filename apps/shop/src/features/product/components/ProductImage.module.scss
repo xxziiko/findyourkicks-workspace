@@ -1,0 +1,20 @@
+.image {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-base;
+
+  @include tablet {
+    width: 200px;
+    height: 200px;
+  }
+
+  @include desktop {
+    width: 230px;
+    height: 230px;
+  }
+
+  @include mobile {
+    width: 180px;
+    height: 180px;
+  }
+}
