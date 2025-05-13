@@ -1,8 +1,13 @@
 .tab {
   display: flex;
-  gap: 0.5rem; // gap-2
+  gap: 6px;
   position: relative;
   font-size: $font-sm;
   font-weight: 500;
   cursor: pointer;
+
+  @include mobile {
+    font-size: $font-lg;
+    font-weight: 700;
+  }
 }

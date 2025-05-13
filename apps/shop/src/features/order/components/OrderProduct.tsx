@@ -1,5 +1,5 @@
 import type { OrderProductItem } from '@/features/order-sheet/types';
-import { Image } from '@/shared/components';
+import { ProductImage } from '@/features/product';
 import styles from './OrderProduct.module.scss';
 
 interface OrderProductProps {
@@ -12,7 +12,7 @@ export default function OrderProduct({ product, type }: OrderProductProps) {
 
   return (
     <div className={styles.info}>
-      <Image src={image} alt="product" width="128px" height="128px" />
+      <ProductImage src={image} alt="product" width="128px" height="128px" />
 
       <div className={styles.__inner}>
         <p>{title}</p>

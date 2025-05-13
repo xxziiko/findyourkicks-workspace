@@ -1,9 +1,9 @@
 'use client';
 
-import MyOrdersLoading from '@/app/(shop)/my/loading';
-import ErrorPage from '@/app/error';
+import MyOrdersLoading from '@/app/(shop)/my/orders/loading';
 import { OrderHistoryList } from '@/features/order';
 import type { OrderHistory } from '@/features/order/types';
+import { ErrorFallback } from '@findyourkicks/shared';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,7 +21,7 @@ export default function OrderHistoryContainer({
         <ErrorBoundary
           onReset={reset}
           fallbackRender={({ resetErrorBoundary }) => (
-            <ErrorPage reset={resetErrorBoundary} />
+            <ErrorFallback reset={resetErrorBoundary} />
           )}
         >
           <Suspense fallback={<MyOrdersLoading />}>
