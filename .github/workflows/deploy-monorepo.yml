@@ -18,6 +18,9 @@ on:
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     outputs:
       shop_changed: ${{ steps.filter.outputs.shop }}
       admin_changed: ${{ steps.filter.outputs.admin }}
@@ -56,6 +59,11 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install
+      
+      - name: 📝 Create .env.production for shop
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
 
       - name: 🏗️ Build shop app
         run: pnpm turbo run build --filter=shop...
