@@ -1,6 +1,6 @@
 'use client';
 
-import { CartNavLink } from '@/shared/components';
+import { CartNavBtn } from '@/shared/components';
 import { PATH } from '@/shared/constants/path';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,7 +29,7 @@ export function Header() {
           <div className={styles.tabs}>
             <p className={styles.tabs__user}>{userEmail.split('@')[0]}님</p>
             <Link href={PATH.myOrders}>MY PAGE</Link>
-            <CartNavLink />
+            <CartNavBtn />
           </div>
         )}
 

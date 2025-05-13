@@ -1,20 +1,14 @@
 'use client';
 
-import {
-  cartQueries,
-  useDeleteCartMutation,
-  useUpdateCartMutation,
-} from '@/features/cart';
-import type { CartItem, CartList } from '@/features/cart/types';
+import { useDeleteCartMutation, useUpdateCartMutation } from '@/features/cart';
+import { useCartQuery } from '@/features/cart/hooks/queries/useCartQuery';
+import type { CartItem } from '@/features/cart/types';
 import { useCreateOrderSheetMutation } from '@/features/order-sheet';
 import { useCheckBoxGroup } from '@/shared/hooks';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 export function useCart() {
-  const { data: cartItems } = useSuspenseQuery<CartList>({
-    ...cartQueries.list(),
-  });
+  const { data: cartItems } = useCartQuery();
 
   const {
     isAllChecked,

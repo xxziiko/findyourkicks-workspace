@@ -1,4 +1,5 @@
 import { fetchCartCount, fetchCartList } from '@/features/cart/apis';
+import { createQueries } from '@findyourkicks/shared';
 
 export const cartKeys = {
   all: ['cart'] as const,
@@ -6,16 +7,11 @@ export const cartKeys = {
   count: () => [...cartKeys.all, 'count'] as const,
 } as const;
 
-export const cartQueries = {
+export const cartQueries = createQueries('cart', {
   list: () => ({
-    queryKey: cartKeys.list(),
     queryFn: fetchCartList,
-    staleTime: 60,
-    refetchOnWindowFocus: false,
   }),
-  count: (userId: string) => ({
-    queryKey: cartKeys.count(),
+  count: () => ({
     queryFn: fetchCartCount,
-    enabled: !!userId,
   }),
-} as const;
+});
