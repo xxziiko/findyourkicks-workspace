@@ -1,3 +1,4 @@
 export const PATH = {
-  dashboard: '/',
+  default: '/',
+  products: '/products',
 } as const;

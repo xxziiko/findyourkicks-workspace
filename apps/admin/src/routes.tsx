@@ -1,13 +1,24 @@
 import { PATH } from '@/shared';
+import { PageLayout } from '@/shared/components';
 import { ErrorFallback } from '@findyourkicks/shared';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Dashborad from './pages/Dashborad';
+import { Dashborad, Products } from './pages';
 
 const router = createBrowserRouter([
   {
-    path: PATH.dashboard,
-    element: <Dashborad />,
+    path: PATH.default,
+    element: <PageLayout />,
     errorElement: <ErrorFallback />,
+    children: [
+      {
+        index: true,
+        element: <Dashborad />,
+      },
+      {
+        path: PATH.products,
+        element: <Products />,
+      },
+    ],
   },
 ]);
 
