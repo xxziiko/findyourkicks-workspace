@@ -1,2 +1,2 @@
 export { default as Products } from './Products';
-export { default as Dashborad } from './Dashborad';
+export { default as Dashboard } from './Dashboard';

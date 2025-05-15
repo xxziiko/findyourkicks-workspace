@@ -1,0 +1,22 @@
+.card {
+  @include flex-col;
+  gap: 24px;
+  padding: 12px 12px 24px;
+  border-radius: $radius-s;
+  background-color: $secondary;
+}
+
+.list {
+  @include flex-col;
+  padding: 0 12px;
+  font-size: $font-s;
+  font-weight: 500;
+}
+
+.list__header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 12px;
+  background-color: #f5f5f5;
+  text-align: center;
+}

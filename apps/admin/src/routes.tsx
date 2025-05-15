@@ -2,7 +2,7 @@ import { PATH } from '@/shared';
 import { PageLayout } from '@/shared/components';
 import { ErrorFallback } from '@findyourkicks/shared';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Dashborad, Products } from './pages';
+import { Dashboard, Products } from './pages';
 
 const router = createBrowserRouter([
   {
@@ -12,11 +12,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Dashborad />,
+        element: <Dashboard />,
       },
       {
         path: PATH.products,
         element: <Products />,
+      },
+      {
+        path: PATH.orders,
+        // element: <Orders />,
       },
     ],
   },

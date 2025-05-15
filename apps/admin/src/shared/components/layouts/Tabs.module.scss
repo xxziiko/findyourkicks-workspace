@@ -15,30 +15,48 @@
 .tabs {
   @include flex-col;
   gap: 32px;
-  width: 340px;
+  min-width: 340px;
   padding: 0 16px;
   background-color: $primary;
 }
 
 .tab {
-  @include tab-base;
+  display: none;
+
+  &__active {
+    display: block;
+  }
+
+  &__item {
+    @include tab-base;
+    padding: 0;
+  }
+
+  &__text {
+    padding: 8px;
+  }
 }
 
-.tabLink {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.tabLinkIcon {
-  width: 1rem;
-  height: 1rem;
-}
-
-.title {
+.logo {
   @include flex-item;
   padding: 32px 0;
   font-weight: 700;
   color: $secondary;
   cursor: default;
+}
+
+.title {
+  // padding: 16px 0;
+  font-weight: 700;
+  color: $secondary;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  &.active {
+    color: #000;
+  }
 }
