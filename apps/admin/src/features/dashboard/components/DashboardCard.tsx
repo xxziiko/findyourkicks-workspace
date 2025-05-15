@@ -1,4 +1,3 @@
-import type { OrderItem } from '@/features/order';
 import type { PropsWithChildren, ReactNode } from 'react';
 import styles from './DashboardCard.module.scss';
 
@@ -13,7 +12,7 @@ export function DashboardCard({ children }: PropsWithChildren) {
   return <section className={styles.card}>{children}</section>;
 }
 
-export function TableCard<T extends OrderItem>({
+export function TableCard<T extends { id: string }>({
   title,
   data,
   tableHeader,

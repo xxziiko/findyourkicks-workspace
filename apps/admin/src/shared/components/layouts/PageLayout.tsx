@@ -8,15 +8,11 @@ const TAB_TITLES = [
     title: '상품관리',
     children: [
       {
-        title: '상품 조회',
+        title: '상품 조회/수정',
         path: PATH.products,
       },
       {
         title: '상품 등록',
-        path: PATH.products,
-      },
-      {
-        title: '상품 수정/삭제',
         path: PATH.products,
       },
     ],
