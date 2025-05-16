@@ -1,2 +1,2 @@
 export * from './getOrders';
-export * from './getResentOrders';
+export * from './getRecentOrders';

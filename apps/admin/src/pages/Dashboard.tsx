@@ -3,10 +3,10 @@ import { useAdmin } from '@/features/auth';
 import { DashboardCard } from '@/features/dashboard';
 import {
   type CardItem,
-  type ResentOrderItem,
-  useResentOrdersQuery,
+  type RecentOrderItem,
+  useRecentOrdersQuery,
 } from '@/features/order';
-import { type ProductItem, useProductResentQuery } from '@/features/product';
+import { type ProductItem, useRecentProductsQuery } from '@/features/product';
 import { PATH } from '@/shared';
 import { format } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,12 +18,12 @@ const formatOrderDate = (date: string) => {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { data: orders } = useResentOrdersQuery();
-  const { data: products } = useProductResentQuery();
+  const { data: orders } = useRecentOrdersQuery();
+  const { data: products } = useRecentProductsQuery();
   const { mutate: signOut } = useSignOutMutation();
   const { name } = useAdmin();
 
-  const orderCard: CardItem<ResentOrderItem> = {
+  const orderCard: CardItem<RecentOrderItem> = {
     id: 'latest-orders',
     title: '최근 주문 내역',
     tableHeader: ['주문번호', '주문일자', '주문상태'] as const,
@@ -64,7 +64,7 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.wrapper}>
-        <DashboardCard.TableCard<ResentOrderItem>
+        <DashboardCard.TableCard<RecentOrderItem>
           key={orderCard.id}
           title={orderCard.title}
           data={orderCard.tableData}

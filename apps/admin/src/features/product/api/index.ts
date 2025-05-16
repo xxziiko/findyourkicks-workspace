@@ -1,2 +1,2 @@
 export * from './getProducts';
-export * from './getResentProducts';
+export * from './getRecentProducts';

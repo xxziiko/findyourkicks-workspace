@@ -3,6 +3,6 @@ import { productQueries } from './productQueries';
 
 const LIMIT = 5;
 
-export function useProductResentQuery() {
+export function useRecentProductsQuery() {
   return useSuspenseQuery(productQueries.recent(LIMIT));
 }

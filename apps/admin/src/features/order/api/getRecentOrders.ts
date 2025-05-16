@@ -6,23 +6,23 @@ const statusMap = {
   paid: '결제완료',
 } as const;
 
-const resentOrdersSchema = z.object({
+const recentOrdersSchema = z.object({
   id: z.string(),
   orderId: z.string(),
   orderDate: z.string(),
   orderStatus: z.string(),
 });
 
-type ResentOrderItem = z.infer<typeof resentOrdersSchema>;
+type RecentOrderItem = z.infer<typeof recentOrdersSchema>;
 
-interface ResentOrderResponse {
+interface RecentOrderResponse {
   order_item_id: string;
   order_id: string;
   order_date: string;
   order_status: keyof typeof statusMap;
 }
 
-const getResentOrders = async (limit: number) => {
+const getRecentOrders = async (limit: number) => {
   let query = supabase
     .from('orders_view')
     .select('order_item_id, order_id, order_date, order_status')
@@ -34,10 +34,10 @@ const getResentOrders = async (limit: number) => {
 
   const data = (await query
     .throwOnError()
-    .then(handleError)) as ResentOrderResponse[];
+    .then(handleError)) as RecentOrderResponse[];
 
   return data.map((order) =>
-    resentOrdersSchema.parse({
+    recentOrdersSchema.parse({
       id: order.order_item_id,
       orderId: order.order_id,
       orderDate: order.order_date,
@@ -46,4 +46,4 @@ const getResentOrders = async (limit: number) => {
   );
 };
 
-export { getResentOrders, type ResentOrderItem };
+export { getRecentOrders, type RecentOrderItem };

@@ -3,6 +3,6 @@ import { orderQueries } from './orderQueries';
 
 const LIMIT = 5;
 
-export function useResentOrdersQuery() {
-  return useSuspenseQuery(orderQueries.resent(LIMIT));
+export function useRecentOrdersQuery() {
+  return useSuspenseQuery(orderQueries.recent(LIMIT));
 }

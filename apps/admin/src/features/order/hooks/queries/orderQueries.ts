@@ -1,11 +1,11 @@
-import { getOrders, getResentOrders } from '@/features/order';
+import { getOrders, getRecentOrders } from '@/features/order';
 import { createQueries as createOrderQueries } from '@findyourkicks/shared';
 
 export const orderQueries = createOrderQueries('orders', {
   list: () => ({
     queryFn: () => getOrders(),
   }),
-  resent: (limit: number) => ({
-    queryFn: () => getResentOrders(limit),
+  recent: (limit: number) => ({
+    queryFn: () => getRecentOrders(limit),
   }),
 } as const);

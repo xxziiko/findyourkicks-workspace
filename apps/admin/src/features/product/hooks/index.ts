@@ -1,1 +1,1 @@
-export * from './queries/useProductResentQuery';
+export * from './queries/useRecentProductsQuery';
