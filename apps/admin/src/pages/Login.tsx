@@ -61,6 +61,7 @@ export default function Login() {
                   <input
                     type={type}
                     id={id}
+                    data-testid={`${id}-error`}
                     {...register(id)}
                     className={styles.input}
                   />
