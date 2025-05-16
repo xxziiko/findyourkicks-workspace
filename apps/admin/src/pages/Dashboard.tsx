@@ -1,3 +1,5 @@
+import { useSignOutMutation } from '@/features/auth';
+import { useAdmin } from '@/features/auth';
 import { DashboardCard } from '@/features/dashboard';
 import {
   type CardItem,
@@ -5,9 +7,9 @@ import {
   useResentOrdersQuery,
 } from '@/features/order';
 import { type ProductItem, useProductResentQuery } from '@/features/product';
-import { PATH } from '@/shared/constants/path';
+import { PATH } from '@/shared';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Dashboard.module.scss';
 
 const formatOrderDate = (date: string) => {
@@ -15,8 +17,11 @@ const formatOrderDate = (date: string) => {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { data: orders } = useResentOrdersQuery();
   const { data: products } = useProductResentQuery();
+  const { mutate: signOut } = useSignOutMutation();
+  const { name } = useAdmin();
 
   const orderCard: CardItem<ResentOrderItem> = {
     id: 'latest-orders',
@@ -41,9 +46,22 @@ export default function Dashboard() {
     },
   ];
 
+  const handleSignOut = () => {
+    signOut(undefined, {
+      onSuccess: () => {
+        navigate(PATH.login);
+      },
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <h1> 반갑습니다, 000 관리자님!✋🎉 </h1>
+      <div className={styles.header}>
+        <h1> 반갑습니다, {name}님!✋🎉 </h1>
+        <button type="button" onClick={handleSignOut}>
+          로그아웃
+        </button>
+      </div>
 
       <div className={styles.wrapper}>
         <DashboardCard.TableCard<ResentOrderItem>

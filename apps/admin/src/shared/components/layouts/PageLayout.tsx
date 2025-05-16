@@ -1,6 +1,7 @@
 import { PATH, useToggleTab } from '@/shared';
+import { Loading } from '@/shared/components';
 import { Tabs } from '@/shared/components';
-import { useState } from 'react';
+import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './PageLayout.module.scss';
 
@@ -60,7 +61,9 @@ export function PageLayout() {
         ))}
       </Tabs>
 
-      <Outlet />
+      <Suspense fallback={<Loading />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 }
