@@ -1,5 +1,5 @@
 import { Loader } from 'lucide-react';
-import styles from './loading.module.scss';
+import styles from './Loading.module.scss';
 
 export function Loading() {
   return (
