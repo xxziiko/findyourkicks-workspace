@@ -1,5 +1,6 @@
 import { PATH, useToggleTab } from '@/shared';
 import { Tabs } from '@/shared/components';
+import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './PageLayout.module.scss';
 
@@ -29,14 +30,15 @@ const TAB_TITLES = [
 ] as const;
 
 export function PageLayout() {
-  const { openTabs, toggleTab } = useToggleTab();
+  const { openTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
+    useToggleTab();
 
   return (
     <div className={styles.container}>
       <Tabs>
-        <Tabs.Title>
-          <Link to={PATH.default}>홈</Link>
-        </Tabs.Title>
+        <Link to={PATH.default}>
+          <Tabs.Title onClick={resetTabs}>홈</Tabs.Title>
+        </Link>
 
         {TAB_TITLES.map(({ title, children }) => (
           <div key={title}>
@@ -44,7 +46,12 @@ export function PageLayout() {
 
             <Tabs.Tab isActive={openTabs[title]}>
               {children.map(({ title, path }) => (
-                <Tabs.TabItem key={title} to={path}>
+                <Tabs.TabItem
+                  key={title}
+                  to={path}
+                  isClicked={openSubTabs[title]}
+                  onClick={() => toggleSubTab(title)}
+                >
                   {title}
                 </Tabs.TabItem>
               ))}

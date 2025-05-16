@@ -6,16 +6,16 @@ const statusMap = {
   paid: '결제완료',
 } as const;
 
-const getResentOrdersSchema = z.object({
+const resentOrdersSchema = z.object({
   id: z.string(),
   orderId: z.string(),
   orderDate: z.string(),
   orderStatus: z.string(),
 });
 
-type ResentOrderItem = z.infer<typeof getResentOrdersSchema>;
+type ResentOrderItem = z.infer<typeof resentOrdersSchema>;
 
-interface OrderResponse {
+interface ResentOrderResponse {
   order_item_id: string;
   order_id: string;
   order_date: string;
@@ -34,10 +34,10 @@ const getResentOrders = async (limit: number) => {
 
   const data = (await query
     .throwOnError()
-    .then(handleError)) as OrderResponse[];
+    .then(handleError)) as ResentOrderResponse[];
 
   return data.map((order) =>
-    getResentOrdersSchema.parse({
+    resentOrdersSchema.parse({
       id: order.order_item_id,
       orderId: order.order_id,
       orderDate: order.order_date,

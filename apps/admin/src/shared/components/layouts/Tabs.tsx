@@ -25,11 +25,17 @@ export const Tab = ({ children, isActive }: TabProps) => {
 
 interface TabItemProps extends PropsWithChildren {
   to: string;
+  isClicked?: boolean;
+  onClick?: () => void;
 }
 
-const TabItem = ({ to, children }: TabItemProps) => {
+const TabItem = ({ to, isClicked, onClick, children }: TabItemProps) => {
   return (
-    <Link to={to} className={styles.tabItem}>
+    <Link
+      to={to}
+      className={`${styles.tabItem} ${isClicked ? styles.active : ''}`}
+      onClick={onClick}
+    >
       <p className={styles.tabText}>{children}</p>
     </Link>
   );

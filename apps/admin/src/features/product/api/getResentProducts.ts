@@ -2,13 +2,13 @@ import { supabase } from '@/shared';
 import { handleError } from '@findyourkicks/shared';
 import { z } from 'zod';
 
-const getResentProductsSchema = z.object({
+const resentProductsSchema = z.object({
   id: z.string(),
   title: z.string(),
   createdAt: z.string(),
 });
 
-type ProductItem = z.infer<typeof getResentProductsSchema>;
+type ProductItem = z.infer<typeof resentProductsSchema>;
 
 interface ProductResponse {
   product_id: string;
@@ -31,7 +31,7 @@ const getResentProducts = async (limit: number) => {
     .then(handleError)) as ProductResponse[];
 
   return data.map(({ product_id, title, created_at }) =>
-    getResentProductsSchema.parse({
+    resentProductsSchema.parse({
       id: product_id,
       title,
       createdAt: created_at,

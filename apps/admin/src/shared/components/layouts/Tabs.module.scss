@@ -6,10 +6,6 @@
   &:hover {
     opacity: 0.6;
   }
-
-  &.active {
-    color: #000;
-  }
 }
 
 .tabs {
@@ -47,7 +43,6 @@
 }
 
 .title {
-  // padding: 16px 0;
   font-weight: 700;
   color: $secondary;
   cursor: pointer;
@@ -56,8 +51,8 @@
   &:hover {
     opacity: 0.6;
   }
+}
 
-  &.active {
-    color: #000;
-  }
+.active {
+  color: rgba(245, 245, 245, 0.6);
 }

@@ -1,7 +1,7 @@
 import { DashboardCard } from '@/features/dashboard';
 import {
   type CardItem,
-  type OrderItem,
+  type ResentOrderItem,
   useResentOrdersQuery,
 } from '@/features/order';
 import { type ProductItem, useProductResentQuery } from '@/features/product';
@@ -18,7 +18,7 @@ export default function Dashboard() {
   const { data: orders } = useResentOrdersQuery();
   const { data: products } = useProductResentQuery();
 
-  const orderCard: CardItem<OrderItem> = {
+  const orderCard: CardItem<ResentOrderItem> = {
     id: 'latest-orders',
     title: '최근 주문 내역',
     tableHeader: ['주문번호', '주문일자', '주문상태'] as const,
@@ -46,7 +46,7 @@ export default function Dashboard() {
       <h1> 반갑습니다, 000 관리자님!✋🎉 </h1>
 
       <div className={styles.wrapper}>
-        <DashboardCard.TableCard<OrderItem>
+        <DashboardCard.TableCard<ResentOrderItem>
           key={orderCard.id}
           title={orderCard.title}
           data={orderCard.tableData}
