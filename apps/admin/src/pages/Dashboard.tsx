@@ -55,13 +55,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <main className={styles.container}>
+      <header className={styles.header}>
         <h1> 반갑습니다, {name}님!✋🎉 </h1>
-        <button type="button" onClick={handleSignOut}>
+        <button type="button" onClick={handleSignOut} aria-label="로그아웃">
           로그아웃
         </button>
-      </div>
+      </header>
 
       <div className={styles.wrapper}>
         <DashboardCard.TableCard<RecentOrderItem>
@@ -108,6 +108,6 @@ export default function Dashboard() {
           </DashboardCard>
         ))}
       </div>
-    </div>
+    </main>
   );
 }
