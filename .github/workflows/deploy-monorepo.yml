@@ -59,7 +59,10 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install
-      
+
+      - name: 📥 Install Vercel CLI
+        run: pnpm install -g vercel
+
       - name: 📝 Create .env.production for shop
         run: |
           echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
@@ -91,6 +94,9 @@ jobs:
 
       - name: 📦 Install dependencies
         run: pnpm install
+
+      - name: 📥 Install Vercel CLI
+        run: pnpm install -g vercel
 
       - name: 🏗️ Build admin app
         run: pnpm turbo run build --filter=admin...
