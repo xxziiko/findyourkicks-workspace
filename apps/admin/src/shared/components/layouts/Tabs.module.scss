@@ -1,0 +1,58 @@
+@mixin tab-base {
+  cursor: pointer;
+  color: $secondary;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.tabs {
+  @include flex-col;
+  gap: 32px;
+  min-width: 340px;
+  padding: 0 16px;
+  background-color: $primary;
+}
+
+.tab {
+  display: none;
+
+  &__active {
+    display: block;
+  }
+
+  &__item {
+    @include tab-base;
+    padding: 0;
+  }
+
+  &__text {
+    font-weight: 600;
+    padding: 8px;
+  }
+}
+
+.logo {
+  @include flex-item;
+  padding: 32px 0;
+  font-weight: 700;
+  color: $secondary;
+  cursor: default;
+}
+
+.title {
+  font-weight: 700;
+  color: $secondary;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.active {
+  color: rgba(245, 245, 245, 0.6);
+}

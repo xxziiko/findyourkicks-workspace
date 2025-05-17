@@ -24,6 +24,7 @@
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@supabase/supabase-js": "^2.49.4",
     "@tanstack/react-query": "^5.75.5",
     "date-fns": "^4.1.0",
     "es-toolkit": "^1.37.2",
@@ -50,5 +51,8 @@
     "turbo": "^2.5.3",
     "typescript": "^5.8.3"
   },
-  "workspaces": ["apps/*", "packages/**"]
+  "workspaces": [
+    "apps/*",
+    "packages/**"
+  ]
 }
