@@ -72,7 +72,7 @@ jobs:
         run: pnpm turbo run build --filter=shop...
 
       - name: 🚀 Deploy shop to Vercel
-        run: vercel deploy --prod --cwd apps/shop
+        run: vercel deploy --prod --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }} 
         
   deploy-admin:
     needs: detect-changes
@@ -102,4 +102,4 @@ jobs:
         run: pnpm turbo run build --filter=admin...
 
       - name: 🚀 Deploy admin to Vercel
-        run: vercel deploy --prod --cwd apps/admin
+        run: vercel deploy --prod --cwd apps/admin --token=${{ secrets.VERCEL_TOKEN }}
