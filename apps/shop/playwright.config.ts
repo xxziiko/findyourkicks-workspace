@@ -25,6 +25,7 @@ export default defineConfig({
 
     // Collect trace when retrying the failed test.
     trace: 'on-first-retry',
+    storageState: 'storageState.json',
   },
   // Configure projects for major browsers.
   projects: [
@@ -35,7 +36,7 @@ export default defineConfig({
   ],
   // Run your local dev server before starting the tests.
   webServer: {
-    command: 'npm run start',
+    command: 'pnpm run start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },

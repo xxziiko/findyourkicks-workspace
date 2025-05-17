@@ -26,7 +26,7 @@ turbo/
 # Playwright
 test-results/
 playwright-report/
-
+storageState.json
 .vercel/
 .netlify/
 
