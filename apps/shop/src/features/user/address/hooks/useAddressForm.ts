@@ -1,8 +1,10 @@
 import {
+  addressKeys,
   useSearchAddress,
   useUserAddressMutation,
 } from '@/features/user/address';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -24,6 +26,7 @@ const schema = z
 export type AddressForm = z.infer<typeof schema>;
 
 export default function useAddressForm(onClose: () => void) {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -33,7 +36,7 @@ export default function useAddressForm(onClose: () => void) {
   const { mutate: mutateUserAddress } = useUserAddressMutation();
   const { handlePostcode } = useSearchAddress(setValue);
 
-  const onSubmit = (data: AddressForm) => {
+  const handleCreateUserAddress = (data: AddressForm) => {
     const { zonecode, roadAddress, extraAddress, name, phone, alias } = data;
 
     const formattedData = {
@@ -43,9 +46,20 @@ export default function useAddressForm(onClose: () => void) {
       address: `[${zonecode}] ${roadAddress} ${extraAddress}`,
     };
 
-    mutateUserAddress(formattedData);
-    onClose();
+    mutateUserAddress(formattedData, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: addressKeys.list() });
+        queryClient.invalidateQueries({ queryKey: addressKeys.default() });
+        onClose();
+      },
+    });
   };
 
-  return { handlePostcode, register, handleSubmit, onSubmit, errors };
+  return {
+    handlePostcode,
+    register,
+    handleSubmit,
+    handleCreateUserAddress,
+    errors,
+  };
 }

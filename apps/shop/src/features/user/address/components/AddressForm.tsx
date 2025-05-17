@@ -22,11 +22,19 @@ declare global {
 }
 
 export default function AddressForm({ onClose }: { onClose: () => void }) {
-  const { handlePostcode, register, handleSubmit, errors, onSubmit } =
-    useAddressForm(onClose);
+  const {
+    handlePostcode,
+    register,
+    handleSubmit,
+    errors,
+    handleCreateUserAddress,
+  } = useAddressForm(onClose);
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit(handleCreateUserAddress)}
+    >
       <div className={styles.form__wrapper}>
         {FORM_TITLE.map((title, i) => (
           <div key={title}>

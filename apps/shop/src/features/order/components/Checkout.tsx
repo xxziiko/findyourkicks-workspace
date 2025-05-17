@@ -15,10 +15,10 @@ export default function Checkout({
     isMutatingOrderItems,
     modalView,
     orderProducts,
-    handleModal,
+    toggleModal,
+    switchToFormView,
+    closeModal,
     handlePayment,
-    handleModalView,
-    onCloseModal,
   } = useCheckout(orderSheet);
 
   const props = {
@@ -31,10 +31,10 @@ export default function Checkout({
     totalPriceWithDeliveryFee,
     modalView,
     isMutatingOrderItems,
-    onModalControl: handleModal,
+    onModalControl: toggleModal,
     onPaymentOpen: handlePayment,
-    onAddressListOpen: handleModalView,
-    onCloseModal,
+    onAddressListOpen: switchToFormView,
+    onCloseModal: closeModal,
   };
 
   return <CheckoutView {...props} />;
