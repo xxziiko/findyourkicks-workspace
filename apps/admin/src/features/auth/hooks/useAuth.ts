@@ -7,11 +7,6 @@ export function useAuth() {
   const { updateAdmin } = useAdmin();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      updateAdmin(data.user ?? null);
-      setIsLoading(false);
-    });
-
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         updateAdmin(session?.user ?? null);
