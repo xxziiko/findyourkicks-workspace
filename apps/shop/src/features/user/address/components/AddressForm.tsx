@@ -1,19 +1,46 @@
 'use client';
 
-import { useAddressForm } from '@/features/user/address';
+import {
+  type UserAddressForm,
+  addressKeys,
+  useAddressForm,
+} from '@/features/user/address';
+import { useUserAddressMutation } from '@/features/user/address';
 import { Button, Modal } from '@findyourkicks/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import styles from './AddressForm.module.scss';
 
-const USER_INPUT_NAME = ['name', 'phone', 'alias'] as const;
-const ADDRESS_INPUT_NAME = ['roadAddress', 'extraAddress'] as const;
-
-const USER_PLACEHOLDER = [
-  '받으실 분의 이름을 입력해주세요.',
-  ' - 없이 휴대폰 번호를 입력해주세요.',
-  '배송받을 주소의 이름을 입력해주세요.',
+const USER_FIELDS = [
+  {
+    name: 'name',
+    title: '주문자 명',
+    placeholder: '받으실 분의 이름을 입력해주세요.',
+  },
+  {
+    name: 'phone',
+    title: '연락처',
+    placeholder: ' - 없이 휴대폰 번호를 입력해주세요.',
+  },
+  {
+    name: 'alias',
+    title: '배송지 명',
+    placeholder: '배송받을 주소의 이름을 입력해주세요.',
+  },
 ] as const;
-const ADDRESS_PLACEHOLDER = ['도로명주소', '상세주소', ' '] as const;
-const FORM_TITLE = ['주문자 명', '연락처', '배송지 명'] as const;
+
+const ADDRESS_FIELDS = [
+  {
+    name: 'roadAddress',
+    title: '도로명주소',
+    placeholder: '도로명주소를 입력해주세요.',
+  },
+
+  {
+    name: 'extraAddress',
+    title: '상세주소',
+    placeholder: '상세주소를 입력해주세요.',
+  },
+] as const;
 
 declare global {
   interface Window {
@@ -21,14 +48,26 @@ declare global {
   }
 }
 
+const formatUserAddressRequest = (form: UserAddressForm) => ({
+  ...form,
+  address: `[${form.zonecode}] ${form.roadAddress} ${form.extraAddress}`,
+});
+
 export default function AddressForm({ onClose }: { onClose: () => void }) {
-  const {
-    handlePostcode,
-    register,
-    handleSubmit,
-    errors,
-    handleCreateUserAddress,
-  } = useAddressForm(onClose);
+  const { handlePostcode, register, handleSubmit, errors } = useAddressForm();
+
+  const queryClient = useQueryClient();
+  const { mutate: mutateUserAddress } = useUserAddressMutation();
+
+  const handleCreateUserAddress = (data: UserAddressForm) => {
+    mutateUserAddress(formatUserAddressRequest(data), {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: addressKeys.list() });
+        queryClient.invalidateQueries({ queryKey: addressKeys.default() });
+        onClose();
+      },
+    });
+  };
 
   return (
     <form
@@ -36,21 +75,19 @@ export default function AddressForm({ onClose }: { onClose: () => void }) {
       onSubmit={handleSubmit(handleCreateUserAddress)}
     >
       <div className={styles.form__wrapper}>
-        {FORM_TITLE.map((title, i) => (
+        {USER_FIELDS.map(({ title, placeholder, name }) => (
           <div key={title}>
             <div className={styles.form__inner}>
               <p>{title}</p>
               <input
                 autoComplete="off"
-                placeholder={USER_PLACEHOLDER[i]}
-                {...register(USER_INPUT_NAME[i])}
+                placeholder={placeholder}
+                {...register(name)}
                 className={styles.form__input}
               />
             </div>
-            {errors[USER_INPUT_NAME[i]] && (
-              <p className={styles.form__error}>
-                {errors[USER_INPUT_NAME[i]]?.message}
-              </p>
+            {errors[name] && (
+              <p className={styles.form__error}>{errors[name]?.message}</p>
             )}
           </div>
         ))}
@@ -68,20 +105,18 @@ export default function AddressForm({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        {ADDRESS_INPUT_NAME.map((name, i) => (
+        {ADDRESS_FIELDS.map(({ name, placeholder }) => (
           <div key={name}>
             <div className={styles.form__address}>
               <input
                 autoComplete="off"
                 {...register(name)}
                 readOnly={name !== 'extraAddress'}
-                placeholder={ADDRESS_PLACEHOLDER[i]}
+                placeholder={placeholder}
               />
             </div>
-            {errors[ADDRESS_INPUT_NAME[i]] && (
-              <p className={styles.form__error}>
-                {errors[ADDRESS_INPUT_NAME[i]]?.message}
-              </p>
+            {errors[name] && (
+              <p className={styles.form__error}>{errors[name]?.message}</p>
             )}
           </div>
         ))}

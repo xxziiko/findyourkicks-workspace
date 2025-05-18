@@ -1,7 +1,7 @@
 import {
   fetchDefaultUserAddress,
   fetchUserAddresses,
-} from '@/features/user/address/apis';
+} from '@/features/user/address';
 import { createQueries as createAddressQueries } from '@findyourkicks/shared';
 
 export const addressKeys = {

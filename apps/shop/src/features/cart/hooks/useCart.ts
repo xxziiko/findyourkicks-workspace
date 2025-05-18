@@ -14,7 +14,7 @@ export function useCart() {
     isAllChecked,
     checkedItems,
     handleToggleAll,
-    handleDeleteItem,
+    handleDeleteItem: handleDeleteItemFromCheckBox,
     handleToggle,
   } = useCheckBoxGroup(cartItems.map((item) => item?.cartItemId));
 
@@ -43,9 +43,9 @@ export function useCart() {
   const handleDelete = useCallback(
     (cartItemId: string) => {
       mutateDeleteCartItem(cartItemId);
-      handleDeleteItem(cartItemId);
+      handleDeleteItemFromCheckBox(cartItemId);
     },
-    [mutateDeleteCartItem, handleDeleteItem],
+    [mutateDeleteCartItem, handleDeleteItemFromCheckBox],
   );
 
   const createOrderSheetFrom = (filterFn: (item: CartItem) => boolean) => {
