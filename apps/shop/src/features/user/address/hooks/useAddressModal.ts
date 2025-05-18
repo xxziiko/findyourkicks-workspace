@@ -1,4 +1,4 @@
-import type { UserAddress } from '@/features/user/address/types';
+import type { UserAddress } from '@/features/user/address';
 import { useCallback, useState } from 'react';
 
 export function useAddressModal(defaultAddress: UserAddress) {

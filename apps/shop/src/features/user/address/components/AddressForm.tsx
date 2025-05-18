@@ -2,10 +2,10 @@
 
 import {
   type UserAddressForm,
-  addressKeys,
+  addressQueries,
   useAddressForm,
 } from '@/features/user/address';
-import { useUserAddressMutation } from '@/features/user/address';
+import { useCreateAddressMutation } from '@/features/user/address';
 import { Button, Modal } from '@findyourkicks/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import styles from './AddressForm.module.scss';
@@ -57,13 +57,17 @@ export default function AddressForm({ onClose }: { onClose: () => void }) {
   const { handlePostcode, register, handleSubmit, errors } = useAddressForm();
 
   const queryClient = useQueryClient();
-  const { mutate: mutateUserAddress } = useUserAddressMutation();
+  const { mutate: mutateUserAddress } = useCreateAddressMutation();
 
   const handleCreateUserAddress = (data: UserAddressForm) => {
     mutateUserAddress(formatUserAddressRequest(data), {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: addressKeys.list() });
-        queryClient.invalidateQueries({ queryKey: addressKeys.default() });
+        queryClient.invalidateQueries({
+          queryKey: addressQueries.list().queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: addressQueries.default().queryKey,
+        });
         onClose();
       },
     });

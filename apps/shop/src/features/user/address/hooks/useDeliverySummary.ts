@@ -1,4 +1,4 @@
-import type { UserAddress } from '@/features/user/address/types';
+import type { UserAddress } from '@/features/user/address';
 import { useDeliveryMessage } from '@/shared/hooks';
 
 const DELIVERY_SUBTITLE = [

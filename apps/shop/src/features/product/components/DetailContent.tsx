@@ -1,6 +1,6 @@
 'use client';
 
-import { cartKeys, useCartItemMutation } from '@/features/cart';
+import { cartQueries, useCartItemMutation } from '@/features/cart';
 import { Description, OptionList, useProductOption } from '@/features/product';
 import type { ProductDetail } from '@/features/product/types';
 import { useUser } from '@/features/user/hooks';
@@ -38,8 +38,12 @@ export default function DetailContent({
   const handleCartButton = () => {
     mutateCart(optionPayload, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: cartKeys.list() });
-        queryClient.invalidateQueries({ queryKey: cartKeys.count() });
+        queryClient.invalidateQueries({
+          queryKey: cartQueries.list().queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: cartQueries.count().queryKey,
+        });
         resetOptions();
       },
     });
