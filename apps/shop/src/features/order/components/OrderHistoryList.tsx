@@ -5,7 +5,6 @@ import {
   OrderProduct,
   useOrderPagination,
 } from '@/features/order';
-import type { OrderHistory } from '@/features/order/types';
 import { PATH } from '@/shared/constants/path';
 import {
   ChevronFirst,
@@ -16,21 +15,8 @@ import {
 import { Suspense } from 'react';
 import styles from './OrderHistoryList.module.scss';
 
-interface OrderHistoryListProps {
-  history: OrderHistory;
-}
-
-export default function OrderHistoryList({ history }: OrderHistoryListProps) {
-  const {
-    orderHistory,
-    handlePageChange,
-    handleNextPage,
-    handlePreviousPage,
-    handleFirstPage,
-    handleLastPage,
-  } = useOrderPagination({
-    initialOrderHistory: history,
-  });
+export default function OrderHistoryList() {
+  const { orderHistory, handlePageChange } = useOrderPagination();
   const { currentPage, hasNext, orders, lastPage } = orderHistory;
   const pageList = Array.from({ length: lastPage }, (_, index) => index + 1);
 
@@ -55,7 +41,7 @@ export default function OrderHistoryList({ history }: OrderHistoryListProps) {
       <div className={styles.pagination}>
         <button
           type="button"
-          onClick={handleFirstPage}
+          onClick={() => handlePageChange(1)}
           disabled={currentPage === 1}
           className={currentPage === 1 ? styles.button__disabled : ''}
         >
@@ -64,7 +50,7 @@ export default function OrderHistoryList({ history }: OrderHistoryListProps) {
 
         <button
           type="button"
-          onClick={handlePreviousPage}
+          onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className={currentPage === 1 ? styles.button__disabled : ''}
         >
@@ -84,7 +70,7 @@ export default function OrderHistoryList({ history }: OrderHistoryListProps) {
 
         <button
           type="button"
-          onClick={handleNextPage}
+          onClick={() => handlePageChange(currentPage + 1)}
           disabled={!hasNext}
           className={currentPage === lastPage ? styles.button__disabled : ''}
         >
@@ -93,7 +79,7 @@ export default function OrderHistoryList({ history }: OrderHistoryListProps) {
 
         <button
           type="button"
-          onClick={handleLastPage}
+          onClick={() => handlePageChange(lastPage)}
           disabled={currentPage === lastPage}
           className={currentPage === lastPage ? styles.button__disabled : ''}
         >
