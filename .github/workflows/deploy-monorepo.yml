@@ -14,6 +14,8 @@ name: Deploy Monorepo Apps
 on:
   push:
     branches: [workflows/fix]
+  pull_request:
+    branches: [workflows/fix]
 
 jobs:
   deploy-shop:
