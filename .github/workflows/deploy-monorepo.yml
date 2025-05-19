@@ -36,17 +36,15 @@
     
         - name: 📥 Install Vercel CLI
           run: pnpm install -g vercel
-    
-        - name: 📝 Create .env.production for shop
-          run: |
-            echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
-            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
-            echo "SUPABASE_SERVICE_ROLE_KEY=${{ env.SUPABASE_SERVICE_ROLE_KEY }}" >> apps/shop/.env.production
       
         - name: pull vercel production output
           run: vercel pull --yes  --cwd=apps/shop --environment=production --token=${{ secrets.VERCEL_TOKEN }}
             
         - name: 🏗️ Build shop app to Vercel
+          env:
+            NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} 
           run: vercel build --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }}
     
         - name: 🚀 Deploy shop to Vercel
