@@ -13,9 +13,7 @@ name: Deploy Monorepo Apps
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches: [workflows/fix]
 
 jobs:
   deploy-shop:
@@ -52,8 +50,6 @@ jobs:
         run: vercel deploy --prod --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }} 
         
   deploy-admin:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.admin_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
