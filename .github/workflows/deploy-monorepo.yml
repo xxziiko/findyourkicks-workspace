@@ -42,7 +42,10 @@
             echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
             echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ env.SUPABASE_SERVICE_ROLE_KEY }}" >> apps/shop/.env.production
-        
+      
+        - name: pull vercel production output
+          run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --dir=apps/shop
+            
         - name: 🏗️ Build shop app to Vercel
           run: vercel build --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }}
     
@@ -71,6 +74,9 @@
         - name: 📥 Install Vercel CLI
           run: pnpm install -g vercel
     
+        - name: pull vercel production output
+          run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --dir=apps/admin
+          
         - name: 🏗️ Build admin app to Vercel
           run: vercel build --cwd apps/admin --token=${{ secrets.VERCEL_TOKEN }}
     
