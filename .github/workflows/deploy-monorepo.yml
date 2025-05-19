@@ -42,12 +42,12 @@
             echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
             echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ env.SUPABASE_SERVICE_ROLE_KEY }}" >> apps/shop/.env.production
-        - name: 🏗️ Build shop app
-          run: pnpm turbo run build --filter=shop...
+        
+        - name: 🏗️ Build shop app to Vercel
+          run: vercel build --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }}
     
-  
         - name: 🚀 Deploy shop to Vercel
-          run: vercel deploy --cwd apps/shop --prod --token=${{ secrets.VERCEL_TOKEN }}
+          run: vercel deploy --cwd apps/shop --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
             
     deploy-admin:
       runs-on: ubuntu-latest
@@ -71,10 +71,9 @@
         - name: 📥 Install Vercel CLI
           run: pnpm install -g vercel
     
-        - name: 🏗️ Build admin app
-          run: pnpm turbo run build --filter=admin...
+        - name: 🏗️ Build admin app to Vercel
+          run: vercel build --cwd apps/admin --token=${{ secrets.VERCEL_TOKEN }}
     
-        
-        - name: 🚀 Deploy prebuilt output
-          run: vercel deploy --cwd apps/admin --prod --token=${{ secrets.VERCEL_TOKEN }}
+        - name: 🚀 Deploy admin to Vercel
+          run: vercel deploy --cwd apps/admin --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
   
