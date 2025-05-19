@@ -9,97 +9,75 @@
 # ------------------------------------------------------------
 
 
-name: Deploy Monorepo Apps
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-    outputs:
-      shop_changed: ${{ steps.filter.outputs.shop }}
-      admin_changed: ${{ steps.filter.outputs.admin }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Check changed paths
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            shop:
-              - 'apps/shop/**'
-              - 'packages/shared/**'
-            admin:
-              - 'apps/admin/**'
-              - 'packages/shared/**'
-
-  deploy-shop:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.shop_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: 🟣 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10  
-
-      - name: 🔵 Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: 📦 Install dependencies
-        run: pnpm install
-
-      - name: 📥 Install Vercel CLI
-        run: pnpm install -g vercel
-
-      - name: 📝 Create .env.production for shop
-        run: |
-          echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
-
-      - name: 🏗️ Build shop app
-        run: pnpm turbo run build --filter=shop...
-
-      - name: 🚀 Deploy shop to Vercel
-        run: vercel deploy --prod --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }} 
-        
-  deploy-admin:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.admin_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: 🟣 Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10
-
-      - name: 🔵 Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: 📦 Install dependencies
-        run: pnpm install
-
-      - name: 📥 Install Vercel CLI
-        run: pnpm install -g vercel
-
-      - name: 🏗️ Build admin app
-        run: pnpm turbo run build --filter=admin...
-
-      - name: 🚀 Deploy admin to Vercel
-        run: vercel deploy --prod --cwd apps/admin --token=${{ secrets.VERCEL_TOKEN }}
+  name: Deploy Monorepo Apps
+  
+  on:
+    push:
+  
+  jobs:
+    deploy-shop:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+    
+        - name: 🟣 Setup pnpm
+          uses: pnpm/action-setup@v2
+          with:
+            version: 10  
+    
+        - name: 🔵 Setup Node
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            cache: 'pnpm'
+    
+        - name: 📦 Install dependencies
+          run: pnpm install
+    
+        - name: 📥 Install Vercel CLI
+          run: pnpm install -g vercel
+      
+        - name: pull vercel production output
+          run: vercel pull --yes  --cwd=apps/shop --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+            
+        - name: 🏗️ Build shop app to Vercel
+          env:
+            NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} 
+          run: vercel build --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }}
+    
+        - name: 🚀 Deploy shop to Vercel
+          run: vercel deploy --cwd apps/shop --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+            
+    deploy-admin:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+    
+        - name: �� Setup pnpm
+          uses: pnpm/action-setup@v2
+          with:
+            version: 10
+    
+        - name: 🔵 Setup Node
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
+            cache: 'pnpm'
+    
+        - name: 📦 Install dependencies
+          run: pnpm install
+    
+        - name: 📥 Install Vercel CLI
+          run: pnpm install -g vercel
+    
+        - name: pull vercel production output
+          run: vercel pull --yes --cwd=apps/admin --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          
+        - name: 🏗️ Build admin app to Vercel
+          run: vercel build --cwd apps/admin --token=${{ secrets.VERCEL_TOKEN }}
+    
+        - name: 🚀 Deploy admin to Vercel
+          run: vercel deploy --cwd apps/admin --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+  
