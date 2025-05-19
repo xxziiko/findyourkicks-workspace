@@ -1,10 +1,10 @@
-import type { OrderSheetList } from '@/features/order-sheet/types';
+import type { OrderSheet } from '@/features/order-sheet';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
-  const body = (await req.json()) as OrderSheetList;
+  const body = (await req.json()) as OrderSheet[];
 
   const {
     data: { user },

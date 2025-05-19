@@ -1,4 +1,4 @@
-import type { OrderProductItem } from '@/features/order-sheet/types';
+import type { OrderProductItem } from '@/features/order';
 import { ProductImage } from '@/features/product';
 import styles from './OrderProduct.module.scss';
 

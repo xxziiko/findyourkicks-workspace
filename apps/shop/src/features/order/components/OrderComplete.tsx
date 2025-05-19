@@ -1,5 +1,5 @@
 'use client';
-import type { Order } from '@/features/order/types';
+import type { OrderByIdResponse } from '@/features/order';
 import { CardLayout } from '@/shared/components/layouts';
 import { PATH } from '@/shared/constants/path';
 import { Button } from '@findyourkicks/shared';
@@ -9,7 +9,7 @@ import styles from './OrderComplete.module.scss';
 
 const DELIVERY_FEE = 3000 as const;
 
-export default function OrderComplete({ order }: { order: Order }) {
+export default function OrderComplete({ order }: { order: OrderByIdResponse }) {
   const { orderId, orderDate, payment, address } = order;
 
   const orderView = {

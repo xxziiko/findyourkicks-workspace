@@ -1,5 +1,5 @@
-import { createOrder } from '@/features/order/apis';
-import type { OrderRequest } from '@/features/order/types';
+import { type OrderRequest, createOrder } from '@/features/order';
+import { PATH } from '@/shared/constants';
 import { redirect } from 'next/navigation';
 
 export default async function ConfirmPage({
@@ -11,7 +11,7 @@ export default async function ConfirmPage({
   const response = await createOrder(payload);
 
   if (response.orderId) {
-    redirect(`/complete/${response.orderId}`);
+    redirect(`${PATH.complete}/${response.orderId}`);
   }
 
   return <div>결제 확인 요청 중입니다.</div>;

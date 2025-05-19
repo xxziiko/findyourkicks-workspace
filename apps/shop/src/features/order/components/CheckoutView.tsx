@@ -1,6 +1,6 @@
 'use client';
 import { CheckoutSummary, OrderProduct } from '@/features/order';
-import type { OrderProductItem } from '@/features/order-sheet/types';
+import type { OrderProductItem } from '@/features/order';
 import {
   AddressForm,
   AddressList,

@@ -4,10 +4,13 @@ import { useDeleteCartMutation, useUpdateCartMutation } from '@/features/cart';
 import { useCartQuery } from '@/features/cart/hooks/queries/useCartQuery';
 import type { CartItem } from '@/features/cart/types';
 import { useCreateOrderSheetMutation } from '@/features/order-sheet';
+import { PATH } from '@/shared/constants/path';
 import { useCheckBoxGroup } from '@/shared/hooks';
+import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 export function useCart() {
+  const router = useRouter();
   const { data: cartItems } = useCartQuery();
 
   const {
@@ -58,7 +61,11 @@ export function useCart() {
       id: item.cartItemId,
     }));
 
-    mutateCreateOrderSheet(payload);
+    mutateCreateOrderSheet(payload, {
+      onSuccess: (response: { orderSheetId: string }) => {
+        router.push(`${PATH.checkout}/${response.orderSheetId}`);
+      },
+    });
   };
 
   const isCheckedItem = (item: CartItem) => !!checkedItems[item.cartItemId];

@@ -30,7 +30,6 @@ export function createQueries<
         queryKey: [prefix, key, ...args],
         queryFn,
         refetchOnWindowFocus: false,
-        refetchOnMount: false,
       };
     };
   }

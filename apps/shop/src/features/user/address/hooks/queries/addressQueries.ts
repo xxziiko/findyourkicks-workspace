@@ -11,4 +11,4 @@ export const addressQueries = createAddressQueries('address', {
   list: () => ({
     queryFn: () => fetchUserAddresses(),
   }),
-});
+} as const);
