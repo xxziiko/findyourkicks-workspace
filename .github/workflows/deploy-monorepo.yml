@@ -18,33 +18,7 @@ on:
     branches: [main]
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-    outputs:
-      shop_changed: ${{ steps.filter.outputs.shop }}
-      admin_changed: ${{ steps.filter.outputs.admin }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Check changed paths
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            shop:
-              - 'apps/shop/**'
-              - 'packages/shared/**'
-            admin:
-              - 'apps/admin/**'
-              - 'packages/shared/**'
-
   deploy-shop:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.shop_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
