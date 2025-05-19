@@ -5,6 +5,4 @@ export * from './createOrderSheetSummary';
 export * from './useCurrentPage';
 
 export * from './mutations/useOrderItemsMutation';
-
-export * from './queries/useOrderHistoryQuery';
-export * from './queries/orderQueries';
+export * from './queries';

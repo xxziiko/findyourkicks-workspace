@@ -1,17 +1,19 @@
-import { OrderHistoryList, fetchOrderHistory } from '@/features/order';
-import { getCookieString } from '@/shared/utils';
+import { OrderHistoryList, orderQueries } from '@/features/order';
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from '@tanstack/react-query';
 
-async function getOrderHistory(page = 1) {
-  const cookieString = await getCookieString();
-  return await fetchOrderHistory(page, {
-    headers: {
-      Cookie: cookieString,
-    },
-  });
-}
+export const dynamic = 'force-dynamic';
 
 export default async function MyOrdersPage() {
-  const orderHistory = await getOrderHistory();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(orderQueries.history(1));
 
-  return <OrderHistoryList history={orderHistory} />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <OrderHistoryList />
+    </HydrationBoundary>
+  );
 }

@@ -1,12 +1,12 @@
 'use client';
 import { CheckoutSummary, OrderProduct } from '@/features/order';
-import type { OrderProductItem } from '@/features/order-sheet/types';
+import type { OrderProductItem } from '@/features/order';
 import {
   AddressForm,
   AddressList,
   DeliverySummary,
 } from '@/features/user/address';
-import type { UserAddress } from '@/features/user/address/types';
+import type { UserAddress } from '@/features/user/address';
 import { CardLayout } from '@/shared/components/layouts';
 import { Button, Modal } from '@findyourkicks/shared';
 import styles from './CheckoutView.module.scss';

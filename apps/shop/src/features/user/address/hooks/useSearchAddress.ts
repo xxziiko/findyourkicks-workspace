@@ -1,9 +1,9 @@
-import type { AddressForm } from '@/features/user/address/hooks/useAddressForm';
+import type { UserAddressForm } from '@/features/user/address';
 import { useEffect } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';
 
 export default function useSearchAddress(
-  setValue: UseFormSetValue<AddressForm>,
+  setValue: UseFormSetValue<UserAddressForm>,
 ) {
   useEffect(() => {
     const script = document.createElement('script');

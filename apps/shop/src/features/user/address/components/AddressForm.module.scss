@@ -39,4 +39,11 @@
     align-items: center;
     gap: 0.3rem;
   }
+
+  &__error {
+    padding: 10px 0;
+    font-size: $font-s;
+    color: $error;
+    font-weight: 500;
+  }
 }

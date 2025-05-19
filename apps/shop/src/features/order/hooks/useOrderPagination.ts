@@ -7,22 +7,13 @@ import {
 } from '@/features/order';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import type { OrderHistory } from '../types';
 
-export function useOrderPagination({
-  initialOrderHistory,
-}: {
-  initialOrderHistory: OrderHistory;
-}) {
+export function useOrderPagination(page = 1) {
   const queryClient = useQueryClient();
 
-  const { currentPage: initialCurrentPage, lastPage: initialLastPage } =
-    initialOrderHistory;
-  const { currentPage, updateCurrentPage } = useCurrentPage(initialCurrentPage);
-
+  const { currentPage, updateCurrentPage } = useCurrentPage(page);
   const { data: orderHistory } = useOrderHistoryQuery({
     page: currentPage,
-    initialValues: initialOrderHistory,
   });
 
   const handlePageChange = (page: number) => {
@@ -31,22 +22,6 @@ export function useOrderPagination({
     queryClient.invalidateQueries({
       queryKey: orderQueries.history(page).queryKey,
     });
-  };
-
-  const handleNextPage = () => {
-    handlePageChange(currentPage + 1);
-  };
-
-  const handlePreviousPage = () => {
-    handlePageChange(currentPage - 1);
-  };
-
-  const handleFirstPage = () => {
-    handlePageChange(1);
-  };
-
-  const handleLastPage = () => {
-    handlePageChange(initialLastPage);
   };
 
   useEffect(() => {
@@ -61,9 +36,5 @@ export function useOrderPagination({
   return {
     orderHistory,
     handlePageChange,
-    handleNextPage,
-    handlePreviousPage,
-    handleFirstPage,
-    handleLastPage,
   };
 }

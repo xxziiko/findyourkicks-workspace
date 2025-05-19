@@ -4,7 +4,7 @@ import type { Products } from '@/features/product/types';
 import { handleError } from '@findyourkicks/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-export default function useProductsQuery({
+export function useProductsQuery({
   initialValues,
 }: { initialValues: Products }) {
   const { error, ...rest } = useInfiniteQuery({

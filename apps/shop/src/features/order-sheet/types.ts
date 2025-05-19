@@ -1,22 +1,20 @@
-import type { UserAddress } from '@/features/user/address/types';
+import { userAddressSchema } from '@/features/user/address';
+import { z } from 'zod';
 
-export interface OrderSheetByIdResponse {
-  orderSheetId: string;
-  orderSheetItems: OrderProductItem[];
-  deliveryAddress: UserAddress;
-}
+const orderProductSchema = z.object({
+  id: z.string(),
+  productId: z.string(),
+  size: z.string(),
+  quantity: z.number(),
+  price: z.number(),
+  title: z.string(),
+  image: z.string(),
+});
 
-export type OrderSheetList = OrderSheetItem[];
+export const orderSheetByIdSchema = z.object({
+  orderSheetId: z.string(),
+  orderSheetItems: z.array(orderProductSchema),
+  deliveryAddress: userAddressSchema,
+});
 
-export interface OrderProductItem extends OrderSheetItem {
-  title: string;
-  image: string;
-}
-
-interface OrderSheetItem {
-  id: string;
-  productId: string;
-  size: string;
-  quantity: number;
-  price: number;
-}
+export type OrderSheetByIdResponse = z.infer<typeof orderSheetByIdSchema>;

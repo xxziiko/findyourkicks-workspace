@@ -1,8 +1,8 @@
-import { createQueries } from '@findyourkicks/shared';
-import { fetchOrderHistory } from '../../apis';
+import { fetchOrderHistory } from '@/features/order';
+import { createQueries as createOrderQueries } from '@findyourkicks/shared';
 
-export const orderQueries = createQueries('order', {
+export const orderQueries = createOrderQueries('order', {
   history: (page: number) => ({
     queryFn: () => fetchOrderHistory(page),
   }),
-});
+} as const);

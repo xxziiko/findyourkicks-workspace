@@ -1,4 +1,4 @@
-import type { OrderProductItem } from '@/features/order-sheet/types';
+import type { OrderProductItem } from '@/features/order';
 
 const DELIVERY_FEE = 3000;
 

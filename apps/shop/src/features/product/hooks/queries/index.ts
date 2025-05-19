@@ -1,4 +1,2 @@
-export const productKeys = {
-  all: ['product'] as const,
-  list: () => [...productKeys.all, 'list'] as const,
-} as const;
+export * from './useProductsQuery';
+export * from './productQueries';

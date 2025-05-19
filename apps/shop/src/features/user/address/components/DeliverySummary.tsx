@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeliverySummary } from '@/features/user/address';
-import type { UserAddress } from '@/features/user/address/types';
+import type { UserAddress } from '@/features/user/address';
 import { Dropdown, NoData } from '@/shared/components';
 import { CircleAlertIcon } from 'lucide-react';
 import styles from './DeliverySummary.module.scss';
@@ -16,7 +16,7 @@ const DELIVERY_TEXT = [
 export default function DeliverySummary({
   data,
 }: { data: UserAddress | null }) {
-  const { address, deliveryMessage, setDeliveryMessage } =
+  const { address, deliveryMessage, updateDeliveryMessage } =
     useDeliverySummary(data);
 
   return (
@@ -40,7 +40,7 @@ export default function DeliverySummary({
             <Dropdown
               variant="border"
               selected={deliveryMessage}
-              setSelected={setDeliveryMessage}
+              setSelected={updateDeliveryMessage}
             >
               <Dropdown.Trigger />
               <Dropdown.Menu>

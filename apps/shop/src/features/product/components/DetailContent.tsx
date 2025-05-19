@@ -1,14 +1,11 @@
 'use client';
 
-import {
-  Description,
-  OptionList,
-  useProductOption,
-  useProductsIntoCart,
-} from '@/features/product';
+import { cartQueries, useCartItemMutation } from '@/features/cart';
+import { Description, OptionList, useProductOption } from '@/features/product';
 import type { ProductDetail } from '@/features/product/types';
 import { useUser } from '@/features/user/hooks';
 import { Button } from '@findyourkicks/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import styles from './DetailContent.module.scss';
 
@@ -28,16 +25,29 @@ export default function DetailContent({
     isOutOfStock,
   } = useProductOption({ productDetail });
 
-  const { handleCartButton, isMutatingCart } = useProductsIntoCart({
-    optionPayload,
-    resetOptions,
-  });
+  const { brand, price, title, description, inventory, category } =
+    productDetail;
+
+  const queryClient = useQueryClient();
+  const { mutate: mutateCart, isPending: isMutatingCart } =
+    useCartItemMutation();
 
   const { isAuthenticated } = useUser();
   const router = useRouter();
 
-  const { brand, price, title, description, inventory, category } =
-    productDetail;
+  const handleCartButton = () => {
+    mutateCart(optionPayload, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: cartQueries.list().queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: cartQueries.count().queryKey,
+        });
+        resetOptions();
+      },
+    });
+  };
 
   return (
     <section className={styles.content}>

@@ -1,6 +1,7 @@
 import { path } from '@/shared/utils';
 
 const ROOT_CART = '/cart';
+const ROOT_USER = '/users';
 
 export const ENDPOINTS = {
   cart: ROOT_CART,
@@ -9,6 +10,11 @@ export const ENDPOINTS = {
   orders: '/orders',
   orderSheets: '/order-sheets',
   payments: '/payments',
-  user: '/users',
   products: '/products',
+} as const;
+
+export const USER_ENDPOINTS = {
+  user: ROOT_USER,
+  addresses: path(ROOT_USER, '/addresses'),
+  addressDefault: path(ROOT_USER, '/addresses/default'),
 } as const;

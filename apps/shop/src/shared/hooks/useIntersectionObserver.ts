@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useEffect, useRef } from 'react';
 
 interface ObserverOptions extends IntersectionObserverInit {}

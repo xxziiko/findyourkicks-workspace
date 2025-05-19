@@ -1,4 +1,4 @@
-import { cartKeys, deleteCartItem } from '@/features/cart';
+import { cartQueries, deleteCartItem } from '@/features/cart';
 import type { CartList } from '@/features/cart/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -8,9 +8,11 @@ export function useDeleteCartMutation() {
   return useMutation({
     mutationFn: deleteCartItem,
     onMutate: async (cartItemId) => {
-      const previousCart = queryClient.getQueryData<CartList>(cartKeys.list());
+      const previousCart = queryClient.getQueryData<CartList>(
+        cartQueries.list().queryKey,
+      );
 
-      queryClient.setQueryData(cartKeys.list(), (old: CartList) =>
+      queryClient.setQueryData(cartQueries.list().queryKey, (old: CartList) =>
         old.filter((item) => item.cartItemId !== cartItemId),
       );
 
@@ -18,13 +20,13 @@ export function useDeleteCartMutation() {
     },
     onError: (err, variables, context) => {
       queryClient.setQueryData<CartList>(
-        cartKeys.list(),
+        cartQueries.list().queryKey,
         context?.previousCart,
       );
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.list() });
-      queryClient.invalidateQueries({ queryKey: cartKeys.count() });
+      queryClient.invalidateQueries({ queryKey: cartQueries.list().queryKey });
+      queryClient.invalidateQueries({ queryKey: cartQueries.count().queryKey });
     },
   });
 }
