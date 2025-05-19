@@ -44,7 +44,7 @@
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ env.SUPABASE_SERVICE_ROLE_KEY }}" >> apps/shop/.env.production
       
         - name: pull vercel production output
-          run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --dir=apps/shop
+          run: vercel pull --yes  --cwd=apps/shop --environment=production --token=${{ secrets.VERCEL_TOKEN }}
             
         - name: 🏗️ Build shop app to Vercel
           run: vercel build --cwd apps/shop --token=${{ secrets.VERCEL_TOKEN }}
@@ -75,7 +75,7 @@
           run: pnpm install -g vercel
     
         - name: pull vercel production output
-          run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --dir=apps/admin
+          run: vercel pull --yes --cwd=apps/admin --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           
         - name: 🏗️ Build admin app to Vercel
           run: vercel build --cwd apps/admin --token=${{ secrets.VERCEL_TOKEN }}
