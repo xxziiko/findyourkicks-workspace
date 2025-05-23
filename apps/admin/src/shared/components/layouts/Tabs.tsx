@@ -15,7 +15,7 @@ interface TabProps extends PropsWithChildren {
   isActive?: boolean;
 }
 
-export const Tab = ({ children, isActive }: TabProps) => {
+const Tab = ({ children, isActive }: TabProps) => {
   return (
     <div className={`${styles.tab} ${isActive ? styles.tabActive : ''}`}>
       {children}

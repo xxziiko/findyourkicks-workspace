@@ -9,7 +9,9 @@ type Variant =
   | 'lined'
   | 'lined--small'
   | 'lined--r'
-  | 'label';
+  | 'label'
+  | 'primary'
+  | 'secondary';
 interface ButtonProps {
   key?: number | string;
   text?: string | number;

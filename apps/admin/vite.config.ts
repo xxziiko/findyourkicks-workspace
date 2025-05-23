@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), viteTsconfigPaths()],
   css: {
     modules: {
-      localsConvention: 'camelCaseOnly',
+      localsConvention: 'camelCase',
     },
     preprocessorOptions: {
       scss: {

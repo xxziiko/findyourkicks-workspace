@@ -1,0 +1,14 @@
+.container {
+  @include flex-item;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.input {
+  border: 1px solid #e0e0e0;
+  border-radius: $radius-xs;
+  padding: 12px;
+  background-color: #f5f5f5;
+  font-size: $font-s;
+  width: 100%;
+}

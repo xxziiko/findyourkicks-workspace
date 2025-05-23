@@ -1,0 +1,17 @@
+.container {
+  @include flex-col;
+  gap: 8px;
+  padding: 24px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.buttons {
+  @include flex-center;
+  gap: 12px;
+  position: sticky;
+  bottom: 0;
+  padding: 24px;
+  background-color: #fff;
+  border-top: 1px solid #f5f5f5;
+}

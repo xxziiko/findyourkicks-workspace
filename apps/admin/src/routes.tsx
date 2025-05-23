@@ -7,7 +7,7 @@ import { AuthGuard } from './features/auth/components/AuthGuard';
 import Login from './pages/Login';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Products = lazy(() => import('./pages/Products'));
+const ProductRegister = lazy(() => import('./pages/ProductRegister'));
 
 const router = createBrowserRouter([
   {
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: PATH.products,
-        element: <Products />,
+        path: PATH.newProduct,
+        element: <ProductRegister />,
       },
       {
         path: PATH.orders,
