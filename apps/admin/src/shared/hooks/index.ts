@@ -1,2 +1,2 @@
 export * from './useToggleTab';
-export * from './useTabTitle';
+export * from './useActiveTabTitle';

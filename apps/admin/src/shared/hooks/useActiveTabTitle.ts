@@ -1,7 +1,7 @@
 import { useAdmin } from '@/features/auth';
 import { useCallback, useState } from 'react';
 
-export function useTabTitle() {
+export function useActiveTabTitle() {
   const { name } = useAdmin();
   const titleText = ` 반갑습니다, ${name}님!✋🎉`;
   const [title, setTitle] = useState(titleText);
@@ -10,9 +10,9 @@ export function useTabTitle() {
     setTitle(text);
   }, []);
 
-  const resultTitle = useCallback(() => {
+  const resetTitle = useCallback(() => {
     setTitle(titleText);
   }, [titleText]);
 
-  return { title, updateTitle, resultTitle };
+  return { title, updateTitle, resetTitle };
 }

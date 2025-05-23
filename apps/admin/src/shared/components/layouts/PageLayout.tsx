@@ -1,4 +1,4 @@
-import { PATH, useTabTitle, useToggleTab } from '@/shared';
+import { PATH, useActiveTabTitle, useToggleTab } from '@/shared';
 import { Loading } from '@/shared/components';
 import { Header, Tabs } from '@/shared/components';
 import { Suspense } from 'react';
@@ -33,7 +33,7 @@ const TAB_TITLES = [
 export function PageLayout() {
   const { openTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
     useToggleTab();
-  const { title, updateTitle, resultTitle } = useTabTitle();
+  const { title, updateTitle, resetTitle } = useActiveTabTitle();
 
   return (
     <div className={styles.container}>
@@ -42,7 +42,7 @@ export function PageLayout() {
           <Tabs.Title
             onClick={() => {
               resetTabs();
-              resultTitle();
+              resetTitle();
             }}
           >
             홈
