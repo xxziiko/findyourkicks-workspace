@@ -4,7 +4,7 @@ import Loading from '@/app/loading';
 import { CartTable } from '@/features/cart';
 import type { CartList } from '@/features/cart';
 import { CheckoutSummary } from '@/features/order';
-import { Button } from '@findyourkicks/shared';
+import { Button, commaizeNumberWithUnit } from '@findyourkicks/shared';
 import styles from './CartView.module.scss';
 
 interface CartViewProps {
@@ -50,10 +50,12 @@ export default function CartView(props: CartViewProps) {
 
       <Button
         isLoading={isMutatingOrderSheet}
-        text={`${totalPriceWithDeliveryFee.toLocaleString()}원 • 총 ${totalProduct}건 주문하기`}
         onClick={onCreateOrderSheet}
         disabled={totalProduct === 0}
-      />
+        radius
+      >
+        {`${commaizeNumberWithUnit(totalPriceWithDeliveryFee, '원')} • 총 ${totalProduct}건 주문하기`}
+      </Button>
     </section>
   );
 }

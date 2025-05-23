@@ -22,7 +22,7 @@ export function ErrorFallback({ reset }: { reset?: () => void }) {
         <p>잠시 후 다시 시도해주세요</p>
       </div>
 
-      <Button type="button" onClick={handleReset}>
+      <Button type="button" onClick={handleReset} radius>
         다시 시도
       </Button>
     </div>

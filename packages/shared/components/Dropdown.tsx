@@ -1,8 +1,7 @@
 'use client';
-import { useDropdownMenu } from '@/shared/hooks';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
 import { createContext, useContext } from 'react';
+import { useDropdownMenu, useInputValue } from '../hooks';
 import styles from './Dropdown.module.scss';
 
 type DropdownContextType = {
@@ -20,7 +19,16 @@ type DropdownContextType = {
 
 const DropdownContext = createContext<DropdownContextType | null>(null);
 
-export default function Dropdown({
+function useDropdown(): DropdownContextType {
+  const context = useContext(DropdownContext);
+
+  if (!context) {
+    throw new Error('useDropdown must be used within a Dropdown');
+  }
+  return context;
+}
+
+export function Dropdown({
   children,
   selected,
   variant,
@@ -109,18 +117,14 @@ function Item({
 
 function Input() {
   const { autoFocus, onBlur } = useDropdown();
-  const [value, setValue] = useState('');
-
-  const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
+  const { value, handleChange } = useInputValue();
 
   return (
     <input
       className={styles.input}
       ref={autoFocus}
       value={value}
-      onChange={handleChangeText}
+      onChange={handleChange}
       onBlur={onBlur}
     />
   );
@@ -129,12 +133,3 @@ function Input() {
 Dropdown.Item = Item;
 Dropdown.Trigger = Trigger;
 Dropdown.Menu = Menu;
-
-function useDropdown(): DropdownContextType {
-  const context = useContext(DropdownContext);
-
-  if (!context) {
-    throw new Error('useDropdown must be used within a Dropdown');
-  }
-  return context;
-}

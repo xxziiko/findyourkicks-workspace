@@ -108,14 +108,15 @@ function TableRow({
 
       <div className={styles.item__buttons}>
         <Button
-          text="주문하기"
           onClick={() => onCreateOrderSheetForSingleProduct(cartItemId)}
-        />
-        <Button
-          text="삭제하기"
-          onClick={() => onDelete(cartItemId)}
-          variant="lined--r"
-        />
+          radius
+        >
+          주문하기
+        </Button>
+
+        <Button onClick={() => onDelete(cartItemId)} variant="secondary" radius>
+          삭제하기
+        </Button>
       </div>
     </li>
   );

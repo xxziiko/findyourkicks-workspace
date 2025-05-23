@@ -102,11 +102,9 @@ export default function AddressForm({ onClose }: { onClose: () => void }) {
 
         <div className={styles.form__address}>
           <input {...register('zonecode')} readOnly placeholder="우편번호" />
-          <Button
-            text="우편번호 찾기"
-            variant="lined--r"
-            onClick={handlePostcode}
-          />
+          <Button variant="secondary" radius onClick={handlePostcode}>
+            우편번호 찾기
+          </Button>
         </div>
 
         {ADDRESS_FIELDS.map(({ name, placeholder }) => (

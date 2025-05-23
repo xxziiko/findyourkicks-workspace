@@ -24,7 +24,11 @@ export default function CardLayout({
 }
 
 function Label({ text, ...props }: { text: string; onClick: () => void }) {
-  return <Button {...props} text={text} variant="label" />;
+  return (
+    <Button {...props} variant="label">
+      {text}
+    </Button>
+  );
 }
 
 CardLayout.Label = Label;

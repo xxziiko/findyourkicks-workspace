@@ -4,6 +4,7 @@ import { cartQueries, useCartItemMutation } from '@/features/cart';
 import { Description, OptionList, useProductOption } from '@/features/product';
 import type { ProductDetail } from '@/features/product/types';
 import { useUser } from '@/features/user/hooks';
+import { PATH } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -64,11 +65,12 @@ export default function DetailContent({
           {inventory.map(({ size, stock }) => (
             <Button
               key={size}
-              variant="lined"
+              variant="secondary"
               onClick={() => handleSelectSize(size)}
               disabled={isOutOfStock({ stock, selectedSize: size })}
-              text={size}
-            />
+            >
+              {size}
+            </Button>
           ))}
         </OptionButtons>
       </div>
@@ -91,12 +93,14 @@ export default function DetailContent({
 
         <div className={styles.content__buttons}>
           <Button
-            text="장바구니"
             onClick={
-              isAuthenticated ? handleCartButton : () => router.push('/login')
+              isAuthenticated ? handleCartButton : () => router.push(PATH.login)
             }
             isLoading={isMutatingCart}
-          />
+            radius
+          >
+            장바구니
+          </Button>
         </div>
       </div>
     </section>

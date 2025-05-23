@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './ErrorFallback';
 export * from './Modal';
+export * from './Dropdown';
 export * from './layouts/AsyncBoundary';
 export * from './layouts/ErrorBoundary';
 export * from './layouts/GlobalPortal';
