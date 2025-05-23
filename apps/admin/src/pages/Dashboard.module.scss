@@ -1,15 +1,8 @@
 .container {
-  @include flex-col;
-  gap: 36px;
-  padding: 24px;
-  background-color: #f5f5f5;
-  width: 100%;
-}
-
-.wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(700px, auto));
   gap: 24px;
+  padding: 0 24px;
 }
 
 .list__item {
@@ -24,8 +17,4 @@
   &:hover {
     background-color: rgba(245, 245, 245, 0.6);
   }
-}
-
-.header {
-  @include flex-between;
 }

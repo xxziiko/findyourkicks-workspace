@@ -1,6 +1,6 @@
-import { PATH, useToggleTab } from '@/shared';
+import { PATH, useTabTitle, useToggleTab } from '@/shared';
 import { Loading } from '@/shared/components';
-import { Tabs } from '@/shared/components';
+import { Header, Tabs } from '@/shared/components';
 import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './PageLayout.module.scss';
@@ -15,7 +15,7 @@ const TAB_TITLES = [
       },
       {
         title: '상품 등록',
-        path: PATH.products,
+        path: PATH.newProduct,
       },
     ],
   },
@@ -33,12 +33,20 @@ const TAB_TITLES = [
 export function PageLayout() {
   const { openTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
     useToggleTab();
+  const { title, updateTitle, resultTitle } = useTabTitle();
 
   return (
     <div className={styles.container}>
       <Tabs>
         <Link to={PATH.default}>
-          <Tabs.Title onClick={resetTabs}>홈</Tabs.Title>
+          <Tabs.Title
+            onClick={() => {
+              resetTabs();
+              resultTitle();
+            }}
+          >
+            홈
+          </Tabs.Title>
         </Link>
 
         {TAB_TITLES.map(({ title, children }) => (
@@ -51,7 +59,10 @@ export function PageLayout() {
                   key={title}
                   to={path}
                   isClicked={openSubTabs[title]}
-                  onClick={() => toggleSubTab(title)}
+                  onClick={() => {
+                    toggleSubTab(title);
+                    updateTitle(title);
+                  }}
                 >
                   {title}
                 </Tabs.TabItem>
@@ -61,9 +72,12 @@ export function PageLayout() {
         ))}
       </Tabs>
 
-      <Suspense fallback={<Loading />}>
-        <Outlet />
-      </Suspense>
+      <main className={styles.main}>
+        <Header text={title} />
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
+      </main>
     </div>
   );
 }
