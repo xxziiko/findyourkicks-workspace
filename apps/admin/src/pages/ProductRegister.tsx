@@ -1,6 +1,11 @@
+import { OptionSizeTable, useOptionSize } from '@/features/product';
 import { CardSection, InputWithUnit } from '@/shared';
-import { Button, Dropdown } from '@findyourkicks/shared';
+import { SIZES } from '@/shared/constants';
+import { Button, Dropdown, commaizeNumber } from '@findyourkicks/shared';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 import styles from './ProductRegister.module.scss';
 
 const FORM_LIST_FIELDS = [
@@ -34,65 +39,89 @@ const FORM_FIELDS = [
     placeholder: '상품 상세 정보를 입력해주세요.',
     unit: '',
   },
-  // {
-  //   id: 'stock',
-  //   title: '재고수량',
-  //   placeholder: '숫자만 입력해주세요',
-  //   unit: '개',
-  // },
 ];
 
-const SIZES = [
-  '190',
-  '200',
-  '210',
-  '220',
-  '230',
-  '240',
-  '250',
-  '260',
-  '270',
-  '280',
-  '290',
-  '300',
-  '310',
-  '320',
-  '330',
-] as const;
+const formSchema = z.object({
+  category: z.string().min(1, '카테고리를 선택해주세요.'),
+  brand: z.string().min(1, '브랜드를 선택해주세요.'),
+  productName: z.string().min(1, '상품명을 입력해주세요.'),
+  price: z
+    .number({ message: '숫자만 입력해주세요.' })
+    .refine((val) => val > 0, {
+      message: '판매가는 0원 이상이어야 합니다.',
+    }),
+  detail: z.string().min(1, '상품 상세 정보를 입력해주세요.'),
+  sizes: z.array(z.object({ size: z.string(), stock: z.number() })),
+  image: z.string().min(1, '상품 이미지를 추가해주세요.'),
+});
 
 export default function ProductRegister() {
-  const [selectedSizes, setSelectedSizes] = useState<
-    {
-      size: string;
-      stock: number;
-    }[]
-  >([]);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const {
+    selectedSizes,
+    handleSelectAllSizes,
+    handleApplyAllStock,
+    updateSelectedSizes,
+    handleChangeSelectedSizes,
+    deleteSelectedSize,
+  } = useOptionSize();
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    setValue('sizes', selectedSizes);
+    console.log('data', data);
+    // mutation
+  };
+
+  const optionButtonText =
+    selectedSizes.length === SIZES.length ? '전체 선택 해제' : '전체 선택';
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className={styles.container}>
         <CardSection title="카테고리">
           {FORM_LIST_FIELDS.map(({ title, options }) => (
             <CardSection.ListItem subTitle={title} key={title}>
-              <Dropdown
-                variant="border"
-                selected={title}
-                setSelected={() => {}}
-              >
-                <Dropdown.Trigger />
-                <Dropdown.Menu>
-                  {options.map((option) => (
-                    <Dropdown.Item key={option} text={option} />
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
+              <Controller
+                control={control}
+                name={title as keyof z.infer<typeof formSchema>}
+                render={({ field }) => (
+                  <Dropdown
+                    variant="border"
+                    selected={
+                      (field.value as string) ?? `${title}를 선택해주세요.`
+                    }
+                    setSelected={field.onChange}
+                  >
+                    <Dropdown.Trigger />
+                    <Dropdown.Menu>
+                      {options.map((option) => (
+                        <Dropdown.Item key={option} text={option} />
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )}
+              />
             </CardSection.ListItem>
           ))}
         </CardSection>
 
         {FORM_FIELDS.map(({ id, title, placeholder, unit }) => (
           <CardSection title={title} key={id}>
-            <InputWithUnit id={id} placeholder={placeholder} unit={unit} />
+            <InputWithUnit
+              id={id}
+              placeholder={placeholder}
+              unit={unit}
+              {...register(id as keyof z.infer<typeof formSchema>)}
+            />
           </CardSection>
         ))}
 
@@ -104,38 +133,46 @@ export default function ProductRegister() {
                 등록할 사이즈 옵션을 선택해주세요.
               </p>
             </div>
+
             <div className={styles.sizeButtons}>
+              <Button type="button" onClick={handleSelectAllSizes}>
+                {optionButtonText}
+              </Button>
               {SIZES.map((size) => (
-                <Button key={size} variant="secondary" type="button">
+                <Button
+                  key={size}
+                  variant="secondary"
+                  type="button"
+                  onClick={() => updateSelectedSizes(size)}
+                  disabled={selectedSizes.some((s) => s.size === size)}
+                >
                   {size}
                 </Button>
               ))}
             </div>
 
-            {selectedSizes.length > 0 && (
-              <div className={styles.sizeTable}>
-                <p>재고 일괄 적용</p>
-                <InputWithUnit
-                  id="stock"
-                  placeholder="숫자만 입력해주세요."
-                  unit="개"
-                  type="number"
-                />
-                <div className={styles.sizeTable__items}>
-                  {selectedSizes.map(({ size }) => (
-                    <p key={size}>{size}</p>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <Button type="button" disabled>
-              옵션 적용
-            </Button>
-
             {/* 선택한 옵션 테이블 - 재고 일괄 적용 또는 개별 적용 */}
             {selectedSizes.length > 0 && (
-              <SizeTable selectedSizes={selectedSizes} />
+              <>
+                <CardSection.ListItem subTitle="재고 일괄 적용">
+                  <div className={styles.stockInput}>
+                    <InputWithUnit
+                      id="stock"
+                      placeholder="숫자만 입력해주세요."
+                      unit="개"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleApplyAllStock(Number(e.target.value))
+                      }
+                    />
+                  </div>
+                </CardSection.ListItem>
+
+                <OptionSizeTable
+                  selectedSizes={selectedSizes}
+                  onChange={handleChangeSelectedSizes}
+                  onDelete={deleteSelectedSize}
+                />
+              </>
             )}
           </div>
         </CardSection>
@@ -161,36 +198,5 @@ export default function ProductRegister() {
         </Button>
       </div>
     </form>
-  );
-}
-
-function SizeTable({
-  selectedSizes,
-}: { selectedSizes: { size: string; stock: number }[] }) {
-  return (
-    <div className={styles.sizeTable}>
-      <div className={styles.sizeHeader}>
-        <p>사이즈</p>
-        <p>재고</p>
-      </div>
-      {selectedSizes.map(({ size, stock }) => (
-        <SizeItem size={size} stock={stock} key={size} />
-      ))}
-    </div>
-  );
-}
-
-function SizeItem({ size, stock }: { size: string; stock: number }) {
-  return (
-    <div className={styles.sizeItem}>
-      <p>{size}</p>
-      <InputWithUnit
-        id="stock"
-        placeholder="숫자만 입력해주세요."
-        unit="개"
-        type="number"
-        value={stock}
-      />
-    </div>
   );
 }

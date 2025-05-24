@@ -6,6 +6,8 @@ interface InputWithUnitProps {
   unit?: string;
   type?: 'text' | 'number';
   value?: string | number;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
 }
 export function InputWithUnit({ id, unit, ...props }: InputWithUnitProps) {
   return (

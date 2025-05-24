@@ -25,7 +25,7 @@
 
 .size {
   @include flex-col;
-  gap: 12px;
+  gap: 24px;
 }
 
 .size__title {
@@ -39,29 +39,9 @@
   color: $gray-dark;
 }
 
-.size__table {
-  @include flex-col;
-  gap: 12px;
-}
-
-.size__header {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 12px;
-  background-color: #f5f5f5;
-  text-align: center;
-}
-
-.size__item {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 12px;
-  text-align: center;
-
-  input {
-    border: 1px solid $gray-light;
-    border-radius: $radius-xs;
-    padding: 8px;
-    text-align: right;
-  }
+.stock__input {
+  @include flex-item;
+  justify-content: flex-end;
+  gap: 24px;
+  width: 100%;
 }
