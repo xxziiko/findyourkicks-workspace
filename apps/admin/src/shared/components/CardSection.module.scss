@@ -4,12 +4,16 @@
   padding: 24px;
   border-radius: $radius-xs;
   background-color: $secondary;
+  font-size: $font-sm;
 }
 
 .card__item {
   @include flex-item;
-  gap: 32px;
   font-weight: 500;
+
+  span {
+    width: 20%;
+  }
 }
 
 .list {

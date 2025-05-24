@@ -33,7 +33,7 @@ const TAB_TITLES = [
 export function PageLayout() {
   const { openTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
     useToggleTab();
-  const { title, updateTitle, resetTitle } = useActiveTabTitle();
+  const title = useActiveTabTitle();
 
   return (
     <div className={styles.container}>
@@ -42,7 +42,6 @@ export function PageLayout() {
           <Tabs.Title
             onClick={() => {
               resetTabs();
-              resetTitle();
             }}
           >
             홈
@@ -61,7 +60,6 @@ export function PageLayout() {
                   isClicked={openSubTabs[title]}
                   onClick={() => {
                     toggleSubTab(title);
-                    updateTitle(title);
                   }}
                 >
                   {title}

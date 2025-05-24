@@ -1,0 +1,23 @@
+.size__header {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 1fr;
+  padding: 16px;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+
+.size__item {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr 1fr;
+  padding: 12px;
+  text-align: center;
+  align-items: center;
+  border-bottom: 1px solid #f5f5f5;
+
+  input {
+    border: 1px solid $gray-light;
+    border-radius: $radius-xs;
+    padding: 8px;
+    text-align: right;
+  }
+}

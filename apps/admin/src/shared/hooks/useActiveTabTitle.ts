@@ -1,18 +1,18 @@
 import { useAdmin } from '@/features/auth';
-import { useCallback, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export function useActiveTabTitle() {
   const { name } = useAdmin();
+  const location = useLocation();
   const titleText = ` 반갑습니다, ${name}님!✋🎉`;
-  const [title, setTitle] = useState(titleText);
+  const currentPath = location.pathname;
 
-  const updateTitle = useCallback((text: string) => {
-    setTitle(text);
-  }, []);
+  const TAB_TITLE_MAP = {
+    '/': titleText,
+    '/products': '상품 조회/수정',
+    '/products/new': '상품 등록',
+    '/orders': '주문 내역',
+  };
 
-  const resetTitle = useCallback(() => {
-    setTitle(titleText);
-  }, [titleText]);
-
-  return { title, updateTitle, resetTitle };
+  return TAB_TITLE_MAP[currentPath as keyof typeof TAB_TITLE_MAP];
 }
