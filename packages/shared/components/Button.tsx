@@ -1,20 +1,12 @@
 'use client';
 
 import { Loader } from 'lucide-react';
+import type { PropsWithChildren } from 'react';
 import styles from './Button.module.scss';
 
-type Variant =
-  | 'kakao'
-  | 'google'
-  | 'lined'
-  | 'lined--small'
-  | 'lined--r'
-  | 'label'
-  | 'primary'
-  | 'secondary';
-interface ButtonProps {
+type Variant = 'kakao' | 'google' | 'label' | 'primary' | 'secondary';
+interface ButtonProps extends PropsWithChildren {
   key?: number | string;
-  text?: string | number;
   variant?: Variant;
   icon?: React.ReactNode;
   width?: string;
@@ -22,22 +14,24 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   isLoading?: boolean;
   onClick?: (e: React.MouseEvent) => Promise<void> | void;
-  children?: React.ReactNode;
+  radius?: boolean;
+  size?: 'small' | 'medium' | 'large';
 }
 
 export function Button({
   icon,
-  text,
-  variant,
+  variant = 'primary',
   width,
   isLoading,
   children,
+  radius,
+  size,
   ...props
 }: ButtonProps) {
   return (
     <button
       {...props}
-      className={styles[`btn-${variant}`] ?? styles.btn}
+      className={`${styles[`btn-${variant}`]} ${radius && styles[`btn-${variant}--radius`]} ${size && styles[`btn-${variant}--${size}`]}`}
       style={{ width }}
     >
       {icon}
@@ -45,7 +39,7 @@ export function Button({
       {isLoading ? (
         <Loader className={styles.btn__loader} />
       ) : (
-        <p>{children ?? text}</p>
+        <p>{children}</p>
       )}
     </button>
   );

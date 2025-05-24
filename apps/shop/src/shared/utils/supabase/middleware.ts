@@ -1,4 +1,4 @@
-import { isAuthPath } from '@findyourkicks/shared';
+import { isAuthPath } from '@/shared/utils';
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 

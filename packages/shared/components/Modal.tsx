@@ -48,10 +48,14 @@ function Footer({
   return (
     <div className={styles.footer}>
       {type === 'default' && (
-        <Button text="저장하기" width="15%" type="submit" />
+        <Button type="submit" radius width="30%">
+          저장하기
+        </Button>
       )}
 
-      <Button onClick={onClose} text="닫기" variant="lined--r" width="15%" />
+      <Button onClick={onClose} variant="secondary" radius width="30%">
+        닫기
+      </Button>
     </div>
   );
 }

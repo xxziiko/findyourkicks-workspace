@@ -13,6 +13,7 @@
   padding: 12px 20px;
   border-radius: $radius-sm;
   cursor: pointer;
+  box-sizing: border-box;
 
   &:hover {
     opacity: 0.65;
@@ -37,7 +38,6 @@
 @mixin button-border-default {
   @include button-disabled;
   border: 1px solid $gray-light;
-  border-radius: $radius-xs;
 
   &:hover {
     opacity: 50%;
@@ -45,10 +45,6 @@
 }
 
 .btn {
-  @include button-layout;
-  @include button-default;
-  @include button-variant($secondary, none, none, $primary);
-
   &-kakao {
     @include button-layout;
     @include button-variant($primary, none, none);
@@ -75,42 +71,31 @@
 
   &-primary {
     @include button-layout;
+    @include button-default;
     @include button-variant($secondary, none, none, $primary);
     font-size: $font-s;
     border-radius: $radius-xs;
 
-    &--r {
+    &--radius {
       border-radius: $radius-sm;
     }
   }
 
   &-secondary {
     @include button-layout;
-    @include button-variant($primary, none, none, $secondary);
-    @include button-border-default;
+    @include button-default;
+    @include button-variant($primary, 1px solid $gray-light, none, $secondary);
     font-size: $font-s;
+    border-radius: $radius-xs;
 
-    &--r {
+    &--radius {
       border-radius: $radius-sm;
     }
-  }
-
-  &-lined {
-    @include button-border-default;
-    @include flex-center;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    font-size: $font-s;
 
     &--small {
       @include button-border-default;
-      padding: 2px 10px;
-    }
-
-    &--r {
-      @include button-layout;
-      @include button-default;
-      @include button-variant($primary, 1px solid $gray-light, none, $secondary);
+      padding: 4px 10px;
+      border-radius: $radius-xs;
     }
   }
 

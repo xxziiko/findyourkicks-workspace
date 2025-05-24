@@ -74,11 +74,13 @@ export default function CheckoutView({
         />
 
         <Button
-          text="결제하기"
           onClick={onPaymentOpen}
           disabled={!isAllCheckedAgreement || !defaultAddress.addressId}
           isLoading={isMutatingOrderItems}
-        />
+          radius
+        >
+          결제하기
+        </Button>
       </div>
 
       {isModalOpen && (
@@ -86,11 +88,12 @@ export default function CheckoutView({
           {modalView === 'list' ? (
             <div>
               <Button
-                text="배송지 추가하기"
                 onClick={onAddressListOpen}
-                variant="lined"
+                variant="secondary"
                 width="100%"
-              />
+              >
+                배송지 추가하기
+              </Button>
 
               <AddressList onClose={onCloseModal} />
             </div>

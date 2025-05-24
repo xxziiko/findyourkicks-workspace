@@ -97,16 +97,16 @@ export default function OrderComplete({ order }: { order: OrderByIdResponse }) {
 
       <div className={styles.buttons}>
         <Button
-          text="주문내역 확인하기"
-          variant="lined--r"
-          width="20%"
+          variant="secondary"
+          radius
+          width="30%"
           onClick={() => router.push(PATH.myOrders)}
-        />
-        <Button
-          text="쇼핑 계속하기"
-          width="20%"
-          onClick={() => router.push('/')}
-        />
+        >
+          주문내역 확인하기
+        </Button>
+        <Button width="30%" radius onClick={() => router.push(PATH.home)}>
+          쇼핑 계속하기
+        </Button>
       </div>
     </section>
   );

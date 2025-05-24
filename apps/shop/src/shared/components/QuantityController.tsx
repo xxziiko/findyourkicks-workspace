@@ -20,17 +20,23 @@ export default function QuantityController({
       <Button
         onClick={() => onQuantityChange(id, quantity - 1)}
         disabled={!quantity}
-        text="-"
-        variant="lined--small"
-      />
+        variant="secondary"
+        radius
+        size="small"
+      >
+        -
+      </Button>
 
       <p>{quantity}</p>
       <Button
         onClick={() => onQuantityChange(id, quantity + 1)}
         disabled={quantity === inventory.stock}
-        text="+"
-        variant="lined--small"
-      />
+        variant="secondary"
+        radius
+        size="small"
+      >
+        +
+      </Button>
     </div>
   );
 }

@@ -13,17 +13,19 @@ export function LoginCardButtons() {
       <Button
         icon={<KakaoLogo />}
         onClick={async () => router.push(await signInWithKakao())}
-        text="카카오계정으로 로그인"
         variant="kakao"
         data-testid="kakao-btn"
-      />
+      >
+        카카오계정으로 로그인
+      </Button>
       <Button
         onClick={async () => router.push(await signInWithGoogle())}
         icon={<GoogleLogo />}
-        text="구글계정으로 로그인"
         variant="google"
         data-testid="google-btn"
-      />
+      >
+        구글계정으로 로그인
+      </Button>
     </>
   );
 }

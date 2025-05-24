@@ -12,7 +12,7 @@ const orderByIdSchema = z.object({
     orderName: z.string(),
   }),
   address: z.object({
-    alias: z.string(),
+    alias: z.string().optional(),
     receiverName: z.string(),
     receiverPhone: z.string(),
     address: z.string(),

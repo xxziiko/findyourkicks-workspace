@@ -2,7 +2,8 @@
 
 import { useDeliverySummary } from '@/features/user/address';
 import type { UserAddress } from '@/features/user/address';
-import { Dropdown, NoData } from '@/shared/components';
+import { NoData } from '@/shared/components';
+import { Dropdown } from '@findyourkicks/shared';
 import { CircleAlertIcon } from 'lucide-react';
 import styles from './DeliverySummary.module.scss';
 
