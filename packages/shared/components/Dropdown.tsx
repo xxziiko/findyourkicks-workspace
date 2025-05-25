@@ -27,7 +27,7 @@ function useDropdown(): DropdownContextType {
   }
   return context;
 }
-
+//FIXME: setSelected -> onChange로 바꾸기
 export function Dropdown({
   children,
   selected,

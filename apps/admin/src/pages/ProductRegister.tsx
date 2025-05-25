@@ -1,9 +1,8 @@
 import { OptionSizeTable, useOptionSize } from '@/features/product';
 import { CardSection, InputWithUnit } from '@/shared';
 import { SIZES } from '@/shared/constants';
-import { Button, Dropdown, commaizeNumber } from '@findyourkicks/shared';
+import { Button, Dropdown, ImageUpload } from '@findyourkicks/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import styles from './ProductRegister.module.scss';
@@ -61,6 +60,7 @@ export default function ProductRegister() {
     handleSubmit,
     setValue,
     control,
+    reset,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,7 +129,7 @@ export default function ProductRegister() {
           <div className={styles.size}>
             <div>
               <p className={styles.sizeTitle}>사이즈</p>
-              <p className={styles.sizeDescription}>
+              <p className={styles.description}>
                 등록할 사이즈 옵션을 선택해주세요.
               </p>
             </div>
@@ -178,11 +178,10 @@ export default function ProductRegister() {
         </CardSection>
 
         <CardSection title="상품 이미지">
-          <div>{/* image upload */}</div>
-          <input type="file" />
-
-          {/* 이미지 미리보기 */}
-          {/* 클릭 시 캐러셀 */}
+          <p className={styles.description}>
+            상품 이미지를 추가해주세요. <br /> 최대 1개까지 추가할 수 있습니다.
+          </p>
+          <ImageUpload />
         </CardSection>
       </div>
 
@@ -193,7 +192,7 @@ export default function ProductRegister() {
         <Button type="submit" variant="primary">
           등록하기
         </Button>
-        <Button type="button" variant="secondary">
+        <Button type="button" variant="secondary" onClick={() => reset()}>
           취소
         </Button>
       </div>

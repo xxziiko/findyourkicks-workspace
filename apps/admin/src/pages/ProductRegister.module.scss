@@ -28,15 +28,16 @@
   gap: 24px;
 }
 
+.description {
+  font-size: $font-xs;
+  color: $gray-dark;
+  line-height: 1.5;
+}
+
 .size__title {
   font-size: $font-sm;
   font-weight: 600;
   padding-bottom: 12px;
-}
-
-.size__description {
-  font-size: $font-xs;
-  color: $gray-dark;
 }
 
 .stock__input {
