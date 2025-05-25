@@ -22,22 +22,33 @@ export function createQueries<
   T extends Record<string, (...args: any[]) => QueryConfig<any[], any>>,
 >(prefix: string, queries: T) {
   const result: any = {};
+  const queryKeyMap: {
+    [K in keyof T]: (...args: Parameters<T[K]>) => readonly unknown[];
+  } = {} as any;
 
   for (const key in queries) {
-    result[key] = (...args: any[]) => {
-      const { queryFn } = queries[key](...args);
+    const typedKey = key as keyof T;
+    queryKeyMap[typedKey] = (...args: Parameters<T[typeof typedKey]>) =>
+      [prefix, key, ...args] as const;
+
+    result[typedKey] = (...args: Parameters<T[typeof typedKey]>) => {
+      const { queryFn } = queries[typedKey](...args);
       return {
-        queryKey: [prefix, key, ...args],
+        queryKey: queryKeyMap[typedKey](...args),
         queryFn,
         refetchOnWindowFocus: false,
       };
     };
   }
 
+  result.queryKeys = queryKeyMap;
+
   return result as {
     [K in keyof T]: (...args: Parameters<T[K]>) => {
-      queryKey: [string, K, ...Parameters<T[K]>];
+      queryKey: ReturnType<(typeof queryKeyMap)[K]>;
       queryFn: () => ReturnType<ReturnType<T[K]>['queryFn']>;
     };
+  } & {
+    queryKeys: typeof queryKeyMap;
   };
 }
