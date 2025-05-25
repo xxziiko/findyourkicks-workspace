@@ -1,6 +1,14 @@
-import { ProductList, ProductListLoading } from '@/features/product';
-import { fetchProducts } from '@/features/product/apis';
+import {
+  ProductList,
+  ProductListLoading,
+  productQueries,
+} from '@/features/product';
 import { fetchProductsByBrand } from '@/features/product/apis';
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from '@tanstack/react-query';
 import { Suspense } from 'react';
 
 export const dynamic = 'force-dynamic';
@@ -14,20 +22,23 @@ export default async function Home() {
 }
 
 async function Products() {
-  try {
-    const initialProducts = await fetchProducts();
-    const productsByVans = await fetchProductsByBrand('vans');
-    const productsByNike = await fetchProductsByBrand('nike');
+  const productsByVans = await fetchProductsByBrand('vans');
+  const productsByNike = await fetchProductsByBrand('nike');
 
-    const products = {
-      initialProducts,
-      productsByVans,
-      productsByNike,
-    };
+  const queryClient = new QueryClient();
+  await queryClient.prefetchInfiniteQuery({
+    ...productQueries.list(),
+    initialPageParam: 1,
+  });
 
-    return <ProductList products={products} />;
-  } catch (error) {
-    console.error('error', error);
-    throw error;
-  }
+  const products = {
+    productsByVans,
+    productsByNike,
+  };
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ProductList products={products} />
+    </HydrationBoundary>
+  );
 }

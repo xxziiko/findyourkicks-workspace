@@ -18,18 +18,15 @@ const SECTION_TITLE = {
 
 interface ProductListProps {
   products: {
-    initialProducts: ProductItem[];
     productsByVans: ProductItem[];
     productsByNike: ProductItem[];
   };
 }
 
 export default function ProductList({ products }: ProductListProps) {
-  const { initialProducts, productsByVans, productsByNike } = products;
+  const { productsByVans, productsByNike } = products;
   const { allLoaded, onAllImageLoad, onFetchNextPage, productList } =
-    useProductList({
-      initialValues: initialProducts,
-    });
+    useProductList();
 
   const sections = [
     {

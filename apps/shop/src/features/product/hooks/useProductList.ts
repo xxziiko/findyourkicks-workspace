@@ -1,20 +1,17 @@
 'use client';
 
 import { useProductsQuery } from '@/features/product';
-import type { Products } from '@/features/product/types';
 import { useImagesLoaded } from '@/shared/hooks';
 import { useRef } from 'react';
 
-export default function useProductList({
-  initialValues,
-}: { initialValues: Products }) {
+export default function useProductList() {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const {
     data: productList,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-  } = useProductsQuery({ initialValues });
+  } = useProductsQuery();
 
   const { allLoaded, handleImageLoad } = useImagesLoaded(productList.length);
 
