@@ -27,7 +27,6 @@ turbo/
 test-results/
 playwright-report/
 storageState.json
-.vercel/
 .netlify/
 
 .turbo/
@@ -36,3 +35,5 @@ storageState.json
 
 
 *.tsbuildinfo
+
+.vercel
