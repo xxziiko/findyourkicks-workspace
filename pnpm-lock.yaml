@@ -29,6 +29,9 @@ importers:
       lucide-react:
         specifier: ^0.476.0
         version: 0.476.0(react@19.1.0)
+      overlay-kit:
+        specifier: ^1.8.1
+        version: 1.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -44,6 +47,9 @@ importers:
       react-loading-skeleton:
         specifier: ^3.5.0
         version: 3.5.0(react@19.1.0)
+      swiper:
+        specifier: ^11.2.6
+        version: 11.2.6
       zod:
         specifier: ^3.24.4
         version: 3.24.4
@@ -130,9 +136,6 @@ importers:
       react-simplikit:
         specifier: ^0.0.30
         version: 0.0.30(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      swiper:
-        specifier: ^11.2.6
-        version: 11.2.6
     devDependencies:
       '@findyourkicks/tsconfig':
         specifier: workspace:*
@@ -1313,6 +1316,12 @@ packages:
 
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
+
+  overlay-kit@1.8.1:
+    resolution: {integrity: sha512-hejk+POLVh6pmOqt4WotQNcvFbi9JYRvmd37Z3KU6fFozFYJeis9JNq5g8LGn8kqgv/mzAwC60mXhoMkufq65Q==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19
+      react-dom: ^16.8 || ^17 || ^18 || ^19
 
   p-limit@4.0.0:
     resolution: {integrity: sha512-5b0R4txpzjPWVw/cXXUResoD4hb6U/x9BH08L7nw+GN1sezDzPdxeRvpc9c433fZhBan/wusjbCsqwqm4EIBIQ==}
@@ -2619,6 +2628,11 @@ snapshots:
 
   node-addon-api@7.1.1:
     optional: true
+
+  overlay-kit@1.8.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   p-limit@4.0.0:
     dependencies:

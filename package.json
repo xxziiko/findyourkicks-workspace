@@ -28,11 +28,13 @@
     "es-toolkit": "^1.37.2",
     "jotai": "^2.12.4",
     "lucide-react": "^0.476.0",
+    "overlay-kit": "^1.8.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.56.3",
     "react-loading-skeleton": "^3.5.0",
+    "swiper": "^11.2.6",
     "zod": "^3.24.4"
   },
   "devDependencies": {
@@ -50,5 +52,8 @@
     "turbo": "^2.5.3",
     "typescript": "^5.8.3"
   },
-  "workspaces": ["apps/*", "packages/**"]
+  "workspaces": [
+    "apps/*",
+    "packages/**"
+  ]
 }

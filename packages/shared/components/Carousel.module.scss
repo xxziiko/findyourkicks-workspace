@@ -1,0 +1,27 @@
+.background {
+  @include flex-center;
+  flex-direction: column;
+  gap: 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+}
+
+.button {
+  @include flex-item;
+  align-self: flex-end;
+  padding: 16px;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper__slide {
+  @include flex-center;
+}

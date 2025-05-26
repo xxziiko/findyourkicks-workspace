@@ -1,66 +1,51 @@
 'use client';
-import { useRef, useState } from 'react';
-import { Button } from './Button';
+import { Button, Carousel, Thumbnail } from '@/components';
+import { useFileInputTrigger, useImagePreview } from '@/hooks';
+import { overlay } from 'overlay-kit';
 import styles from './ImageUpload.module.scss';
 
-export function ImageUpload({ multiple = false }: { multiple?: boolean }) {
-  const [previewImg, setPreviewImg] = useState<any>([]);
-  const [postImg, setPostImg] = useState<any>([]);
-  const fileInput = useRef<HTMLInputElement>(null);
+interface ImageUploadProps {
+  single?: boolean;
+  maxCount?: number;
+}
+export function ImageUpload({ single = true }: ImageUploadProps) {
+  const { ref: fileInputRef, triggerClick } = useFileInputTrigger();
+  const { handlePreviews, previews } = useImagePreview({ single });
 
-  const uploadFile = (e: any) => {
-    const fileArr = e.target.files;
-
-    const fileUrl: string[] = [];
-    const fileObjects: File[] = [];
-
-    for (let i = 0; i < fileArr.length; i += 1) {
-      const fileRead = new FileReader();
-
-      fileRead.onload = () => {
-        fileUrl.push(fileRead.result as string);
-        setPreviewImg([...fileUrl]);
-      };
-
-      fileObjects.push(fileArr[i]);
-      fileRead.readAsDataURL(fileArr[i]);
-    }
-
-    setPostImg(fileObjects);
-  };
-
-  const removeFile = (index: number) => {
-    const updatedPostImg = [...postImg];
-    const updatedPreviewImg = [...previewImg];
-
-    updatedPostImg.splice(index, 1);
-    updatedPreviewImg.splice(index, 1);
-
-    setPostImg(updatedPostImg);
-    setPreviewImg(updatedPreviewImg);
-  };
-
-  const handleButtonClick = () => {
-    fileInput.current?.click();
+  const handleCarousel = () => {
+    overlay.open(({ close }) => {
+      return <Carousel images={previews} onClose={close} />;
+    });
   };
 
   return (
     <div>
-      <Button type="button" onClick={handleButtonClick}>
+      <Button type="button" onClick={triggerClick}>
         이미지 업로드
       </Button>
 
       <input
         type="file"
         accept="image/jpeg, image/jpg, image/png"
-        onChange={(e) => uploadFile(e)}
-        ref={fileInput}
+        onChange={(e) => handlePreviews(e)}
+        ref={fileInputRef}
         className={styles.fileInput}
-        multiple={multiple}
+        multiple={!single}
       />
 
-      {/* 이미지 미리보기 */}
-      {/* 클릭 시 캐러셀 */}
+      {/* TODO: mutiple일 때 썸네일 개별 삭제 기능 추가 */}
+      <div className={styles.thumbnailContainer}>
+        {previews.map((src: string) => (
+          <Thumbnail
+            key={src}
+            src={src}
+            alt="thumbnail"
+            width={100}
+            height={100}
+            onClick={handleCarousel}
+          />
+        ))}
+      </div>
     </div>
   );
 }

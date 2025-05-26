@@ -1,0 +1,66 @@
+import { useCallback, useState } from 'react';
+
+const getImagePreviews = async (
+  e: React.ChangeEvent<HTMLInputElement>,
+  maxCount: number,
+) => {
+  const files = e.target.files;
+  if (!files) return;
+
+  const fileArray = Array.from(files);
+
+  const previews = await Promise.all(
+    fileArray.map((file) => {
+      return new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
+    }),
+  );
+
+  if (previews.length > maxCount) {
+    alert(`최대 ${maxCount}개의 이미지를 업로드할 수 있습니다.`);
+    return previews.slice(0, maxCount);
+  }
+
+  return previews;
+};
+
+/**
+ * @param single 이미지 미리보기 타입
+ * @param maxCount 최대 이미지 개수
+ * @returns 이미지 미리보기 배열, 이미지 제거 함수, 이미지 미리보기 함수
+ */
+export function useImagePreview({
+  single,
+  maxCount = 1,
+}: {
+  single: boolean;
+  maxCount?: number;
+}) {
+  const [previews, setPreviews] = useState<string[]>([]);
+
+  const handlePreviews = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const preivews = await getImagePreviews(e, maxCount);
+
+      if (preivews) {
+        setPreviews((prev) =>
+          single ? [preivews[0]] : [...prev, ...preivews],
+        );
+      }
+    },
+    [single, maxCount],
+  );
+
+  const removeFile = useCallback((index: number) => {
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
+  return {
+    previews,
+    removeFile,
+    handlePreviews,
+  };
+}

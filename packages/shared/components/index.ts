@@ -6,3 +6,5 @@ export * from './layouts/AsyncBoundary';
 export * from './layouts/ErrorBoundary';
 export * from './layouts/GlobalPortal';
 export * from './ImageUpload';
+export * from './Thumbnail';
+export * from './Carousel';
