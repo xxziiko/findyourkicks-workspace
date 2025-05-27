@@ -1,3 +1,9 @@
+.container {
+  @include flex-col;
+  gap: 10px;
+  padding: 24px;
+}
+
 .size__buttons {
   @include flex-item;
   flex-wrap: wrap;
@@ -21,4 +27,15 @@
   justify-content: flex-end;
   gap: 24px;
   width: 100%;
+}
+
+.error {
+  color: $error;
+  font-weight: 500;
+}
+
+.description {
+  font-size: $font-xs;
+  color: $gray-dark;
+  line-height: 1.5;
 }

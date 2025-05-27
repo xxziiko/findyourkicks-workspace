@@ -1,15 +1,19 @@
+import type { FormSchema } from '@/features/product';
 import { CardSection } from '@/shared/components';
 import { ImageUploadInput } from '@findyourkicks/shared';
+import type { FieldErrors } from 'react-hook-form';
 import styles from './ProductImageUploader.module.scss';
 
 const MAX_IMAGE_COUNT = 1;
 
 interface ProductImageUploaderProps {
+  errors: FieldErrors<FormSchema>;
   previews: string[];
   handlePreviews: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function ProductImageUploader({
+  errors,
   previews,
   handlePreviews,
 }: ProductImageUploaderProps) {
@@ -24,6 +28,10 @@ export function ProductImageUploader({
         previews={previews}
         onChange={handlePreviews}
       />
+
+      {errors.images && (
+        <p className={styles.error}>{errors.images?.message}</p>
+      )}
     </CardSection>
   );
 }

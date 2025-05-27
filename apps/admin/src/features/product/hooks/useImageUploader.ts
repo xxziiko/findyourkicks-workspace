@@ -1,6 +1,5 @@
 import { supabase } from '@/shared/utils';
 import { useCallback } from 'react';
-import type { UseFormSetValue } from 'react-hook-form';
 import { z } from 'zod';
 import { useImageMutation } from './mutations';
 
@@ -20,24 +19,22 @@ const getImageUrl = async (filePath: string): Promise<ImageUrl> => {
   return getImageUrlSchema.parse({ publicUrl });
 };
 
-export function useImageUploader(setValue: UseFormSetValue<any>) {
+export function useImageUploader() {
   const { mutate: uploadImages } = useImageMutation();
 
   const handleUpload = useCallback(
     async (previews: string[]) => {
       uploadImages(previews);
 
-      const urls = await Promise.all(
+      return await Promise.all(
         previews.map(async (preview) => {
           const filePath = `products/${Date.now()}_${preview}`;
           const { publicUrl } = await getImageUrl(filePath);
           return publicUrl;
         }),
       );
-
-      setValue('image', urls);
     },
-    [uploadImages, setValue],
+    [uploadImages],
   );
 
   return handleUpload;

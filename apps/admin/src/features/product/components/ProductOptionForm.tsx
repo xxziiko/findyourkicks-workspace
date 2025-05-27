@@ -1,20 +1,31 @@
-import { OptionSizeTable, useOptionSize } from '@/features/product';
+import { type FormSchema, OptionSizeTable } from '@/features/product';
 import { CardSection, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
+import type { FieldErrors } from 'react-hook-form';
 import styles from './ProductOptionForm.module.scss';
 
-export function ProductOptionForm() {
-  const {
-    selectedSizes,
-    handleSelectAllSizes,
-    handleApplyAllStock,
-    updateSelectedSizes,
-    handleChangeSelectedSizes,
-    deleteSelectedSize,
-  } = useOptionSize();
+interface ProductOptionFormProps {
+  errors: FieldErrors<FormSchema>;
+  sizes: { size: string; stock: number }[];
+  onSelectAllSizes: () => void;
+  onApplyAllStock: (stock: number) => void;
+  onUpdateSizes: (size: string) => void;
+  onChangeSizes: (size: string, stock: number) => void;
+  onDeleteSize: (size: string) => void;
+}
+
+export function ProductOptionForm({
+  sizes,
+  errors,
+  onSelectAllSizes,
+  onApplyAllStock,
+  onUpdateSizes,
+  onChangeSizes,
+  onDeleteSize,
+}: ProductOptionFormProps) {
   const optionButtonText =
-    selectedSizes.length === SIZES.length ? '전체 선택 해제' : '전체 선택';
+    sizes.length === SIZES.length ? '전체 선택 해제' : '전체 선택';
 
   return (
     <CardSection title="옵션">
@@ -27,7 +38,7 @@ export function ProductOptionForm() {
         </div>
 
         <div className={styles.sizeButtons}>
-          <Button type="button" onClick={handleSelectAllSizes}>
+          <Button type="button" onClick={onSelectAllSizes}>
             {optionButtonText}
           </Button>
           {SIZES.map((size) => (
@@ -35,8 +46,8 @@ export function ProductOptionForm() {
               key={size}
               variant="secondary"
               type="button"
-              onClick={() => updateSelectedSizes(size)}
-              disabled={selectedSizes.some((s) => s.size === size)}
+              onClick={() => onUpdateSizes(size)}
+              disabled={sizes.some((s) => s.size === size)}
             >
               {size}
             </Button>
@@ -44,7 +55,7 @@ export function ProductOptionForm() {
         </div>
 
         {/* 선택한 옵션 테이블 - 재고 일괄 적용 또는 개별 적용 */}
-        {selectedSizes.length > 0 && (
+        {sizes.length > 0 && (
           <>
             <CardSection.ListItem subTitle="재고 일괄 적용">
               <div className={styles.stockInput}>
@@ -53,18 +64,22 @@ export function ProductOptionForm() {
                   placeholder="숫자만 입력해주세요."
                   unit="개"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleApplyAllStock(Number(e.target.value))
+                    onApplyAllStock(Number(e.target.value))
                   }
                 />
               </div>
             </CardSection.ListItem>
 
             <OptionSizeTable
-              selectedSizes={selectedSizes}
-              onChange={handleChangeSelectedSizes}
-              onDelete={deleteSelectedSize}
+              selectedSizes={sizes}
+              onChange={onChangeSizes}
+              onDelete={onDeleteSize}
             />
           </>
+        )}
+
+        {errors.sizes && (
+          <p className={styles.error}>{errors.sizes?.message}</p>
         )}
       </div>
     </CardSection>

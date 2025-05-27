@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  category: z.string().min(1, '카테고리를 선택해주세요.'),
-  brand: z.string().min(1, '브랜드를 선택해주세요.'),
+  category: z.string({ required_error: '카테고리를 선택해주세요.' }),
+  brand: z.string({ required_error: '브랜드를 선택해주세요.' }),
   productName: z.string().min(1, '상품명을 입력해주세요.'),
   price: z
     .number({ message: '숫자만 입력해주세요.' })
@@ -13,7 +13,7 @@ const formSchema = z.object({
     }),
   detail: z.string().min(1, '상품 상세 정보를 입력해주세요.'),
   sizes: z.array(z.object({ size: z.string(), stock: z.number() })),
-  images: z.array(z.string().min(1, '상품 이미지를 추가해주세요.')),
+  images: z.array(z.string()).min(1, '상품 이미지를 추가해주세요.'),
 });
 
 export type FormSchema = z.infer<typeof formSchema>;
@@ -25,6 +25,7 @@ export function useProductRegisterForm() {
     setValue,
     control,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,5 +38,6 @@ export function useProductRegisterForm() {
     control,
     reset,
     errors,
+    getValues,
   };
 }
