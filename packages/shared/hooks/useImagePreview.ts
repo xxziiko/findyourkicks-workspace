@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useState } from 'react';
 
 const getImagePreviews = async (
@@ -33,25 +35,25 @@ const getImagePreviews = async (
  * @returns 이미지 미리보기 배열, 이미지 제거 함수, 이미지 미리보기 함수
  */
 export function useImagePreview({
-  single,
   maxCount = 1,
 }: {
-  single: boolean;
   maxCount?: number;
 }) {
   const [previews, setPreviews] = useState<string[]>([]);
 
   const handlePreviews = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const preivews = await getImagePreviews(e, maxCount);
+      const newPreviews = await getImagePreviews(e, maxCount);
+      if (!newPreviews) return;
 
-      if (preivews) {
-        setPreviews((prev) =>
-          single ? [preivews[0]] : [...prev, ...preivews],
-        );
+      if (maxCount === 1) {
+        setPreviews([newPreviews[0]]);
+        return;
       }
+
+      setPreviews(newPreviews);
     },
-    [single, maxCount],
+    [maxCount],
   );
 
   const removeFile = useCallback((index: number) => {

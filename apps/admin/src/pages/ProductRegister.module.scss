@@ -1,9 +1,14 @@
+.form {
+  @include flex-col;
+  justify-content: space-between;
+  height: 100vh;
+  overflow: auto;
+}
+
 .container {
   @include flex-col;
-  gap: 8px;
+  gap: 10px;
   padding: 24px;
-  height: 100vh;
-  overflow-y: auto;
 }
 
 .buttons {

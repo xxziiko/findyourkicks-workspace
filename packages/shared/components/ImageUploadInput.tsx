@@ -1,20 +1,26 @@
 'use client';
-import { Button, Carousel, Thumbnail } from '@/components';
-import { useFileInputTrigger, useImagePreview } from '@/hooks';
 import { overlay } from 'overlay-kit';
-import styles from './ImageUpload.module.scss';
+import { Button, Carousel, Thumbnail } from '.';
+import { useFileInputTrigger } from '../hooks';
+import styles from './ImageUploadInput.module.scss';
 
-interface ImageUploadProps {
-  single?: boolean;
+interface ImageUploadInputProps {
+  previews: string[];
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   maxCount?: number;
+  onUpload?: (files: File[]) => Promise<string[]>;
 }
-export function ImageUpload({ single = true }: ImageUploadProps) {
+
+export function ImageUploadInput({
+  maxCount = 1,
+  previews,
+  onChange,
+}: ImageUploadInputProps) {
   const { ref: fileInputRef, triggerClick } = useFileInputTrigger();
-  const { handlePreviews, previews } = useImagePreview({ single });
 
   const handleCarousel = () => {
-    overlay.open(({ close }) => {
-      return <Carousel images={previews} onClose={close} />;
+    overlay.open(({ close, isOpen }) => {
+      return <Carousel images={previews} onClose={close} isOpen={isOpen} />;
     });
   };
 
@@ -27,10 +33,10 @@ export function ImageUpload({ single = true }: ImageUploadProps) {
       <input
         type="file"
         accept="image/jpeg, image/jpg, image/png"
-        onChange={(e) => handlePreviews(e)}
+        onChange={onChange}
         ref={fileInputRef}
         className={styles.fileInput}
-        multiple={!single}
+        multiple={maxCount > 1}
       />
 
       {/* TODO: mutiple일 때 썸네일 개별 삭제 기능 추가 */}
@@ -40,8 +46,8 @@ export function ImageUpload({ single = true }: ImageUploadProps) {
             key={src}
             src={src}
             alt="thumbnail"
-            width={100}
-            height={100}
+            width={400}
+            height={400}
             onClick={handleCarousel}
           />
         ))}

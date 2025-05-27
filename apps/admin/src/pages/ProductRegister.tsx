@@ -1,7 +1,16 @@
-import { OptionSizeTable, useOptionSize } from '@/features/product';
-import { CardSection, InputWithUnit } from '@/shared';
+import {
+  OptionSizeTable,
+  useImageUploader,
+  useOptionSize,
+} from '@/features/product';
+import { CardSection, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
-import { Button, Dropdown, ImageUpload } from '@findyourkicks/shared';
+import {
+  Button,
+  Dropdown,
+  ImageUploadInput,
+  useImagePreview,
+} from '@findyourkicks/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -54,6 +63,8 @@ const formSchema = z.object({
   image: z.string().min(1, '상품 이미지를 추가해주세요.'),
 });
 
+const MAX_IMAGE_COUNT = 1;
+
 export default function ProductRegister() {
   const {
     register,
@@ -74,6 +85,10 @@ export default function ProductRegister() {
     handleChangeSelectedSizes,
     deleteSelectedSize,
   } = useOptionSize();
+  const { handlePreviews, previews } = useImagePreview({
+    maxCount: MAX_IMAGE_COUNT,
+  });
+  const handleUpload = useImageUploader(setValue);
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setValue('sizes', selectedSizes);
@@ -81,11 +96,12 @@ export default function ProductRegister() {
     // mutation
   };
 
+  //TODO: 추상화, form 담기, mutation 연결
   const optionButtonText =
     selectedSizes.length === SIZES.length ? '전체 선택 해제' : '전체 선택';
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       <div className={styles.container}>
         <CardSection title="카테고리">
           {FORM_LIST_FIELDS.map(({ title, options }) => (
@@ -179,9 +195,14 @@ export default function ProductRegister() {
 
         <CardSection title="상품 이미지">
           <p className={styles.description}>
-            상품 이미지를 추가해주세요. <br /> 최대 1개까지 추가할 수 있습니다.
+            상품 이미지를 추가해주세요. <br /> 최대 {MAX_IMAGE_COUNT}개까지
+            추가할 수 있습니다.
           </p>
-          <ImageUpload />
+          <ImageUploadInput
+            maxCount={MAX_IMAGE_COUNT}
+            previews={previews}
+            onChange={handlePreviews}
+          />
         </CardSection>
       </div>
 
