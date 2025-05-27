@@ -1,6 +1,6 @@
 'use client';
 import { overlay } from 'overlay-kit';
-import { Button, Carousel, Thumbnail } from '.';
+import { Button, Carousel, Thumbnail } from '../components';
 import { useFileInputTrigger } from '../hooks';
 import styles from './ImageUploadInput.module.scss';
 

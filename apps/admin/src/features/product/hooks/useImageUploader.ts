@@ -1,5 +1,5 @@
 import { supabase } from '@/shared/utils';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';
 import { z } from 'zod';
 import { useImageMutation } from './mutations';

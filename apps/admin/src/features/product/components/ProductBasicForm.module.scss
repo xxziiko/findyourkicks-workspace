@@ -1,0 +1,5 @@
+.container {
+  @include flex-col;
+  gap: 10px;
+  padding: 24px;
+}
