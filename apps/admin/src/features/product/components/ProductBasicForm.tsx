@@ -1,4 +1,4 @@
-import type { FormSchema } from '@/features/product';
+import type { Product } from '@/features/product';
 import { CardSection, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
 import {
@@ -37,7 +37,7 @@ const FORM_FIELDS = [
   },
 
   {
-    id: 'detail',
+    id: 'description',
     title: '상품 상세 정보',
     placeholder: '상품 상세 정보를 입력해주세요.',
     unit: '',
@@ -45,9 +45,9 @@ const FORM_FIELDS = [
 ];
 
 interface ProductBasicFormProps {
-  control: Control<FormSchema>;
-  register: UseFormRegister<FormSchema>;
-  errors: FieldErrors<FormSchema>;
+  control: Control<Product>;
+  register: UseFormRegister<Product>;
+  errors: FieldErrors<Product>;
 }
 
 export function ProductBasicForm({
@@ -59,11 +59,11 @@ export function ProductBasicForm({
     <div className={styles.container}>
       <CardSection title="카테고리">
         {FORM_LIST_FIELDS.map(({ id, title, options }) => (
-          <CardSection.ListItem subTitle={title} key={title}>
+          <CardSection.ListItem subTitle={title} key={title} aria-label={title}>
             <div className={styles.dropdown}>
               <Controller
                 control={control}
-                name={id as keyof FormSchema}
+                name={id as keyof Product}
                 render={({ field }) => (
                   <Dropdown
                     variant="border"
@@ -82,9 +82,9 @@ export function ProductBasicForm({
                 )}
               />
 
-              {errors[id as keyof FormSchema] && (
+              {errors[id as keyof Product] && (
                 <p className={styles.error}>
-                  {errors[id as keyof FormSchema]?.message}
+                  {errors[id as keyof Product]?.message}
                 </p>
               )}
             </div>
@@ -93,18 +93,18 @@ export function ProductBasicForm({
       </CardSection>
 
       {FORM_FIELDS.map(({ id, title, placeholder, unit }) => (
-        <CardSection title={title} key={id}>
+        <CardSection title={title} key={id} aria-label={title}>
           <InputWithUnit
             id={id}
             placeholder={placeholder}
             unit={unit}
-            {...register(id as keyof FormSchema, {
+            {...register(id as keyof Product, {
               valueAsNumber: id === 'price',
             })}
           />
-          {errors[id as keyof FormSchema] && (
+          {errors[id as keyof Product] && (
             <p className={styles.error}>
-              {errors[id as keyof FormSchema]?.message}
+              {errors[id as keyof Product]?.message}
             </p>
           )}
         </CardSection>

@@ -1,9 +1,10 @@
 import { Button } from '@findyourkicks/shared';
+import type { MouseEvent } from 'react';
 import styles from './FormActions.module.scss';
 
 interface FormActionsProps {
   onReset: () => void;
-  onUpdate: () => void;
+  onUpdate: (e: MouseEvent<Element>) => void;
 }
 
 export function FormActions({ onReset, onUpdate }: FormActionsProps) {
@@ -12,7 +13,7 @@ export function FormActions({ onReset, onUpdate }: FormActionsProps) {
       <Button type="button" variant="secondary">
         임시저장
       </Button>
-      <Button type="submit" variant="primary" onClick={onUpdate}>
+      <Button type="submit" variant="primary" onClick={(e) => onUpdate(e)}>
         등록하기
       </Button>
       <Button type="button" variant="secondary" onClick={onReset}>

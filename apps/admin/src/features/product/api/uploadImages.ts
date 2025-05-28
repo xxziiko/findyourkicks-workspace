@@ -1,5 +1,4 @@
 import { supabase } from '@/shared/utils';
-import { handleError } from '@findyourkicks/shared';
 import { z } from 'zod';
 
 const uploadImagesSchema = z.object({
@@ -10,19 +9,13 @@ type UploadImages = z.infer<typeof uploadImagesSchema>;
 
 const BUCKET_NAME = 'products';
 
-const uploadImage = async (file: string, filePath: string) => {
+const uploadImage = async ({
+  filePath,
+  webpFile,
+}: { filePath: string; webpFile: File }) => {
   await supabase.storage
     .from(BUCKET_NAME)
-    .upload(filePath, file)
-    .then(handleError);
+    .upload(filePath, webpFile, { upsert: true });
 };
 
-const uploadImages = async (files: string[]) => {
-  for (const file of files) {
-    const filePath = `products/${Date.now()}_${file}`;
-
-    await uploadImage(file, filePath);
-  }
-};
-
-export { uploadImages, type UploadImages };
+export { uploadImage, type UploadImages };

@@ -30,7 +30,6 @@ const getImagePreviews = async (
 };
 
 /**
- * @param single 이미지 미리보기 타입
  * @param maxCount 최대 이미지 개수
  * @returns 이미지 미리보기 배열, 이미지 제거 함수, 이미지 미리보기 함수
  */

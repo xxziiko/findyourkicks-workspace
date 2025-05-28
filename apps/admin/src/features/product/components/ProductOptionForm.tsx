@@ -1,4 +1,4 @@
-import { type FormSchema, OptionSizeTable } from '@/features/product';
+import { OptionSizeTable, type Product } from '@/features/product';
 import { CardSection, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
@@ -6,7 +6,7 @@ import type { FieldErrors } from 'react-hook-form';
 import styles from './ProductOptionForm.module.scss';
 
 interface ProductOptionFormProps {
-  errors: FieldErrors<FormSchema>;
+  errors: FieldErrors<Product>;
   sizes: { size: string; stock: number }[];
   onSelectAllSizes: () => void;
   onApplyAllStock: (stock: number) => void;
@@ -60,6 +60,7 @@ export function ProductOptionForm({
             <CardSection.ListItem subTitle="재고 일괄 적용">
               <div className={styles.stockInput}>
                 <InputWithUnit
+                  aria-label="stock-input"
                   id="stock"
                   placeholder="숫자만 입력해주세요."
                   unit="개"

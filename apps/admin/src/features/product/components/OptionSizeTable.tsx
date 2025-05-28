@@ -44,7 +44,7 @@ function SizeItem({ size, stock, onChange, onDelete }: SizeItemProps) {
   return (
     <div className={styles.sizeItem}>
       <div className={styles.sizeCell}>
-        <p>{size}</p>
+        <p aria-label={size}>{size}</p>
       </div>
 
       <div className={styles.sizeCell}>

@@ -1,4 +1,4 @@
-import type { FormSchema } from '@/features/product';
+import type { Product } from '@/features/product';
 import { CardSection } from '@/shared/components';
 import { ImageUploadInput } from '@findyourkicks/shared';
 import type { FieldErrors } from 'react-hook-form';
@@ -7,7 +7,7 @@ import styles from './ProductImageUploader.module.scss';
 const MAX_IMAGE_COUNT = 1;
 
 interface ProductImageUploaderProps {
-  errors: FieldErrors<FormSchema>;
+  errors: FieldErrors<Product>;
   previews: string[];
   handlePreviews: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
