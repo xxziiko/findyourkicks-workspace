@@ -70,7 +70,7 @@ export function ProductBasicForm({
                     selected={
                       (field.value as string) ?? `${title}를 선택해주세요.`
                     }
-                    setSelected={field.onChange}
+                    onChange={field.onChange}
                   >
                     <Dropdown.Trigger />
                     <Dropdown.Menu>
