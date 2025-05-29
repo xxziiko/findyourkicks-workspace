@@ -1,5 +1,5 @@
 import { supabase } from '@/shared/utils';
-import { assert, handleError } from '@findyourkicks/shared';
+import { handleError } from '@findyourkicks/shared';
 import { z } from 'zod';
 
 const productSchema = z.object({
@@ -19,7 +19,7 @@ const postProduct = async (product: Product) => {
   const { category, brand, productName, description, price, images, sizes } =
     validatedProduct;
 
-  const { data } = await supabase
+  return await supabase
     .rpc('insert_product_with_inventory', {
       _brand: brand,
       _category: category,
@@ -30,8 +30,6 @@ const postProduct = async (product: Product) => {
       _sizes: sizes,
     })
     .then(handleError);
-
-  console.log(data);
 };
 
 export { postProduct, type Product, productSchema };

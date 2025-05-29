@@ -7,9 +7,10 @@ import { Button, GlobalPortal } from './index';
 interface ModalProps {
   title: string;
   children: React.ReactNode;
+  isOpen?: boolean;
 }
 
-export function Modal({ title, children }: ModalProps) {
+export function Modal({ title, children, isOpen }: ModalProps) {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -19,13 +20,15 @@ export function Modal({ title, children }: ModalProps) {
 
   return (
     <GlobalPortal.Consumer>
-      <div className={styles.modal__overlay}>
-        <div className={styles.modal__container}>
-          <Header title={title} />
+      {isOpen && (
+        <div className={styles.modal__overlay}>
+          <div className={styles.modal__container}>
+            <Header title={title} />
 
-          <div>{children}</div>
+            <div>{children}</div>
+          </div>
         </div>
-      </div>
+      )}
     </GlobalPortal.Consumer>
   );
 }
@@ -53,7 +56,7 @@ function Footer({
         </Button>
       )}
 
-      <Button onClick={onClose} variant="secondary" radius width="30%">
+      <Button onClick={onClose} variant="secondary" radius>
         닫기
       </Button>
     </div>

@@ -4,16 +4,15 @@ import styles from './FormActions.module.scss';
 
 interface FormActionsProps {
   onReset: () => void;
-  onUpdate: (e: MouseEvent<Element>) => void;
 }
 
-export function FormActions({ onReset, onUpdate }: FormActionsProps) {
+export function FormActions({ onReset }: FormActionsProps) {
   return (
     <div className={styles.buttons}>
       <Button type="button" variant="secondary">
         임시저장
       </Button>
-      <Button type="submit" variant="primary" onClick={(e) => onUpdate(e)}>
+      <Button type="submit" variant="primary">
         등록하기
       </Button>
       <Button type="button" variant="secondary" onClick={onReset}>
