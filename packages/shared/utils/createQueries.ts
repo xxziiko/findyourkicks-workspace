@@ -48,7 +48,5 @@ export function createQueries<
       queryKey: ReturnType<(typeof queryKeyMap)[K]>;
       queryFn: () => ReturnType<ReturnType<T[K]>['queryFn']>;
     };
-  } & {
-    queryKeys: typeof queryKeyMap;
   };
 }
