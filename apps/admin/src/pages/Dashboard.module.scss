@@ -2,7 +2,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(700px, auto));
   gap: 24px;
-  padding: 0 24px;
+  padding: 0 24px 24px 24px;
+  overflow: auto;
 }
 
 .list__item {

@@ -47,7 +47,7 @@ interface TitleProps extends PropsWithChildren {
 
 const Title = ({ children, onClick }: TitleProps) => {
   return (
-    <button type="button" onClick={onClick}>
+    <button type="button" onClick={onClick} className={styles.title}>
       <h3 className={styles.title}>{children}</h3>
     </button>
   );

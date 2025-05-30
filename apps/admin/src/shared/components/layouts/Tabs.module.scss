@@ -2,10 +2,6 @@
   cursor: pointer;
   color: $secondary;
   transition: all 0.2s ease;
-
-  &:hover {
-    opacity: 0.6;
-  }
 }
 
 .tabs {
@@ -43,6 +39,7 @@
 }
 
 .title {
+  width: 100%;
   font-weight: 700;
   color: $secondary;
   cursor: pointer;
