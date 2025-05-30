@@ -171,7 +171,7 @@
 
 |상품등록 페이지|
 |--|
-|<img width="500" alt="Image" src="https://github.com/user-attachments/assets/14c934d4-cd94-4108-84ac-684de3e0ffe7" />|
+|<img width="500" alt="Image" src="https://github.com/user-attachments/assets/47be4483-386f-4aca-9ec9-3878aa867cab" />|
 
 |이미지 업로드|이미지 캐러셀|
 |---|---|
@@ -190,8 +190,7 @@
 - Tanstack Query의 **쿼리 키 팩토리 패턴** 방식의 중복과 확장성을 개선하기 위해 **createQueries 커스텀 함수를 구현**했습니다. <br/>
   각 API에 대해 **queryKey, queryFn, 공통 옵션을 선언적으로 정의**할 수 있도록 구성하고 이를 통해 타입 안정성과 쿼리 중복을 개선했습니다.
   
-- 클라이언트 인증, UI 상태 등과 같은 전역 상태는 **Jotai의 atom을 Custom Hook으로 추상화**하여 선언형으로 사용할 수 있도록 설계했습니다.  <br/>
-  이를 통해 상태 관리의 일관성과 재사용성을 확보했습니다.
+- 로그인 인증과 같은 전역 상태를 **Jotai의 atom을 사용하여 Custom Hook으로 추상화**해 상태의 일관성과 코드 재사용성을 높였습니다.
 
 #### 3. 데이터 흐름 및 렌더링
 - 반복적인 try-catch 구문과 오류 처리를 통합하기 위해 **API 유틸을 설계**하고, **각 HTTP 메서드 단위의 선언형 호출 인터페이스를 제공**하여 에러 핸들링의 일관성을 확보했습니다. <br/>
@@ -212,31 +211,8 @@
 
 #### 5. 공통 컴포넌트 설계
 - Compound Component Pattern을 Dropdown, Tab UI에 적용하여 선언형 기반의 유연한 UI 인터페이스를 설계했습니다. <br/>
-  패키지의 모듈로 관리하여 다양한 화면에서 일관되게 적용할 수 있도록 유지보수와 재사용성을 고려했습니다.
+  Dropdown 내부 로직을 Context로 분리하여 토글/옵션/트리거 등 세부 컴포넌트를 개별 정의하여 다양한 화면에서 조합 형태로 재사용하기 용이했습니다.
   
-<br/>
-
-## 트러블 슈팅
-
-**무한스크롤 페이지네이션에서 동일한 데이터가 반복해서 조회되는 현상**
- - DB에서 두 레코드의 정렬 순서가 보장되지 않아 중복 데이터가 발생 <br/>
- - 정렬 기준을 고유 ID인 `product_id`로 변경하여 해결
- - 👉 [자세히 보러가기](https://xxziiko.notion.site/1da4ae05ecc7802cbc27da7f6de2679f?pvs=74)
-
-**결제 완료 후 장바구니 항목 삭제가 안되는 현상**
-- 결제 완료 후, `order_sheet_items`와 `cart_items` 간 직접적인 참조 관계가 없어 구매한 항목을 장바구니에서 정확히 삭제할 수 없는 문제가 발생
-- `order_sheet_items` 테이블에 `cart_item_id` 컬럼을 추가하고 해당 값을 기반으로 삭제 대상을 명확하게 식별할 수 있도록 개선
-- 👉 [자세히 보러가기](https://xxziiko.notion.site/1da4ae05ecc78004bc9fe0790f44c96c)
-
-<br/>
-
-## 성능 개선
-
-**테이블 조인 → view 변경으로 TTFB 개선**
-- Supabase의 조인 응답 속도가 느리고, 중첩 응답으로 인해 정확한 타입 추론이 어려웠음
-- View 테이블을 생성하여 타입 추론이 명확해지고, 네트워크 대기 시간(TTFB) 기준으로 1.12s → 186ms으로 약 83% 응답 속도 개선
-- 👉 [자세히 보러가기](https://xxziiko.notion.site/view-TTFB-1dd4ae05ecc780d7b2b0d68c0a88c999)
-
 
 <br/>
 
