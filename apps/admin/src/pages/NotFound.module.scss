@@ -1,0 +1,7 @@
+.container {
+  @include flex-center;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+  padding: 24px;
+}

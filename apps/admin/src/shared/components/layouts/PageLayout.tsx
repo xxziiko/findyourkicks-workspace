@@ -1,7 +1,5 @@
 import { PATH, useActiveTabTitle, useToggleTab } from '@/shared';
-import { Loading } from '@/shared/components';
 import { Header, Tabs } from '@/shared/components';
-import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './PageLayout.module.scss';
 
@@ -20,7 +18,7 @@ const TAB_TITLES = [
     ],
   },
   {
-    title: '판매관리',
+    title: '주문관리',
     children: [
       {
         title: '주문 내역',
@@ -72,9 +70,7 @@ export function PageLayout() {
 
       <main className={styles.main}>
         <Header text={title} />
-        <Suspense fallback={<Loading />}>
-          <Outlet />
-        </Suspense>
+        <Outlet />
       </main>
     </div>
   );
