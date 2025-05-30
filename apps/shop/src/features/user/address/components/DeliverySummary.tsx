@@ -41,7 +41,7 @@ export default function DeliverySummary({
             <Dropdown
               variant="border"
               selected={deliveryMessage}
-              setSelected={updateDeliveryMessage}
+              onChange={updateDeliveryMessage}
             >
               <Dropdown.Trigger />
               <Dropdown.Menu>

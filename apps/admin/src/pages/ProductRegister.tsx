@@ -1,74 +1,125 @@
-import { CardSection, InputWithUnit } from '@/shared';
-import { Button } from '@findyourkicks/shared';
+import {
+  FormActions,
+  type Product,
+  ProductBasicForm,
+  ProductImageUploader,
+  ProductOptionForm,
+  productSchema,
+  useImageUploader,
+  useOptionSize,
+  useProductMutation,
+} from '@/features/product';
+import { useImagePreview } from '@findyourkicks/shared';
+import { Modal } from '@findyourkicks/shared';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { overlay } from 'overlay-kit';
+import type { FormEvent } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import styles from './ProductRegister.module.scss';
 
-const FORM_LIST_FIELDS = ['카테고리', '브랜드'] as const;
+const MAX_IMAGE_COUNT = 1;
 
-const FORM_FIELDS = [
-  {
-    id: 'productName',
-    title: '상품명',
-    placeholder: '상품명을 입력해주세요.',
-  },
-  {
-    id: 'price',
-    title: '판매가',
-    placeholder: '숫자만 입력해주세요',
-    unit: '원',
-  },
-  {
-    id: 'stock',
-    title: '재고수량',
-    placeholder: '숫자만 입력해주세요',
-    unit: '개',
-  },
-  {
-    id: 'detail',
-    title: '상품 상세 정보',
-    placeholder: '상품 상세 정보를 입력해주세요.',
-  },
-];
+const formSchema = productSchema.extend({
+  category: z.string({ required_error: '카테고리를 선택해주세요.' }),
+  brand: z.string({ required_error: '브랜드를 선택해주세요.' }),
+  productName: z.string({ required_error: '상품명을 입력해주세요.' }),
+  price: z
+    .number({ message: '숫자만 입력해주세요.' })
+    .refine((val) => val > 0, {
+      message: '판매가는 0원 이상이어야 합니다.',
+    }),
+  description: z.string({ required_error: '상품 상세 정보를 입력해주세요.' }),
+  images: z.array(z.string({ required_error: '상품 이미지를 추가해주세요.' })),
+});
 
 export default function ProductRegister() {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      images: [],
+      sizes: [],
+    },
+  });
+  const { handlePreviews, previews } = useImagePreview({
+    maxCount: MAX_IMAGE_COUNT,
+  });
+  const handleUpload = useImageUploader();
+  const {
+    selectedSizes,
+    handleSelectAllSizes,
+    handleApplyAllStock,
+    updateSelectedSizes,
+    handleChangeSelectedSizes,
+    deleteSelectedSize,
+  } = useOptionSize();
+  const { mutate: postProduct } = useProductMutation();
+
+  const updateForm = async () => {
+    const urls = await handleUpload(previews);
+
+    setValue('sizes', selectedSizes);
+    setValue('images', urls);
+  };
+
+  const handleSubmitForm = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    await updateForm();
+    await handleSubmit(onSubmit)();
+  };
+
+  const onSubmit = (data: Product) => {
+    postProduct(data, {
+      onSuccess: () => {
+        reset();
+        handleAlertModal();
+      },
+    });
+  };
+
+  const handleAlertModal = () =>
+    overlay.open(({ isOpen, close }) => {
+      return (
+        <Modal title="상품 등록" isOpen={isOpen}>
+          <div className={styles.alert}>상품 등록이 완료되었습니다.</div>
+          <Modal.Footer onClose={close} type="single" />
+        </Modal>
+      );
+    });
+
   return (
-    <form>
+    <form className={styles.form} onSubmit={handleSubmitForm}>
       <div className={styles.container}>
-        <CardSection title="카테고리">
-          {FORM_LIST_FIELDS.map((subTitle) => (
-            <CardSection.ListItem subTitle={subTitle} key={subTitle}>
-              <div>{/* select */}</div>
-            </CardSection.ListItem>
-          ))}
-        </CardSection>
-
-        {FORM_FIELDS.map(({ id, title, placeholder, unit }) => (
-          <CardSection title={title} key={id}>
-            <InputWithUnit id={id} placeholder={placeholder} unit={unit} />
-          </CardSection>
-        ))}
-
-        <CardSection title="옵션">
-          <span>사이즈</span>
-          {/* size buttons */}
-        </CardSection>
-
-        <CardSection title="상품 이미지">
-          <div>{/* image upload */}</div>
-          <input type="file" />
-        </CardSection>
+        <ProductBasicForm
+          control={control}
+          register={register}
+          errors={errors}
+        />
+        <ProductOptionForm
+          sizes={selectedSizes}
+          errors={errors}
+          onSelectAllSizes={handleSelectAllSizes}
+          onApplyAllStock={handleApplyAllStock}
+          onUpdateSizes={updateSelectedSizes}
+          onChangeSizes={handleChangeSelectedSizes}
+          onDeleteSize={deleteSelectedSize}
+        />
+        <ProductImageUploader
+          errors={errors}
+          previews={previews}
+          handlePreviews={handlePreviews}
+        />
       </div>
 
-      <div className={styles.buttons}>
-        <Button type="button" variant="secondary">
-          임시저장
-        </Button>
-        <Button type="submit" variant="primary">
-          등록하기
-        </Button>
-        <Button type="button" variant="secondary">
-          취소
-        </Button>
-      </div>
+      <FormActions onReset={reset} />
     </form>
   );
 }

@@ -12,11 +12,7 @@ type OrderItem = z.infer<typeof getOrdersSchema>;
 
 // TODO:
 const getOrders = async () => {
-  const query = supabase
-    .from('orders_view')
-    .select('*')
-    .throwOnError()
-    .then(handleError);
+  const query = supabase.from('orders_view').select('*').then(handleError);
 
   const data = await query;
 

@@ -1,6 +1,6 @@
 'use client';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { createContext, useContext } from 'react';
+import { type PropsWithChildren, createContext, useContext } from 'react';
 import { useDropdownMenu, useInputValue } from '../hooks';
 import styles from './Dropdown.module.scss';
 
@@ -28,17 +28,17 @@ function useDropdown(): DropdownContextType {
   return context;
 }
 
+interface DropdownProps extends PropsWithChildren {
+  variant?: 'border';
+  selected: string;
+  onChange: (text: string) => void;
+}
 export function Dropdown({
   children,
   selected,
   variant,
-  setSelected,
-}: {
-  children: React.ReactNode;
-  variant?: 'border';
-  selected: string;
-  setSelected: (text: string) => void;
-}) {
+  onChange,
+}: DropdownProps) {
   const {
     isOpen,
     isEditable,
@@ -49,7 +49,7 @@ export function Dropdown({
     handleKeyDown,
     handleBlur,
     autoFocus,
-  } = useDropdownMenu(setSelected);
+  } = useDropdownMenu(onChange);
 
   const value = {
     selected,

@@ -1,0 +1,10 @@
+.file__input {
+  display: none;
+}
+
+.thumbnail_container {
+  @include flex-item;
+  gap: 10px;
+  padding: 10px;
+  overflow: auto;
+}

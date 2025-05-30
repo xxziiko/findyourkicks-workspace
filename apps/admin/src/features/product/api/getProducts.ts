@@ -29,11 +29,7 @@ interface ProductResponse {
 }
 
 const getProducts = async (): Promise<RecentProductItem[]> => {
-  const query = supabase
-    .from('products')
-    .select('*')
-    .throwOnError()
-    .then(handleError);
+  const query = supabase.from('products').select('*').then(handleError);
 
   const data = (await query) as ProductResponse[];
 

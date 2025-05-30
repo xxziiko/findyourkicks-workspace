@@ -1,0 +1,41 @@
+.container {
+  @include flex-col;
+  gap: 10px;
+  padding: 24px;
+}
+
+.size__buttons {
+  @include flex-item;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 12px;
+}
+
+.size {
+  @include flex-col;
+  gap: 24px;
+}
+
+.size__title {
+  font-size: $font-sm;
+  font-weight: 600;
+  padding-bottom: 12px;
+}
+
+.stock__input {
+  @include flex-item;
+  justify-content: flex-end;
+  gap: 24px;
+  width: 100%;
+}
+
+.error {
+  color: $error;
+  font-weight: 500;
+}
+
+.description {
+  font-size: $font-xs;
+  color: $gray-dark;
+  line-height: 1.5;
+}

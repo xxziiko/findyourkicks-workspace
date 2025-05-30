@@ -1,4 +1,4 @@
-const commaizeNumber = (number: number) => {
+export const commaizeNumber = (number: number) => {
   return number.toLocaleString();
 };
 

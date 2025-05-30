@@ -1,16 +1,17 @@
 {
   "name": "@findyourkicks/shared",
+  "type": "module",
   "version": "0.0.1",
   "private": true,
   "main": "./index.ts",
   "exports": {
-    ".": {
-      "import": "./index.ts"
-    },
+    ".": "./index.ts",
     "./styles/*": "./styles/*"
   },
   "files": ["components", "styles", "utils", "types", "hooks", "index.ts"],
-
+  "peerDependencies": {
+    "swiper": "^11.2.6"
+  },
   "devDependencies": {
     "@findyourkicks/tsconfig": "workspace:*"
   }

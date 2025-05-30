@@ -26,9 +26,7 @@ const getRecentProducts = async (limit: number) => {
     query = query.limit(limit);
   }
 
-  const data = (await query
-    .throwOnError()
-    .then(handleError)) as ProductResponse[];
+  const data = (await query.then(handleError)) as ProductResponse[];
 
   return data.map(({ product_id, title, created_at }) =>
     recentProductsSchema.parse({

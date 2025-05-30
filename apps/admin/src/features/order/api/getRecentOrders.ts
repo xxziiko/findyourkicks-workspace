@@ -32,9 +32,7 @@ const getRecentOrders = async (limit: number) => {
     query = query.limit(limit);
   }
 
-  const data = (await query
-    .throwOnError()
-    .then(handleError)) as RecentOrderResponse[];
+  const data = (await query.then(handleError)) as RecentOrderResponse[];
 
   return data.map((order) =>
     recentOrdersSchema.parse({

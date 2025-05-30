@@ -1,0 +1,16 @@
+.container {
+  @include flex-col;
+  gap: 10px;
+  width: 100%;
+}
+
+.dropdown {
+  @include flex-col;
+  width: 100%;
+  gap: 12px;
+}
+
+.error {
+  color: $error;
+  font-weight: 500;
+}
