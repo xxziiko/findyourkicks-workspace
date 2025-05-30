@@ -38,6 +38,7 @@ export async function GET(request: Request) {
     .from('product_with_details')
     .select('*')
     .range(from, to)
+    .order('created_at', { ascending: false })
     .order('product_id', { ascending: true });
 
   if (error) {
