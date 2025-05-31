@@ -42,7 +42,7 @@ export function Carousel({ images, onClose, isOpen }: CarouselProps) {
           >
             {images.map((image) => (
               <SwiperSlide key={image} className={styles.swiperSlide}>
-                <img src={image} alt="carousel" />
+                <img src={image} alt="carousel" loading="lazy" />
               </SwiperSlide>
             ))}
           </Swiper>
