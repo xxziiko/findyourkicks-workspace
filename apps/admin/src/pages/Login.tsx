@@ -1,6 +1,7 @@
 import { useSignInForm } from '@/features/auth';
 import { PATH } from '@/shared';
 import { Button } from '@findyourkicks/shared';
+import { InfoIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.scss';
 
@@ -14,6 +15,17 @@ const INPUT_LABELS = [
     label: '비밀번호',
     id: 'password',
     type: 'password',
+  },
+] as const;
+
+const TEST_DATA = [
+  {
+    label: '테스트 아이디',
+    value: 'admin@example.com',
+  },
+  {
+    label: '테스트 비밀번호',
+    value: 'admin123',
   },
 ] as const;
 
@@ -52,6 +64,15 @@ export default function Login() {
       <div className={styles.right}>
         <div className={styles.rightContainer}>
           <h3 className={styles.title}>로그인</h3>
+
+          {/* <div className={styles.testContainer}>
+            {TEST_DATA.map(({ label, value }) => (
+              <div className={styles.testItem} key={label}>
+                <p className={styles.itemLabel}>{label}</p>
+                <p>{value}</p>
+              </div>
+            ))}
+          </div> */}
 
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.formContainer}>
