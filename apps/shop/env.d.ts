@@ -7,5 +7,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
     TOSS_SECRET_KEY: string;
     SUPABASE_SERVICE_ROLE_KEY: string;
+    TEST_ACCOUNT_PW: string;
   }
 }
