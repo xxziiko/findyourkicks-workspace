@@ -47,6 +47,10 @@ export function useOptionSize() {
     );
   }, []);
 
+  const resetSelectedSizes = useCallback(() => {
+    setSelectedSizes([]);
+  }, []);
+
   return {
     selectedSizes,
     updateSelectedSizes,
@@ -54,5 +58,6 @@ export function useOptionSize() {
     handleChangeSelectedSizes,
     handleApplyAllStock,
     deleteSelectedSize,
+    resetSelectedSizes,
   };
 }

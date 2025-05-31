@@ -59,9 +59,14 @@ export function useImagePreview({
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
+  const resetPreviews = useCallback(() => {
+    setPreviews([]);
+  }, []);
+
   return {
     previews,
     removeFile,
     handlePreviews,
+    resetPreviews,
   };
 }
