@@ -9,8 +9,8 @@ import {
   useOptionSize,
   useProductMutation,
 } from '@/features/product';
-import { useImagePreview, useModalControl } from '@findyourkicks/shared';
-import { Modal } from '@findyourkicks/shared';
+import { ErrorMessage } from '@/shared';
+import { Modal, useImagePreview, useModalControl } from '@findyourkicks/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
@@ -57,16 +57,16 @@ export default function ProductRegister() {
       sizes: [],
     },
   });
-  const { handlePreviews, previews, resetPreviews } = useImagePreview({
+  const { handleImageInputChange, previews, resetPreviews } = useImagePreview({
     maxCount: MAX_IMAGE_COUNT,
   });
   const handleUpload = useImageUploader();
   const {
     selectedSizes,
     handleSelectAllSizes,
-    handleApplyAllStock,
+    handleAllStockChange,
     updateSelectedSizes,
-    handleChangeSelectedSizes,
+    handleSizeChange,
     deleteSelectedSize,
     resetSelectedSizes,
   } = useOptionSize();
@@ -107,17 +107,25 @@ export default function ProductRegister() {
         />
         <ProductOptionForm
           sizes={selectedSizes}
-          errors={errors}
-          onSelectAllSizes={handleSelectAllSizes}
-          onApplyAllStock={handleApplyAllStock}
-          onUpdateSizes={updateSelectedSizes}
-          onChangeSizes={handleChangeSelectedSizes}
-          onDeleteSize={deleteSelectedSize}
+          onAllSizesClick={handleSelectAllSizes}
+          onAllStockChange={handleAllStockChange}
+          onSizeClick={updateSelectedSizes}
+          onSizesChange={handleSizeChange}
+          onSizeDelete={deleteSelectedSize}
+          ErrorMessage={
+            errors.sizes && (
+              <ErrorMessage id="sizes" error={errors.sizes?.message} />
+            )
+          }
         />
         <ProductImageUploader
-          errors={errors}
           previews={previews}
-          handlePreviews={handlePreviews}
+          onInputChange={handleImageInputChange}
+          ErrorMessage={
+            errors.images && (
+              <ErrorMessage id="images" error={errors.images?.message} />
+            )
+          }
         />
       </div>
 

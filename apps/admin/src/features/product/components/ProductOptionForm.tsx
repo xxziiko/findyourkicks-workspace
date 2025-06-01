@@ -1,28 +1,28 @@
-import { OptionSizeTable, type Product } from '@/features/product';
-import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
+import { OptionSizeTable } from '@/features/product';
+import { CardSection, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
-import type { FieldErrors } from 'react-hook-form';
+import type { MouseEvent, ReactNode } from 'react';
 import styles from './ProductOptionForm.module.scss';
 
 interface ProductOptionFormProps {
-  errors: FieldErrors<Product>;
+  ErrorMessage: ReactNode;
   sizes: { size: string; stock: number }[];
-  onSelectAllSizes: () => void;
-  onApplyAllStock: (stock: number) => void;
-  onUpdateSizes: (size: string) => void;
-  onChangeSizes: (size: string, stock: number) => void;
-  onDeleteSize: (size: string) => void;
+  onAllSizesClick: (e: MouseEvent<Element>) => void;
+  onAllStockChange: (stock: number) => void;
+  onSizeClick: (size: string) => void;
+  onSizesChange: (size: string, stock: number) => void;
+  onSizeDelete: (size: string) => void;
 }
 
 export function ProductOptionForm({
   sizes,
-  errors,
-  onSelectAllSizes,
-  onApplyAllStock,
-  onUpdateSizes,
-  onChangeSizes,
-  onDeleteSize,
+  ErrorMessage,
+  onAllSizesClick,
+  onSizeClick,
+  onSizesChange,
+  onSizeDelete,
+  onAllStockChange,
 }: ProductOptionFormProps) {
   const optionButtonText =
     sizes.length === SIZES.length ? '전체 선택 해제' : '전체 선택';
@@ -37,12 +37,10 @@ export function ProductOptionForm({
           </p>
         </div>
 
-        {errors.sizes && (
-          <ErrorMessage id="sizes" error={errors.sizes?.message} />
-        )}
+        {ErrorMessage}
 
         <div className={styles.sizeButtons}>
-          <Button type="button" onClick={onSelectAllSizes}>
+          <Button type="button" onClick={onAllSizesClick}>
             {optionButtonText}
           </Button>
           {SIZES.map((size) => (
@@ -50,7 +48,7 @@ export function ProductOptionForm({
               key={size}
               variant="secondary"
               type="button"
-              onClick={() => onUpdateSizes(size)}
+              onClick={() => onSizeClick(size)}
               disabled={sizes.some((s) => s.size === size)}
             >
               {size}
@@ -69,7 +67,7 @@ export function ProductOptionForm({
                   placeholder="숫자만 입력해주세요."
                   unit="개"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onApplyAllStock(Number(e.target.value))
+                    onAllStockChange(Number(e.target.value))
                   }
                 />
               </div>
@@ -77,8 +75,8 @@ export function ProductOptionForm({
 
             <OptionSizeTable
               selectedSizes={sizes}
-              onChange={onChangeSizes}
-              onDelete={onDeleteSize}
+              onChange={onSizesChange}
+              onDelete={onSizeDelete}
             />
           </>
         )}

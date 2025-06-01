@@ -22,20 +22,15 @@ export function useOptionSize() {
     setSelectedSizes(SIZES.map((size) => ({ size, stock: 0 })));
   }, [selectedSizes]);
 
-  const handleChangeSelectedSizes = useCallback(
-    (size: string, stock: number) => {
-      setSelectedSizes((prev) =>
-        prev.map((selectedSize) =>
-          selectedSize.size === size
-            ? { ...selectedSize, stock }
-            : selectedSize,
-        ),
-      );
-    },
-    [],
-  );
+  const handleSizeChange = useCallback((size: string, stock: number) => {
+    setSelectedSizes((prev) =>
+      prev.map((selectedSize) =>
+        selectedSize.size === size ? { ...selectedSize, stock } : selectedSize,
+      ),
+    );
+  }, []);
 
-  const handleApplyAllStock = useCallback((stock: number) => {
+  const handleAllStockChange = useCallback((stock: number) => {
     setSelectedSizes((prev) =>
       prev.map((selectedSize) => ({ ...selectedSize, stock })),
     );
@@ -55,8 +50,8 @@ export function useOptionSize() {
     selectedSizes,
     updateSelectedSizes,
     handleSelectAllSizes,
-    handleChangeSelectedSizes,
-    handleApplyAllStock,
+    handleSizeChange,
+    handleAllStockChange,
     deleteSelectedSize,
     resetSelectedSizes,
   };
