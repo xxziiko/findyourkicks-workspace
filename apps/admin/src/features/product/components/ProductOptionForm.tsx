@@ -1,5 +1,5 @@
 import { OptionSizeTable, type Product } from '@/features/product';
-import { CardSection, InputWithUnit } from '@/shared/components';
+import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
 import type { FieldErrors } from 'react-hook-form';
@@ -36,6 +36,10 @@ export function ProductOptionForm({
             등록할 사이즈 옵션을 선택해주세요.
           </p>
         </div>
+
+        {errors.sizes && (
+          <ErrorMessage id="sizes" error={errors.sizes?.message} />
+        )}
 
         <div className={styles.sizeButtons}>
           <Button type="button" onClick={onSelectAllSizes}>
@@ -77,10 +81,6 @@ export function ProductOptionForm({
               onDelete={onDeleteSize}
             />
           </>
-        )}
-
-        {errors.sizes && (
-          <p className={styles.error}>{errors.sizes?.message}</p>
         )}
       </div>
     </CardSection>

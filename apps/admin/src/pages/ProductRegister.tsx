@@ -22,14 +22,24 @@ const MAX_IMAGE_COUNT = 1;
 const formSchema = productSchema.extend({
   category: z.string({ required_error: '카테고리를 선택해주세요.' }),
   brand: z.string({ required_error: '브랜드를 선택해주세요.' }),
-  productName: z.string({ required_error: '상품명을 입력해주세요.' }),
+  productName: z.string().min(1, { message: '상품명을 입력해주세요.' }),
   price: z
     .number({ message: '숫자만 입력해주세요.' })
     .refine((val) => val > 0, {
       message: '판매가는 0원 이상이어야 합니다.',
     }),
-  description: z.string({ required_error: '상품 상세 정보를 입력해주세요.' }),
-  images: z.array(z.string({ required_error: '상품 이미지를 추가해주세요.' })),
+  description: z.string().min(1, { message: '상품 상세 정보를 입력해주세요.' }),
+  images: z
+    .array(z.string())
+    .min(1, { message: '상품 이미지를 추가해주세요.' }),
+  sizes: z
+    .array(
+      z.object({
+        size: z.string().min(1, { message: '사이즈를 선택해주세요.' }),
+        stock: z.number().min(1, { message: '재고를 입력해주세요.' }),
+      }),
+    )
+    .min(1, { message: '사이즈를 선택해주세요.' }),
 });
 
 export default function ProductRegister() {

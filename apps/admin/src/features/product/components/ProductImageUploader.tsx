@@ -1,5 +1,5 @@
 import type { Product } from '@/features/product';
-import { CardSection } from '@/shared/components';
+import { CardSection, ErrorMessage } from '@/shared/components';
 import { ImageUploadInput } from '@findyourkicks/shared';
 import type { FieldErrors } from 'react-hook-form';
 import styles from './ProductImageUploader.module.scss';
@@ -23,15 +23,16 @@ export function ProductImageUploader({
         상품 이미지를 추가해주세요. <br /> 최대 {MAX_IMAGE_COUNT}개까지 추가할
         수 있습니다.
       </p>
+
+      {errors.images && (
+        <ErrorMessage id="images" error={errors.images?.message} />
+      )}
+
       <ImageUploadInput
         maxCount={MAX_IMAGE_COUNT}
         previews={previews}
         onChange={handlePreviews}
       />
-
-      {errors.images && (
-        <p className={styles.error}>{errors.images?.message}</p>
-      )}
     </CardSection>
   );
 }
