@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test as setup } from '@playwright/test';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const authFile = path.join(__dirname, '../storageState.json');
+const authFile = path.join(__dirname, '../../storageState.json');
 
 setup('authenticate', async ({ page }) => {
   await page.goto('http://localhost:5173/login');

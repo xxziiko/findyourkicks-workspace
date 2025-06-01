@@ -20,17 +20,18 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    // Base URL to use in actions like `await page.goto('/')`.
-    baseURL: 'http://localhost:5173',
-
     // Collect trace when retrying the failed test.
     trace: 'on-first-retry',
   },
+
   // Configure projects for major browsers.
   projects: [
     {
       name: 'admin-setup',
       testMatch: ['apps/admin/src/tests/**/*.setup.ts'],
+      use: {
+        baseURL: 'http://localhost:5173',
+      },
     },
     {
       name: 'admin',
@@ -38,12 +39,16 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'apps/admin/storageState.json',
+        baseURL: 'http://localhost:5173',
       },
       dependencies: ['admin-setup'],
     },
     {
       name: 'shop-setup',
       testMatch: ['apps/shop/src/tests/**/*.setup.ts'],
+      use: {
+        baseURL: 'http://localhost:3000',
+      },
     },
     {
       name: 'shop',
@@ -51,14 +56,19 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'apps/shop/storageState.json',
+        baseURL: 'http://localhost:3000',
       },
       dependencies: ['shop-setup'],
     },
+
+    {
+      name: 'shop-public',
+      testMatch: ['apps/shop/src/tests/login.public.test.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'apps/shop/storageState.json',
+        baseURL: 'http://localhost:3000',
+      },
+    },
   ],
-  // Run your local dev server before starting the tests.
-  webServer: {
-    command: 'pnpm run start',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-  },
 });
