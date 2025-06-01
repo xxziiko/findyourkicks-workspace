@@ -1,5 +1,5 @@
 import type { Product } from '@/features/product';
-import { CardSection, InputWithUnit } from '@/shared/components';
+import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
 import {
   type Control,
@@ -59,13 +59,14 @@ export function ProductBasicForm({
     <div className={styles.container}>
       <CardSection title="카테고리">
         {FORM_LIST_FIELDS.map(({ id, title, options }) => (
-          <CardSection.ListItem subTitle={title} key={title} aria-label={title}>
+          <CardSection.ListItem subTitle={title} key={title}>
             <div className={styles.dropdown}>
               <Controller
                 control={control}
                 name={id as keyof Product}
                 render={({ field }) => (
                   <Dropdown
+                    testId={id}
                     variant="border"
                     selected={
                       (field.value as string) ?? `${title}를 선택해주세요.`
@@ -83,9 +84,10 @@ export function ProductBasicForm({
               />
 
               {errors[id as keyof Product] && (
-                <p className={styles.error}>
-                  {errors[id as keyof Product]?.message}
-                </p>
+                <ErrorMessage
+                  id={id}
+                  error={errors[id as keyof Product]?.message}
+                />
               )}
             </div>
           </CardSection.ListItem>
@@ -103,9 +105,10 @@ export function ProductBasicForm({
             })}
           />
           {errors[id as keyof Product] && (
-            <p className={styles.error}>
-              {errors[id as keyof Product]?.message}
-            </p>
+            <ErrorMessage
+              id={id}
+              error={errors[id as keyof Product]?.message}
+            />
           )}
         </CardSection>
       ))}

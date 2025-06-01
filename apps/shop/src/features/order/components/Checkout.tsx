@@ -1,40 +1,87 @@
 'use client';
-import { CheckoutView, useCheckout } from '@/features/order';
+import {
+  CheckoutView,
+  createOrderSheetSummary,
+  useOrderItemsMutation,
+  useTossPayments,
+} from '@/features/order';
 import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
+import type { PaymentsResponse } from '@/features/payment/types';
+import {
+  useAddressModal,
+  useDefaultAddressQuery,
+} from '@/features/user/address';
+
+import { useCheckoutAgreement, useDeliveryMessage } from '@/shared/hooks';
 
 export default function Checkout({
   orderSheet,
 }: { orderSheet: OrderSheetByIdResponse }) {
+  const { orderSheetItems, orderSheetId, deliveryAddress } = orderSheet;
+
+  const { isAllCheckedAgreement } = useCheckoutAgreement();
+
+  const { totalPrice, totalPriceWithDeliveryFee, orderName } =
+    createOrderSheetSummary(orderSheetItems);
+
+  const { deliveryMessage } = useDeliveryMessage();
+  const { data: defaultAddress } = useDefaultAddressQuery({ deliveryAddress });
   const {
-    defaultAddress,
-    addressModalTitle,
     isModalOpen,
-    isAllCheckedAgreement,
-    totalPrice,
-    totalPriceWithDeliveryFee,
-    isMutatingOrderItems,
     modalView,
-    orderProducts,
+    addressModalTitle,
     toggleModal,
     switchToFormView,
     closeModal,
-    handlePayment,
-  } = useCheckout(orderSheet);
+  } = useAddressModal(defaultAddress);
+
+  const { requestTossPayments } = useTossPayments();
+  const { mutate: mutateOrderItems, isPending: isMutatingOrderItems } =
+    useOrderItemsMutation();
+
+  const handlePayment = () => {
+    const payload = {
+      orderSheetId,
+      userAddressId: defaultAddress.addressId,
+      deliveryAddress: {
+        message: deliveryMessage,
+      },
+      termsAgreed: isAllCheckedAgreement,
+    };
+
+    mutateOrderItems(payload, {
+      onSuccess: (response: PaymentsResponse) => {
+        requestTossPayments({
+          ...response,
+          orderName,
+          amount: totalPriceWithDeliveryFee,
+        });
+      },
+    });
+  };
 
   const props = {
-    defaultAddress,
-    addressModalTitle,
-    isModalOpen,
-    isAllCheckedAgreement,
-    totalPrice,
-    orderProducts,
-    totalPriceWithDeliveryFee,
-    modalView,
-    isMutatingOrderItems,
-    onModalControl: toggleModal,
-    onPaymentOpen: handlePayment,
-    onAddressListOpen: switchToFormView,
-    onCloseModal: closeModal,
+    address: {
+      defaultAddress,
+      modalTitle: addressModalTitle,
+      modalView,
+      isModalOpen,
+      onModalToggle: toggleModal,
+      onSwitchToFormView: switchToFormView,
+      onCloseModal: closeModal,
+    },
+    price: {
+      totalPrice,
+      totalPriceWithDeliveryFee,
+    },
+    agreement: {
+      isAllChecked: isAllCheckedAgreement,
+    },
+    order: {
+      items: orderSheetItems,
+      isMutating: isMutatingOrderItems,
+      onPayment: handlePayment,
+    },
   };
 
   return <CheckoutView {...props} />;

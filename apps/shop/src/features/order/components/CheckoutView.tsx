@@ -1,58 +1,60 @@
 'use client';
 import { CheckoutSummary, OrderProduct } from '@/features/order';
 import type { OrderProductItem } from '@/features/order';
-import {
-  AddressForm,
-  AddressList,
-  DeliverySummary,
-} from '@/features/user/address';
+import { AddressModal, DeliverySummary } from '@/features/user/address';
 import type { UserAddress } from '@/features/user/address';
 import { CardLayout } from '@/shared/components/layouts';
-import { Button, Modal } from '@findyourkicks/shared';
+import { Button } from '@findyourkicks/shared';
 import styles from './CheckoutView.module.scss';
 
 interface CheckoutViewProps {
-  defaultAddress: UserAddress;
-  orderProducts: OrderProductItem[];
-  addressModalTitle: string;
-  modalView: 'form' | 'list';
-  isModalOpen: boolean;
-  isMutatingOrderItems: boolean;
-  totalPrice: number;
-  totalPriceWithDeliveryFee: number;
-  isAllCheckedAgreement: boolean;
-  onModalControl: () => void;
-  onPaymentOpen: () => void;
-  onAddressListOpen: () => void;
-  onCloseModal: () => void;
+  address: {
+    defaultAddress: UserAddress;
+    modalTitle: string;
+    modalView: 'form' | 'list';
+    isModalOpen: boolean;
+    onCloseModal: () => void;
+    onSwitchToFormView: () => void;
+    onModalToggle: () => void;
+  };
+  price: {
+    totalPrice: number;
+    totalPriceWithDeliveryFee: number;
+  };
+  agreement: {
+    isAllChecked: boolean;
+  };
+  order: {
+    items: OrderProductItem[];
+    isMutating: boolean;
+    onPayment: () => void;
+  };
 }
 
 export default function CheckoutView({
-  defaultAddress,
-  addressModalTitle,
-  isModalOpen,
-  modalView,
-  orderProducts,
-  totalPrice,
-  totalPriceWithDeliveryFee,
-  isAllCheckedAgreement,
-  isMutatingOrderItems,
-  onModalControl,
-  onPaymentOpen,
-  onAddressListOpen,
-  onCloseModal,
+  address,
+  price,
+  agreement,
+  order,
 }: CheckoutViewProps) {
+  const {
+    defaultAddress,
+    modalTitle,
+    modalView,
+    isModalOpen,
+    onModalToggle,
+    onCloseModal,
+  } = address;
+  const { totalPrice, totalPriceWithDeliveryFee } = price;
+  const { isAllChecked } = agreement;
+  const { items: orderProducts, isMutating, onPayment } = order;
+
   return (
     <div className={styles.layout}>
       <div className={styles.layout__left}>
         <CardLayout
           title="배송 정보"
-          label={
-            <CardLayout.Label
-              text={addressModalTitle}
-              onClick={onModalControl}
-            />
-          }
+          label={<CardLayout.Label text={modalTitle} onClick={onModalToggle} />}
         >
           <DeliverySummary data={defaultAddress} />
         </CardLayout>
@@ -74,9 +76,9 @@ export default function CheckoutView({
         />
 
         <Button
-          onClick={onPaymentOpen}
-          disabled={!isAllCheckedAgreement || !defaultAddress.addressId}
-          isLoading={isMutatingOrderItems}
+          onClick={onPayment}
+          disabled={!isAllChecked || !defaultAddress.addressId}
+          isLoading={isMutating}
           radius
         >
           결제하기
@@ -84,23 +86,13 @@ export default function CheckoutView({
       </div>
 
       {isModalOpen && (
-        <Modal title={addressModalTitle}>
-          {modalView === 'list' ? (
-            <div>
-              <Button
-                onClick={onAddressListOpen}
-                variant="secondary"
-                width="100%"
-              >
-                배송지 추가하기
-              </Button>
-
-              <AddressList onClose={onCloseModal} />
-            </div>
-          ) : (
-            <AddressForm onClose={onCloseModal} />
-          )}
-        </Modal>
+        <AddressModal
+          addressModalTitle={modalTitle}
+          modalView={modalView}
+          isOpen={isModalOpen}
+          onClick={onModalToggle}
+          onClose={onCloseModal}
+        />
       )}
     </div>
   );

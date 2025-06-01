@@ -32,12 +32,14 @@ interface DropdownProps extends PropsWithChildren {
   variant?: 'border';
   selected: string;
   onChange: (text: string) => void;
+  testId?: string;
 }
 export function Dropdown({
   children,
   selected,
   variant,
   onChange,
+  testId,
 }: DropdownProps) {
   const {
     isOpen,
@@ -67,7 +69,10 @@ export function Dropdown({
 
   return (
     <DropdownContext.Provider value={value}>
-      <div className={styles[`drop-down__${variant}`] ?? styles['drop-down']}>
+      <div
+        className={styles[`drop-down__${variant}`] ?? styles['drop-down']}
+        data-testid={testId}
+      >
         {children}
       </div>
     </DropdownContext.Provider>
@@ -109,7 +114,7 @@ function Item({
   };
 
   return (
-    <li onClick={handleSelect} onKeyDown={onKeyDown}>
+    <li onClick={handleSelect} onKeyDown={onKeyDown} data-testid={text}>
       <p>{text}</p>
     </li>
   );

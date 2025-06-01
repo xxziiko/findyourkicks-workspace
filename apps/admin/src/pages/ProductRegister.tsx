@@ -9,10 +9,9 @@ import {
   useOptionSize,
   useProductMutation,
 } from '@/features/product';
-import { useImagePreview } from '@findyourkicks/shared';
+import { useImagePreview, useModalControl } from '@findyourkicks/shared';
 import { Modal } from '@findyourkicks/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { overlay } from 'overlay-kit';
 import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -23,14 +22,24 @@ const MAX_IMAGE_COUNT = 1;
 const formSchema = productSchema.extend({
   category: z.string({ required_error: '카테고리를 선택해주세요.' }),
   brand: z.string({ required_error: '브랜드를 선택해주세요.' }),
-  productName: z.string({ required_error: '상품명을 입력해주세요.' }),
+  productName: z.string().min(1, { message: '상품명을 입력해주세요.' }),
   price: z
     .number({ message: '숫자만 입력해주세요.' })
     .refine((val) => val > 0, {
       message: '판매가는 0원 이상이어야 합니다.',
     }),
-  description: z.string({ required_error: '상품 상세 정보를 입력해주세요.' }),
-  images: z.array(z.string({ required_error: '상품 이미지를 추가해주세요.' })),
+  description: z.string().min(1, { message: '상품 상세 정보를 입력해주세요.' }),
+  images: z
+    .array(z.string())
+    .min(1, { message: '상품 이미지를 추가해주세요.' }),
+  sizes: z
+    .array(
+      z.object({
+        size: z.string().min(1, { message: '사이즈를 선택해주세요.' }),
+        stock: z.number().min(1, { message: '재고를 입력해주세요.' }),
+      }),
+    )
+    .min(1, { message: '사이즈를 선택해주세요.' }),
 });
 
 export default function ProductRegister() {
@@ -48,7 +57,7 @@ export default function ProductRegister() {
       sizes: [],
     },
   });
-  const { handlePreviews, previews } = useImagePreview({
+  const { handlePreviews, previews, resetPreviews } = useImagePreview({
     maxCount: MAX_IMAGE_COUNT,
   });
   const handleUpload = useImageUploader();
@@ -59,9 +68,10 @@ export default function ProductRegister() {
     updateSelectedSizes,
     handleChangeSelectedSizes,
     deleteSelectedSize,
+    resetSelectedSizes,
   } = useOptionSize();
   const { mutate: postProduct } = useProductMutation();
-
+  const { isOpen, closeModal, toggleModal } = useModalControl(false);
   const updateForm = async () => {
     const urls = await handleUpload(previews);
 
@@ -79,21 +89,13 @@ export default function ProductRegister() {
   const onSubmit = (data: Product) => {
     postProduct(data, {
       onSuccess: () => {
+        toggleModal();
         reset();
-        handleAlertModal();
+        resetPreviews();
+        resetSelectedSizes();
       },
     });
   };
-
-  const handleAlertModal = () =>
-    overlay.open(({ isOpen, close }) => {
-      return (
-        <Modal title="상품 등록" isOpen={isOpen}>
-          <div className={styles.alert}>상품 등록이 완료되었습니다.</div>
-          <Modal.Footer onClose={close} type="single" />
-        </Modal>
-      );
-    });
 
   return (
     <form className={styles.form} onSubmit={handleSubmitForm}>
@@ -120,6 +122,13 @@ export default function ProductRegister() {
       </div>
 
       <FormActions onReset={reset} />
+
+      {isOpen && (
+        <Modal title="상품 등록" isOpen={isOpen}>
+          <div className={styles.alert}>상품 등록이 완료되었습니다.</div>
+          <Modal.Footer onClose={closeModal} type="single" />
+        </Modal>
+      )}
     </form>
   );
 }

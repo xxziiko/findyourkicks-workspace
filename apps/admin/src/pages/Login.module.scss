@@ -1,3 +1,8 @@
+@mixin border-base($width, $color, $radius) {
+  border: $width solid $color;
+  border-radius: $radius;
+}
+
 .login {
   display: flex;
   width: 100%;
@@ -18,12 +23,26 @@
 
   &__container {
     @include flex-col;
+    @include border-base(1.5px, $primary, $radius-s);
     align-items: center;
     width: 500px;
     height: 500px;
-    border: 1.5px solid $primary;
-    border-radius: $radius-s;
   }
+}
+
+.test__container {
+  padding: 24px 0;
+}
+
+.test__item {
+  @include flex-item;
+  gap: 12px;
+}
+
+.item__label {
+  width: 100px;
+  font-size: $font-s;
+  font-weight: 500;
 }
 
 .form {
@@ -53,6 +72,10 @@
 
 .title {
   padding: 32px 0;
+}
+
+.icon {
+  cursor: pointer;
 }
 
 .input {
