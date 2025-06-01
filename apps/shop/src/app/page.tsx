@@ -1,6 +1,7 @@
 import {
-  ProductList,
   ProductListLoading,
+  ProductSectionList,
+  SECTION_TITLE,
   productQueries,
 } from '@/features/product';
 import { fetchProductsByBrand } from '@/features/product/apis';
@@ -22,8 +23,8 @@ export default async function Home() {
 }
 
 async function Products() {
-  const productsByVans = await fetchProductsByBrand('vans');
-  const productsByNike = await fetchProductsByBrand('nike');
+  const vansProducts = await fetchProductsByBrand('vans');
+  const nikeProducts = await fetchProductsByBrand('nike');
 
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
@@ -31,14 +32,20 @@ async function Products() {
     initialPageParam: 1,
   });
 
-  const products = {
-    productsByVans,
-    productsByNike,
-  };
+  const sections = [
+    {
+      title: SECTION_TITLE.VANS,
+      products: vansProducts,
+    },
+    {
+      title: SECTION_TITLE.NIKE,
+      products: nikeProducts,
+    },
+  ];
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProductList products={products} />
+      <ProductSectionList sections={sections} />
     </HydrationBoundary>
   );
 }
