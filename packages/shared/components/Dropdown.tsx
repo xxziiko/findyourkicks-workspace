@@ -39,7 +39,6 @@ function useDropdown(): DropdownContextType {
 }
 
 interface DropdownProps extends PropsWithChildren {
-  variant?: 'border';
   selected: string;
   onChange: (text: string) => void;
   id?: string;
@@ -55,13 +54,7 @@ interface DropdownProps extends PropsWithChildren {
  * @param onChange 값 변경 핸들러
  * @param id 드롭다운 아이디(테스트용)
  */
-export function Dropdown({
-  children,
-  selected,
-  variant,
-  onChange,
-  id,
-}: DropdownProps) {
+export function Dropdown({ children, selected, onChange, id }: DropdownProps) {
   const {
     isOpen,
     isEditable,
@@ -78,7 +71,6 @@ export function Dropdown({
   const value = {
     selected,
     isOpen,
-    variant,
     isEditable,
     onEdit: handleEditable,
     onSelect: handleSelected,
@@ -94,7 +86,7 @@ export function Dropdown({
   return (
     <DropdownContext.Provider value={value}>
       <div
-        className={styles[`drop-down__${variant}`] ?? styles['drop-down']}
+        className={isOpen ? styles['drop-down--open'] : styles['drop-down']}
         data-testid={id}
       >
         {children}
@@ -122,7 +114,7 @@ function Trigger() {
       className={styles['drop-down__trigger']}
     >
       {isEditable ? <Input /> : selected}
-      {isOpen ? <ChevronUp /> : <ChevronDown />}
+      {isOpen ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
     </button>
   );
 }
@@ -138,19 +130,19 @@ function Menu({ children }: { children: React.ReactNode }) {
     (child) => (child as any).props.text,
   );
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      className={styles['drop-down__menu']}
-      role="listbox"
-      tabIndex={0}
-      aria-label="dropdown options"
-      aria-hidden={!isOpen}
-      onKeyDown={(e) => onKeyDown(e, options)}
-    >
-      {children}
-    </div>
+    isOpen && (
+      <div
+        className={styles['drop-down__menu']}
+        role="listbox"
+        tabIndex={0}
+        aria-label="dropdown options"
+        aria-hidden={!isOpen}
+        onKeyDown={(e) => onKeyDown(e, options)}
+      >
+        {children}
+      </div>
+    )
   );
 }
 

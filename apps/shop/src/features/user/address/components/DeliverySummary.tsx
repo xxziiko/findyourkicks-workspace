@@ -39,7 +39,6 @@ export default function DeliverySummary({
             <p className={styles['delivery__sub--last']}>베송 메세지</p>
 
             <Dropdown
-              variant="border"
               selected={deliveryMessage}
               onChange={updateDeliveryMessage}
             >

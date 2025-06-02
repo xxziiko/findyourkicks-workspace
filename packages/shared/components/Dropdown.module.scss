@@ -1,54 +1,49 @@
-@mixin drop-down-default {
-  cursor: pointer;
-  width: 100%;
-}
-
 .drop-down {
-  @include drop-down-default;
+  border: 1px solid $gray-light;
+  border-radius: $radius-s;
+  width: 100%;
 
-  &__border {
-    @include drop-down-default;
-    padding: 16px;
+  &--open {
+    position: relative;
     border: 1px solid $gray-light;
-    border-radius: $radius-s;
+    border-bottom: none;
+    border-radius: $radius-s $radius-s 0 0;
+    cursor: pointer;
+  }
+
+  &__trigger {
+    @include flex-between;
+    width: 100%;
+    padding: 16px;
+    align-items: center;
+    color: $primary;
+    font-weight: 500;
+  }
+
+  &__menu {
+    position: absolute;
+    width: 100%;
+    padding: 4px;
+    background-color: white;
+    border: 1px solid $gray-light;
+    border-top: none;
+    border-radius: 0 0 $radius-s $radius-s;
+    z-index: 10;
   }
 
   &__item {
     @include flex-between;
     align-items: center;
-    color: $primary;
-    padding: 12px 0;
+    width: 100%;
+    padding: 16px;
     font-weight: 400;
+    color: $primary;
+    cursor: pointer;
 
     &:hover {
       background-color: #f5f5f5;
+      border-radius: $radius-s;
     }
-  }
-
-  &__menu {
-    padding-top: 16px;
-  }
-
-  &__trigger {
-    @include flex-between;
-    align-items: center;
-    color: $primary;
-    width: 100%;
-  }
-
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-}
-
-.item {
-  list-style: none;
-
-  &:hover {
-    background-color: #ededed;
-    border-radius: $radius-xs;
   }
 }
 
