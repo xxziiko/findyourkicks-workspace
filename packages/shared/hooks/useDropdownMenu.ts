@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 export function useDropdownMenu(onChange: (text: string) => void) {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
 
   const handleSelected = useCallback(
     (text: string) => onChange(text),
@@ -15,11 +16,17 @@ export function useDropdownMenu(onChange: (text: string) => void) {
     [],
   );
 
-  const handleClose = useCallback(() => setIsOpen(false), []);
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setFocusedIndex(-1);
+  }, []);
 
   const handleToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
-  }, []);
+    if (!isOpen) {
+      setFocusedIndex(0);
+    }
+  }, [isOpen]);
 
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
@@ -29,13 +36,32 @@ export function useDropdownMenu(onChange: (text: string) => void) {
   );
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLUListElement | HTMLLIElement>) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        setIsOpen((prev) => !prev);
+    (e: React.KeyboardEvent<HTMLDivElement>, options: string[]) => {
+      switch (e.key) {
+        case 'Escape':
+          handleClose();
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedIndex((prev) => (prev + 1) % options.length);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedIndex(
+            (prev) => (prev - 1 + options.length) % options.length,
+          );
+          break;
+        case 'Enter':
+        case 'Space':
+          e.preventDefault();
+          if (focusedIndex >= 0) {
+            handleSelected(options[focusedIndex]);
+            handleClose();
+          }
+          break;
       }
     },
-    [],
+    [handleClose, handleSelected, focusedIndex],
   );
 
   const autoFocus = useCallback((node: HTMLInputElement | null) => {
@@ -45,6 +71,7 @@ export function useDropdownMenu(onChange: (text: string) => void) {
   return {
     isOpen,
     isEditable,
+    focusedIndex,
     handleEditable,
     handleSelected,
     handleToggle,

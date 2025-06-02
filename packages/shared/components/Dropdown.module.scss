@@ -11,17 +11,17 @@
     padding: 16px;
     border: 1px solid $gray-light;
     border-radius: $radius-s;
+  }
 
-    li {
-      @include flex-between;
-      align-items: center;
-      color: $primary;
-      padding: 12px 0;
-      font-weight: 400;
+  &__item {
+    @include flex-between;
+    align-items: center;
+    color: $primary;
+    padding: 12px 0;
+    font-weight: 400;
 
-      &:hover {
-        background-color: #f5f5f5;
-      }
+    &:hover {
+      background-color: #f5f5f5;
     }
   }
 
