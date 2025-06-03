@@ -1,15 +1,15 @@
-import { InputWithUnit } from '@/shared';
+import { ErrorMessage, InputWithUnit } from '@/shared';
 import { commaizeNumber } from '@findyourkicks/shared';
 import { Trash2Icon } from 'lucide-react';
 import styles from './OptionSizeTable.module.scss';
 
 interface OptionSizeTableProps {
-  selectedSizes: { size: string; stock: number }[];
+  sizes: { size: string; stock: number }[];
   onChange: (size: string, stock: number) => void;
   onDelete: (size: string) => void;
 }
 export function OptionSizeTable({
-  selectedSizes,
+  sizes,
   onChange,
   onDelete,
 }: OptionSizeTableProps) {
@@ -18,10 +18,10 @@ export function OptionSizeTable({
       <div className={styles.sizeHeader}>
         <p>사이즈</p>
         <p>재고</p>
-        <div />
+        <p />
       </div>
 
-      {selectedSizes.map(({ size, stock }) => (
+      {sizes.map(({ size, stock }) => (
         <SizeItem
           size={size}
           key={size}
@@ -43,13 +43,13 @@ interface SizeItemProps {
 function SizeItem({ size, stock, onChange, onDelete }: SizeItemProps) {
   return (
     <div className={styles.sizeItem}>
-      <div className={styles.sizeCell}>
+      <div className={styles.cell}>
         <p aria-label={size}>{size}</p>
       </div>
 
-      <div className={styles.sizeCell}>
+      <div className={styles.cellCol}>
         <InputWithUnit
-          id="stock"
+          id={`${size}-stock-input`}
           placeholder="숫자만 입력해주세요."
           unit="개"
           value={commaizeNumber(stock)}
@@ -57,9 +57,13 @@ function SizeItem({ size, stock, onChange, onDelete }: SizeItemProps) {
             onChange(size, Number(e.target.value))
           }
         />
+
+        {stock === 0 && (
+          <ErrorMessage id="stock" error="재고를 입력해주세요." />
+        )}
       </div>
 
-      <div className={styles.sizeCell}>
+      <div className={styles.cell}>
         <button type="button" onClick={() => onDelete(size)}>
           <Trash2Icon width={20} height={20} />
         </button>

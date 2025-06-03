@@ -6,14 +6,14 @@ import {
   ProductOptionForm,
   productSchema,
   useImageUploader,
-  useOptionSize,
   useProductMutation,
 } from '@/features/product';
-import { ErrorMessage } from '@/shared';
+import { PATH } from '@/shared';
 import { Modal, useImagePreview, useModalControl } from '@findyourkicks/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import styles from './ProductRegister.module.scss';
 
@@ -35,8 +35,8 @@ const formSchema = productSchema.extend({
   sizes: z
     .array(
       z.object({
-        size: z.string().min(1, { message: '사이즈를 선택해주세요.' }),
-        stock: z.number().min(1, { message: '재고를 입력해주세요.' }),
+        size: z.string().min(1),
+        stock: z.number().refine((val) => val > 0),
       }),
     )
     .min(1, { message: '사이즈를 선택해주세요.' }),
@@ -57,27 +57,21 @@ export default function ProductRegister() {
       sizes: [],
     },
   });
+
   const { handleImageInputChange, previews, resetPreviews } = useImagePreview({
     maxCount: MAX_IMAGE_COUNT,
   });
   const handleUpload = useImageUploader();
-  const {
-    selectedSizes,
-    handleSelectAllSizes,
-    handleAllStockChange,
-    updateSelectedSizes,
-    handleSizeChange,
-    deleteSelectedSize,
-    resetSelectedSizes,
-  } = useOptionSize();
   const { mutate: postProduct } = useProductMutation();
   const { isOpen, closeModal, toggleModal } = useModalControl(false);
+
   const updateForm = async () => {
     const urls = await handleUpload(previews);
 
-    setValue('sizes', selectedSizes);
     setValue('images', urls);
   };
+
+  const navigate = useNavigate();
 
   const handleSubmitForm = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,11 +84,18 @@ export default function ProductRegister() {
     postProduct(data, {
       onSuccess: () => {
         toggleModal();
-        reset();
-        resetPreviews();
-        resetSelectedSizes();
+        handleReset();
       },
     });
+  };
+
+  const handleReset = () => {
+    reset();
+    resetPreviews();
+  };
+
+  const goToHome = () => {
+    navigate(PATH.default);
   };
 
   return (
@@ -105,36 +106,33 @@ export default function ProductRegister() {
           register={register}
           errors={errors}
         />
-        <ProductOptionForm
-          sizes={selectedSizes}
-          onAllSizesClick={handleSelectAllSizes}
-          onAllStockChange={handleAllStockChange}
-          onSizeClick={updateSelectedSizes}
-          onSizesChange={handleSizeChange}
-          onSizeDelete={deleteSelectedSize}
-          ErrorMessage={
-            errors.sizes && (
-              <ErrorMessage id="sizes" error={errors.sizes?.message} />
-            )
-          }
-        />
+        <ProductOptionForm errors={errors} control={control} />
         <ProductImageUploader
           previews={previews}
           onInputChange={handleImageInputChange}
-          ErrorMessage={
-            errors.images && (
-              <ErrorMessage id="images" error={errors.images?.message} />
-            )
-          }
+          errors={errors}
         />
       </div>
 
-      <FormActions onReset={reset} />
+      <FormActions onResetClick={handleReset} />
 
       {isOpen && (
         <Modal title="상품 등록" isOpen={isOpen}>
           <div className={styles.alert}>상품 등록이 완료되었습니다.</div>
-          <Modal.Footer onClose={closeModal} type="single" />
+          <Modal.Footer
+            buttons={[
+              {
+                text: '상품 더 추가하기',
+                onClick: closeModal,
+                variant: 'secondary',
+              },
+              {
+                text: '홈으로 가기',
+                onClick: goToHome,
+                variant: 'primary',
+              },
+            ]}
+          />
         </Modal>
       )}
     </form>

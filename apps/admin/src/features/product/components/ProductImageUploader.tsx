@@ -1,6 +1,8 @@
-import { CardSection } from '@/shared/components';
+import type { Product } from '@/features/product';
+import { CardSection, ErrorMessage } from '@/shared/components';
 import { ImageUploadInput } from '@findyourkicks/shared';
-import type { ChangeEvent, ReactNode } from 'react';
+import type { ChangeEvent } from 'react';
+import type { FieldErrors } from 'react-hook-form';
 import styles from './ProductImageUploader.module.scss';
 
 const MAX_IMAGE_COUNT = 1;
@@ -8,13 +10,13 @@ const MAX_IMAGE_COUNT = 1;
 interface ProductImageUploaderProps {
   previews: string[];
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  ErrorMessage: ReactNode;
+  errors: FieldErrors<Product>;
 }
 
 export function ProductImageUploader({
   previews,
-  ErrorMessage,
   onInputChange,
+  errors,
 }: ProductImageUploaderProps) {
   return (
     <CardSection title="상품 이미지">
@@ -23,7 +25,9 @@ export function ProductImageUploader({
         수 있습니다.
       </p>
 
-      {ErrorMessage}
+      {errors.images && (
+        <ErrorMessage id="images" error={errors.images?.message} />
+      )}
 
       <ImageUploadInput
         maxCount={MAX_IMAGE_COUNT}

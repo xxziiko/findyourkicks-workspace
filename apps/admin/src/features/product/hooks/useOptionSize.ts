@@ -1,58 +1,72 @@
 import { SIZES } from '@/shared/constants';
-import { useCallback, useState } from 'react';
+import { type ChangeEvent, useCallback } from 'react';
+import type { FieldValues } from 'react-hook-form';
 
 export function useOptionSize() {
-  const [selectedSizes, setSelectedSizes] = useState<
-    {
-      size: string;
-      stock: number;
-    }[]
-  >([]);
+  const isAllSelected = useCallback(
+    (field: FieldValues) => field.value.length === SIZES.length,
+    [],
+  );
 
-  const updateSelectedSizes = useCallback((size: string) => {
-    setSelectedSizes((prev) => [...prev, { size, stock: 0 }]);
-  }, []);
+  const updateSelectedSizes = useCallback(
+    (size: string, field: FieldValues) => {
+      field.onChange([...field.value, { size, stock: 0 }]);
+    },
+    [],
+  );
 
-  const handleSelectAllSizes = useCallback(() => {
-    if (selectedSizes.length === SIZES.length) {
-      setSelectedSizes([]);
-      return;
-    }
+  const handleSelectAllSizes = useCallback(
+    (field: FieldValues) => {
+      if (isAllSelected(field)) {
+        field.onChange([]);
+        return;
+      }
 
-    setSelectedSizes(SIZES.map((size) => ({ size, stock: 0 })));
-  }, [selectedSizes]);
+      field.onChange(SIZES.map((size) => ({ size, stock: 0 })));
+    },
+    [isAllSelected],
+  );
 
-  const handleSizeChange = useCallback((size: string, stock: number) => {
-    setSelectedSizes((prev) =>
-      prev.map((selectedSize) =>
-        selectedSize.size === size ? { ...selectedSize, stock } : selectedSize,
+  const handleAllStockChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>, field: FieldValues) => {
+      const stock = Number(e.target.value);
+      field.onChange(
+        field.value.map((selectedSize: { size: string }) => ({
+          ...selectedSize,
+          stock,
+        })),
+      );
+    },
+    [],
+  );
+
+  const handleSizeChange = useCallback(
+    (size: string, stock: number, field: FieldValues) => {
+      field.onChange(
+        field.value.map((selectedSize: { size: string }) =>
+          selectedSize.size === size
+            ? { ...selectedSize, stock }
+            : selectedSize,
+        ),
+      );
+    },
+    [],
+  );
+
+  const deleteSelectedSize = useCallback((size: string, field: FieldValues) => {
+    field.onChange(
+      field.value.filter(
+        (selectedSize: { size: string }) => selectedSize.size !== size,
       ),
     );
   }, []);
 
-  const handleAllStockChange = useCallback((stock: number) => {
-    setSelectedSizes((prev) =>
-      prev.map((selectedSize) => ({ ...selectedSize, stock })),
-    );
-  }, []);
-
-  const deleteSelectedSize = useCallback((size: string) => {
-    setSelectedSizes((prev) =>
-      prev.filter((selectedSize) => selectedSize.size !== size),
-    );
-  }, []);
-
-  const resetSelectedSizes = useCallback(() => {
-    setSelectedSizes([]);
-  }, []);
-
   return {
-    selectedSizes,
     updateSelectedSizes,
     handleSelectAllSizes,
     handleSizeChange,
     handleAllStockChange,
     deleteSelectedSize,
-    resetSelectedSizes,
+    isAllSelected,
   };
 }

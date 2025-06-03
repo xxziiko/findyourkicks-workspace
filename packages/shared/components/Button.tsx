@@ -5,7 +5,7 @@ import type { PropsWithChildren } from 'react';
 import styles from './Button.module.scss';
 
 type Variant = 'kakao' | 'google' | 'label' | 'primary' | 'secondary';
-interface ButtonProps extends PropsWithChildren {
+export interface ButtonProps extends PropsWithChildren {
   key?: number | string;
   variant?: Variant;
   icon?: React.ReactNode;

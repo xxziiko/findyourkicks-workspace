@@ -1,86 +1,97 @@
-import { OptionSizeTable } from '@/features/product';
-import { CardSection, InputWithUnit } from '@/shared/components';
+import {
+  OptionSizeTable,
+  type Product,
+  useOptionSize,
+} from '@/features/product';
+import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
-import type { MouseEvent, ReactNode } from 'react';
+import type { ChangeEvent } from 'react';
+import { type Control, Controller, type FieldErrors } from 'react-hook-form';
 import styles from './ProductOptionForm.module.scss';
 
 interface ProductOptionFormProps {
-  ErrorMessage: ReactNode;
-  sizes: { size: string; stock: number }[];
-  onAllSizesClick: (e: MouseEvent<Element>) => void;
-  onAllStockChange: (stock: number) => void;
-  onSizeClick: (size: string) => void;
-  onSizesChange: (size: string, stock: number) => void;
-  onSizeDelete: (size: string) => void;
+  errors: FieldErrors<Product>;
+  control: Control<Product>;
 }
 
-export function ProductOptionForm({
-  sizes,
-  ErrorMessage,
-  onAllSizesClick,
-  onSizeClick,
-  onSizesChange,
-  onSizeDelete,
-  onAllStockChange,
-}: ProductOptionFormProps) {
-  const optionButtonText =
-    sizes.length === SIZES.length ? '전체 선택 해제' : '전체 선택';
+export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {
+  const {
+    isAllSelected,
+    handleAllStockChange,
+    updateSelectedSizes,
+    handleSelectAllSizes,
+    handleSizeChange,
+    deleteSelectedSize,
+  } = useOptionSize();
 
   return (
     <CardSection title="옵션">
-      <div className={styles.size}>
-        <div>
-          <p className={styles.sizeTitle}>사이즈</p>
-          <p className={styles.description}>
-            등록할 사이즈 옵션을 선택해주세요.
-          </p>
-        </div>
+      <Controller
+        control={control}
+        name="sizes"
+        render={({ field }) => (
+          <div className={styles.size}>
+            <div>
+              <p className={styles.sizeTitle}>사이즈</p>
+              <p className={styles.description}>
+                등록할 사이즈 옵션을 선택해주세요.
+              </p>
+            </div>
 
-        {ErrorMessage}
+            {errors.sizes && (
+              <ErrorMessage id="sizes" error={errors.sizes?.message} />
+            )}
 
-        <div className={styles.sizeButtons}>
-          <Button type="button" onClick={onAllSizesClick}>
-            {optionButtonText}
-          </Button>
-          {SIZES.map((size) => (
-            <Button
-              key={size}
-              variant="secondary"
-              type="button"
-              onClick={() => onSizeClick(size)}
-              disabled={sizes.some((s) => s.size === size)}
-            >
-              {size}
-            </Button>
-          ))}
-        </div>
+            <div className={styles.sizeButtons}>
+              <Button type="button" onClick={() => handleSelectAllSizes(field)}>
+                {isAllSelected(field) ? '전체 선택 해제' : '전체 선택'}
+              </Button>
 
-        {/* 선택한 옵션 테이블 - 재고 일괄 적용 또는 개별 적용 */}
-        {sizes.length > 0 && (
-          <>
-            <CardSection.ListItem subTitle="재고 일괄 적용">
-              <div className={styles.stockInput}>
-                <InputWithUnit
-                  aria-label="stock-input"
-                  id="stock"
-                  placeholder="숫자만 입력해주세요."
-                  unit="개"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    onAllStockChange(Number(e.target.value))
+              {SIZES.map((size) => (
+                <Button
+                  key={size}
+                  variant="secondary"
+                  type="button"
+                  onClick={() => updateSelectedSizes(size, field)}
+                  disabled={
+                    Array.isArray(field.value) &&
+                    field.value.some((s: { size: string }) => s.size === size)
                   }
-                />
-              </div>
-            </CardSection.ListItem>
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
 
-            <OptionSizeTable
-              selectedSizes={sizes}
-              onChange={onSizesChange}
-              onDelete={onSizeDelete}
-            />
-          </>
+            {/* 선택한 옵션 테이블 - 재고 일괄 적용 또는 개별 적용 */}
+            {field.value.length > 0 && (
+              <>
+                <CardSection.ListItem subTitle="재고 일괄 적용">
+                  <div className={styles.stockInput}>
+                    <InputWithUnit
+                      id="all-stock-input"
+                      placeholder="숫자만 입력해주세요."
+                      unit="개"
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleAllStockChange(e, field)
+                      }
+                    />
+                  </div>
+                </CardSection.ListItem>
+
+                <OptionSizeTable
+                  sizes={field.value}
+                  onChange={(size, stock) =>
+                    handleSizeChange(size, stock, field)
+                  }
+                  onDelete={(size) => deleteSelectedSize(size, field)}
+                />
+              </>
+            )}
+          </div>
         )}
-      </div>
+      />
     </CardSection>
   );
 }
