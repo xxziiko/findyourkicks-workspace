@@ -25,7 +25,7 @@ export default function useProductList() {
     allLoaded,
     isFetchingNextPage,
     loadMoreRef,
-    onAllImageLoad: handleImageLoad,
-    onFetchNextPage: handleFetchNextPage,
+    handleImageLoad,
+    handleFetchNextPage,
   };
 }

@@ -66,8 +66,7 @@ export function ProductBasicForm({
                 name={id as keyof Product}
                 render={({ field }) => (
                   <Dropdown
-                    testId={id}
-                    variant="border"
+                    id={id}
                     selected={
                       (field.value as string) ?? `${title}를 선택해주세요.`
                     }

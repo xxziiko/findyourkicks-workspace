@@ -1,21 +1,22 @@
 import type { Product } from '@/features/product';
 import { CardSection, ErrorMessage } from '@/shared/components';
 import { ImageUploadInput } from '@findyourkicks/shared';
+import type { ChangeEvent } from 'react';
 import type { FieldErrors } from 'react-hook-form';
 import styles from './ProductImageUploader.module.scss';
 
 const MAX_IMAGE_COUNT = 1;
 
 interface ProductImageUploaderProps {
-  errors: FieldErrors<Product>;
   previews: string[];
-  handlePreviews: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  errors: FieldErrors<Product>;
 }
 
 export function ProductImageUploader({
-  errors,
   previews,
-  handlePreviews,
+  onInputChange,
+  errors,
 }: ProductImageUploaderProps) {
   return (
     <CardSection title="상품 이미지">
@@ -31,7 +32,7 @@ export function ProductImageUploader({
       <ImageUploadInput
         maxCount={MAX_IMAGE_COUNT}
         previews={previews}
-        onChange={handlePreviews}
+        onChange={onInputChange}
       />
     </CardSection>
   );

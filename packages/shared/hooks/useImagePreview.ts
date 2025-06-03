@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { type ChangeEvent, useCallback, useState } from 'react';
 
 const getImagePreviews = async (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -40,8 +40,8 @@ export function useImagePreview({
 }) {
   const [previews, setPreviews] = useState<string[]>([]);
 
-  const handlePreviews = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageInputChange = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
       const newPreviews = await getImagePreviews(e, maxCount);
       if (!newPreviews) return;
 
@@ -66,7 +66,7 @@ export function useImagePreview({
   return {
     previews,
     removeFile,
-    handlePreviews,
+    handleImageInputChange,
     resetPreviews,
   };
 }

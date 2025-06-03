@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import styles from './Modal.module.scss';
-import { Button, GlobalPortal } from './index';
+import { Button, type ButtonProps, GlobalPortal } from './index';
 
 interface ModalProps {
   title: string;
@@ -41,24 +41,22 @@ function Header({ title }: { title: string }) {
   );
 }
 
-function Footer({
-  onClose,
-  type = 'default',
-}: {
-  onClose: () => void;
-  type?: 'default' | 'single';
-}) {
+interface ModalFooterButton extends ButtonProps {
+  text: string;
+}
+
+interface ModalFooterProps {
+  buttons: ModalFooterButton[];
+}
+
+function Footer({ buttons }: ModalFooterProps) {
   return (
     <div className={styles.footer}>
-      {type === 'default' && (
-        <Button type="submit" radius width="30%">
-          저장하기
+      {buttons.map(({ text, ...props }) => (
+        <Button key={text} {...props} radius>
+          {text}
         </Button>
-      )}
-
-      <Button onClick={onClose} variant="secondary" radius>
-        닫기
-      </Button>
+      ))}
     </div>
   );
 }

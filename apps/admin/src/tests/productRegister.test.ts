@@ -50,10 +50,10 @@ test.describe('상품 등록', () => {
       await expect(page.getByRole('button', { name: size })).toBeDisabled();
     }
 
-    await page.getByLabel('stock-input').fill('10');
+    await page.getByTestId('all-stock-input').fill('10');
 
     for (const size of selectedSizes) {
-      await expect(page.getByLabel(size)).toBeVisible();
+      await expect(page.getByTestId(`${size}-stock-input`)).toBeVisible();
     }
 
     // 이미지 업로드
@@ -107,10 +107,10 @@ test.describe('상품 등록', () => {
       await expect(page.getByRole('button', { name: size })).toBeDisabled();
     }
 
-    await page.getByLabel('stock-input').fill('10');
+    await page.getByTestId('all-stock-input').fill('10');
 
     for (const size of SIZES) {
-      await expect(page.getByLabel(size)).toBeVisible();
+      await expect(page.getByTestId(`${size}-stock-input`)).toBeVisible();
     }
 
     await page.getByRole('button', { name: '전체 선택 해제' }).click();
