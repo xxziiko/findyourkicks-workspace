@@ -1,23 +1,34 @@
 import { useSignOutMutation } from '@/features/auth';
 import { PATH } from '@/shared';
+import { PanelLeftCloseIcon, PanelLeftOpenIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 
-export function Header({ text }: { text?: string }) {
-  const navigate = useNavigate();
-  const { mutate: signOut } = useSignOutMutation();
+interface HeaderProps {
+  text?: string;
+  isOpenSidebar: boolean;
+  toggleSidebar: () => void;
+}
 
-  const handleSignOut = () => {
-    signOut(undefined, {
-      onSuccess: () => {
-        navigate(PATH.login);
-      },
-    });
-  };
+export function Header({ text, isOpenSidebar, toggleSidebar }: HeaderProps) {
+  const navigate = useNavigate();
+  const { mutate: signOut } = useSignOutMutation({
+    onSuccess: () => {
+      navigate(PATH.login);
+    },
+  });
+
   return (
     <header className={styles.header}>
-      <h2>{text}</h2>
-      <button type="button" onClick={handleSignOut} aria-label="로그아웃">
+      <div className={styles.headerTitle}>
+        {isOpenSidebar ? (
+          <PanelLeftCloseIcon onClick={toggleSidebar} />
+        ) : (
+          <PanelLeftOpenIcon onClick={toggleSidebar} />
+        )}
+        <h2>{text}</h2>
+      </div>
+      <button type="button" onClick={() => signOut()} aria-label="로그아웃">
         로그아웃
       </button>
     </header>

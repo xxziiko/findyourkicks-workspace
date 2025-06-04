@@ -1,4 +1,9 @@
-import { PATH, useActiveTabTitle, useToggleTab } from '@/shared';
+import {
+  PATH,
+  useActiveTabTitle,
+  useSidebarControl,
+  useToggleTab,
+} from '@/shared';
 import { Header, Tabs } from '@/shared/components';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './PageLayout.module.scss';
@@ -32,18 +37,13 @@ export function PageLayout() {
   const { openTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
     useToggleTab();
   const title = useActiveTabTitle();
+  const { isOpen: isOpenSidebar, toggleSidebar } = useSidebarControl();
 
   return (
     <div className={styles.container}>
-      <Tabs>
+      <Tabs isOpen={isOpenSidebar}>
         <Link to={PATH.default}>
-          <Tabs.Title
-            onClick={() => {
-              resetTabs();
-            }}
-          >
-            홈
-          </Tabs.Title>
+          <Tabs.Title onClick={resetTabs}>홈</Tabs.Title>
         </Link>
 
         {TAB_TITLES.map(({ title, children }) => (
@@ -69,7 +69,11 @@ export function PageLayout() {
       </Tabs>
 
       <main className={styles.main}>
-        <Header text={title} />
+        <Header
+          text={title}
+          isOpenSidebar={isOpenSidebar}
+          toggleSidebar={toggleSidebar}
+        />
         <Outlet />
       </main>
     </div>

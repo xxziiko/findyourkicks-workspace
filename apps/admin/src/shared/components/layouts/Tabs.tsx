@@ -2,12 +2,20 @@ import type { PropsWithChildren } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Tabs.module.scss';
 
-export const Tabs = ({ children }: PropsWithChildren) => {
+interface TabsProps extends PropsWithChildren {
+  isOpen: boolean;
+}
+
+export const Tabs = ({ children, isOpen }: TabsProps) => {
   return (
-    <nav className={styles.tabs}>
-      <h1 className={styles.logo}>findyourkicks</h1>
-      {children}
-    </nav>
+    <>
+      {isOpen && (
+        <nav className={styles.tabs}>
+          <h1 className={styles.logo}>findyourkicks</h1>
+          {children}
+        </nav>
+      )}
+    </>
   );
 };
 

@@ -1,4 +1,13 @@
 .header {
   @include flex-between;
   padding: 24px 24px 0 24px;
+
+  &__title {
+    @include flex-item;
+    gap: 16px;
+  }
+
+  svg {
+    cursor: pointer;
+  }
 }
