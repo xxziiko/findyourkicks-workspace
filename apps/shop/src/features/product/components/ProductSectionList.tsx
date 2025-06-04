@@ -24,35 +24,39 @@ export function ProductSectionList({ sections }: ProductSectionListProps) {
 
   return (
     <>
-      {!allLoaded && <ProductListLoading />}
+      {!allLoaded ? (
+        <ProductListLoading />
+      ) : (
+        <>
+          <section className={styles.banner}>
+            <BannerSlide />
+          </section>
 
-      <section className={styles.banner}>
-        <BannerSlide />
-      </section>
+          {sections.map(({ title, products }) => (
+            <ProductSection
+              key={title}
+              title={title}
+              products={products}
+              onAllImageLoad={handleImageLoad}
+            />
+          ))}
 
-      {sections.map(({ title, products }) => (
-        <ProductSection
-          key={title}
-          title={title}
-          products={products}
-          onAllImageLoad={handleImageLoad}
-        />
-      ))}
+          <ProductSection
+            title={SECTION_TITLE.ALL}
+            products={productList}
+            onAllImageLoad={handleImageLoad}
+          />
 
-      <ProductSection
-        title={SECTION_TITLE.ALL}
-        products={productList}
-        onAllImageLoad={handleImageLoad}
-      />
-
-      {/* TODO: 직접 구현 */}
-      <ImpressionArea
-        onImpressionStart={handleFetchNextPage}
-        areaThreshold={0.2}
-        className={styles.loading}
-      >
-        <Loader className={styles.loading__loader} />
-      </ImpressionArea>
+          {/* TODO: 직접 구현 */}
+          <ImpressionArea
+            onImpressionStart={handleFetchNextPage}
+            areaThreshold={0.2}
+            className={styles.loading}
+          >
+            <Loader className={styles.loading__loader} />
+          </ImpressionArea>
+        </>
+      )}
     </>
   );
 }

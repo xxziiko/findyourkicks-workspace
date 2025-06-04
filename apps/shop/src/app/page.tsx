@@ -15,11 +15,7 @@ import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  return (
-    <Suspense fallback={<ProductListLoading />}>
-      <Products />
-    </Suspense>
-  );
+  return <Products />;
 }
 
 async function Products() {
@@ -45,7 +41,9 @@ async function Products() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProductSectionList sections={sections} />
+      <Suspense fallback={<ProductListLoading />}>
+        <ProductSectionList sections={sections} />
+      </Suspense>
     </HydrationBoundary>
   );
 }
