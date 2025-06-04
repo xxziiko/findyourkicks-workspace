@@ -2,20 +2,20 @@ import { SIZES } from '@/shared/constants';
 import { type ChangeEvent, useCallback } from 'react';
 import type { FieldValues } from 'react-hook-form';
 
-export function useOptionSize() {
+export function useProductSizeOptions() {
   const isAllSelected = useCallback(
     (field: FieldValues) => field.value.length === SIZES.length,
     [],
   );
 
-  const updateSelectedSizes = useCallback(
+  const handleAddSizeOption = useCallback(
     (size: string, field: FieldValues) => {
       field.onChange([...field.value, { size, stock: 0 }]);
     },
     [],
   );
 
-  const handleSelectAllSizes = useCallback(
+  const handleToggleAllSizes = useCallback(
     (field: FieldValues) => {
       if (isAllSelected(field)) {
         field.onChange([]);
@@ -53,20 +53,23 @@ export function useOptionSize() {
     [],
   );
 
-  const deleteSelectedSize = useCallback((size: string, field: FieldValues) => {
-    field.onChange(
-      field.value.filter(
-        (selectedSize: { size: string }) => selectedSize.size !== size,
-      ),
-    );
-  }, []);
+  const handleRemoveSizeOption = useCallback(
+    (size: string, field: FieldValues) => {
+      field.onChange(
+        field.value.filter(
+          (selectedSize: { size: string }) => selectedSize.size !== size,
+        ),
+      );
+    },
+    [],
+  );
 
   return {
-    updateSelectedSizes,
-    handleSelectAllSizes,
+    handleAddSizeOption,
+    handleToggleAllSizes,
     handleSizeChange,
     handleAllStockChange,
-    deleteSelectedSize,
+    handleRemoveSizeOption,
     isAllSelected,
   };
 }

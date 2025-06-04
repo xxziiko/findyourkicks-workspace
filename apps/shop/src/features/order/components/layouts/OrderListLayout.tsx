@@ -1,4 +1,4 @@
-import { formatDateDefault } from '@/shared/utils/date';
+import { formatDateDefault } from '@findyourkicks/shared';
 import type { ReactNode } from 'react';
 import styles from './OrderListLayout.module.scss';
 

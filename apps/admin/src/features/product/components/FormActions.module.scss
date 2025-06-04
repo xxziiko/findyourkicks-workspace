@@ -1,9 +1,19 @@
-.buttons {
-  @include flex-center;
-  gap: 12px;
+.container {
+  @include flex-between;
   position: sticky;
   bottom: 0;
   padding: 24px;
   background-color: #fff;
   border-top: 1px solid #f5f5f5;
+}
+
+.buttons {
+  @include flex-center;
+  gap: 12px;
+}
+
+.saved {
+  @include flex-center;
+  font-size: $font-s;
+  color: $gray-dark;
 }
