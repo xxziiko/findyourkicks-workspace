@@ -26,9 +26,8 @@ export default function useProductList({
     0,
   );
 
-  const { allLoaded, handleImageLoadCount } = useImagesLoaded(
-    totalProductCount + productList.length,
-  );
+  const { allLoaded, handleImageLoadCount } =
+    useImagesLoaded(totalProductCount);
 
   const handleFetchNextPage = () => {
     if (isFetchingNextPage || !hasNextPage) return;
