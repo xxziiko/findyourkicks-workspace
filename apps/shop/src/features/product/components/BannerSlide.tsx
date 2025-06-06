@@ -38,13 +38,7 @@ export function BannerSlide() {
     >
       {BANNERS.map(({ src, alt }) => (
         <SwiperSlide className={styles.swiper__slide} key={src}>
-          <Image
-            src={src}
-            layout="responsive"
-            alt={alt}
-            width={1216}
-            height={500}
-          />
+          <Image src={src} alt={alt} width={1216} height={500} />
         </SwiperSlide>
       ))}
     </Swiper>

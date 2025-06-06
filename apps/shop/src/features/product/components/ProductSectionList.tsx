@@ -19,44 +19,40 @@ interface ProductSectionListProps {
 }
 
 export function ProductSectionList({ sections }: ProductSectionListProps) {
-  const { allLoaded, handleImageLoad, handleFetchNextPage, productList } =
-    useProductList();
+  const { allLoaded, handleImageLoadCount, handleFetchNextPage, productList } =
+    useProductList({ sections });
 
   return (
     <>
-      {!allLoaded ? (
-        <ProductListLoading />
-      ) : (
-        <>
-          <section className={styles.banner}>
-            <BannerSlide />
-          </section>
+      {!allLoaded && <ProductListLoading />}
 
-          {sections.map(({ title, products }) => (
-            <ProductSection
-              key={title}
-              title={title}
-              products={products}
-              onAllImageLoad={handleImageLoad}
-            />
-          ))}
+      <section className={styles.banner}>
+        <BannerSlide />
+      </section>
 
-          <ProductSection
-            title={SECTION_TITLE.ALL}
-            products={productList}
-            onAllImageLoad={handleImageLoad}
-          />
+      {sections.map(({ title, products }) => (
+        <ProductSection
+          key={title}
+          title={title}
+          products={products}
+          onAllImageLoad={handleImageLoadCount}
+        />
+      ))}
 
-          {/* TODO: 직접 구현 */}
-          <ImpressionArea
-            onImpressionStart={handleFetchNextPage}
-            areaThreshold={0.2}
-            className={styles.loading}
-          >
-            <Loader className={styles.loading__loader} />
-          </ImpressionArea>
-        </>
-      )}
+      <ProductSection
+        title={SECTION_TITLE.ALL}
+        products={productList}
+        onAllImageLoad={handleImageLoadCount}
+      />
+
+      {/* TODO: 직접 구현 */}
+      <ImpressionArea
+        onImpressionStart={handleFetchNextPage}
+        areaThreshold={0.2}
+        className={styles.loading}
+      >
+        <Loader className={styles.loading__loader} />
+      </ImpressionArea>
     </>
   );
 }
