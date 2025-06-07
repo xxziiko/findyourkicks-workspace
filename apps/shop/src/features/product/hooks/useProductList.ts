@@ -1,10 +1,18 @@
 'use client';
 
 import { useProductsQuery } from '@/features/product';
+import type { ProductItem, SECTION_TITLE } from '@/features/product';
 import { useImagesLoaded } from '@/shared/hooks';
 import { useRef } from 'react';
 
-export default function useProductList() {
+export default function useProductList({
+  sections,
+}: {
+  sections: {
+    title: (typeof SECTION_TITLE)[keyof typeof SECTION_TITLE];
+    products: ProductItem[];
+  }[];
+}) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const {
     data: productList,
@@ -13,7 +21,14 @@ export default function useProductList() {
     fetchNextPage,
   } = useProductsQuery();
 
-  const { allLoaded, handleImageLoad } = useImagesLoaded(productList.length);
+  const totalProductCount = sections.reduce(
+    (acc, { products }) => acc + products.length,
+    0,
+  );
+
+  const { allLoaded, handleImageLoadCount } = useImagesLoaded(
+    totalProductCount + productList.length,
+  );
 
   const handleFetchNextPage = () => {
     if (isFetchingNextPage || !hasNextPage) return;
@@ -25,7 +40,7 @@ export default function useProductList() {
     allLoaded,
     isFetchingNextPage,
     loadMoreRef,
-    handleImageLoad,
+    handleImageLoadCount,
     handleFetchNextPage,
   };
 }
