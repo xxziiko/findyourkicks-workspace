@@ -5,3 +5,4 @@ export * from './useProductSizeOptions';
 export * from './useImageUploader';
 export * from './useFormDraft';
 export * from './useProductForm';
+export * from './useProductFormField';

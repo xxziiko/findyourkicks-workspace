@@ -1,0 +1,34 @@
+.container {
+  @include flex-col;
+  gap: 24px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.seller-status {
+  @include flex-evenly;
+  width: 100%;
+
+  > div {
+    @include flex-col;
+    align-items: center;
+    gap: 10px;
+
+    > p:first-child {
+      font-size: $font-m;
+      font-weight: 500;
+      color: $gray-dark;
+    }
+
+    > p:last-child {
+      font-size: $font-xl;
+      font-weight: 700;
+    }
+  }
+}
+
+.buttons {
+  @include flex-center;
+  align-items: center;
+  gap: 15px;
+}

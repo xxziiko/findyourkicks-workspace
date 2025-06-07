@@ -1,7 +1,6 @@
-import { productSchema } from '@/features/product';
 import { z } from 'zod';
 
-const formSchema = productSchema.extend({
+const formSchema = z.object({
   category: z.string({ required_error: '카테고리를 선택해주세요.' }),
   brand: z.string({ required_error: '브랜드를 선택해주세요.' }),
   productName: z.string().min(1, { message: '상품명을 입력해주세요.' }),

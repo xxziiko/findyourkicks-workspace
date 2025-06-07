@@ -1,21 +1,9 @@
 import { supabase } from '@/shared/utils';
 import { handleError } from '@findyourkicks/shared';
-import { z } from 'zod';
+import { type ProductForm, formSchema } from '../types';
 
-const productSchema = z.object({
-  category: z.string(),
-  brand: z.string(),
-  productName: z.string(),
-  price: z.number(),
-  description: z.string(),
-  sizes: z.array(z.object({ size: z.string(), stock: z.number() })),
-  images: z.array(z.string()),
-});
-
-type Product = z.infer<typeof productSchema>;
-
-const postProduct = async (product: Product) => {
-  const validatedProduct = productSchema.parse(product);
+const postProduct = async (product: ProductForm) => {
+  const validatedProduct = formSchema.parse(product);
   const { category, brand, productName, description, price, images, sizes } =
     validatedProduct;
 
@@ -32,4 +20,4 @@ const postProduct = async (product: Product) => {
     .then(handleError);
 };
 
-export { postProduct, type Product, productSchema };
+export { postProduct };

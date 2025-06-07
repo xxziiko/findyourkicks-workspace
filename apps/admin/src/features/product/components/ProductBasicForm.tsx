@@ -1,4 +1,4 @@
-import type { Product } from '@/features/product';
+import { type ProductForm, useProductFormField } from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
 import {
@@ -9,20 +9,7 @@ import {
 } from 'react-hook-form';
 import styles from './ProductBasicForm.module.scss';
 
-const FORM_LIST_FIELDS = [
-  {
-    id: 'category',
-    title: '카테고리',
-    options: ['운동화'],
-  },
-  {
-    id: 'brand',
-    title: '브랜드',
-    options: ['nike', 'vans', 'converse', 'new balance', 'adidas', 'puma'],
-  },
-] as const;
-
-const FORM_FIELDS = [
+const INPUT_FIELDS = [
   {
     id: 'productName',
     title: '상품명',
@@ -45,9 +32,9 @@ const FORM_FIELDS = [
 ];
 
 interface ProductBasicFormProps {
-  control: Control<Product>;
-  register: UseFormRegister<Product>;
-  errors: FieldErrors<Product>;
+  control: Control<ProductForm>;
+  register: UseFormRegister<ProductForm>;
+  errors: FieldErrors<ProductForm>;
 }
 
 export function ProductBasicForm({
@@ -55,15 +42,17 @@ export function ProductBasicForm({
   register,
   errors,
 }: ProductBasicFormProps) {
+  const { selectFields } = useProductFormField();
+
   return (
     <div className={styles.container}>
       <CardSection title="카테고리">
-        {FORM_LIST_FIELDS.map(({ id, title, options }) => (
+        {selectFields.map(({ id, title, options }) => (
           <CardSection.ListItem subTitle={title} key={title}>
             <div className={styles.dropdown}>
               <Controller
                 control={control}
-                name={id as keyof Product}
+                name={id as keyof ProductForm}
                 render={({ field }) => (
                   <Dropdown
                     id={id}
@@ -82,10 +71,10 @@ export function ProductBasicForm({
                 )}
               />
 
-              {errors[id as keyof Product] && (
+              {errors[id as keyof ProductForm] && (
                 <ErrorMessage
                   id={id}
-                  error={errors[id as keyof Product]?.message}
+                  error={errors[id as keyof ProductForm]?.message}
                 />
               )}
             </div>
@@ -93,20 +82,20 @@ export function ProductBasicForm({
         ))}
       </CardSection>
 
-      {FORM_FIELDS.map(({ id, title, placeholder, unit }) => (
+      {INPUT_FIELDS.map(({ id, title, placeholder, unit }) => (
         <CardSection title={title} key={id} aria-label={title}>
           <InputWithUnit
             id={id}
             placeholder={placeholder}
             unit={unit}
-            {...register(id as keyof Product, {
+            {...register(id as keyof ProductForm, {
               valueAsNumber: id === 'price',
             })}
           />
-          {errors[id as keyof Product] && (
+          {errors[id as keyof ProductForm] && (
             <ErrorMessage
               id={id}
-              error={errors[id as keyof Product]?.message}
+              error={errors[id as keyof ProductForm]?.message}
             />
           )}
         </CardSection>
