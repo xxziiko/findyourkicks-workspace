@@ -1,7 +1,7 @@
 import {
   OptionSizeTable,
-  type Product,
-  useOptionSize,
+  type ProductForm,
+  useProductSizeOptions,
 } from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { SIZES } from '@/shared/constants';
@@ -11,19 +11,19 @@ import { type Control, Controller, type FieldErrors } from 'react-hook-form';
 import styles from './ProductOptionForm.module.scss';
 
 interface ProductOptionFormProps {
-  errors: FieldErrors<Product>;
-  control: Control<Product>;
+  errors: FieldErrors<ProductForm>;
+  control: Control<ProductForm>;
 }
 
 export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {
   const {
     isAllSelected,
     handleAllStockChange,
-    updateSelectedSizes,
-    handleSelectAllSizes,
+    handleAddSizeOption,
+    handleToggleAllSizes,
     handleSizeChange,
-    deleteSelectedSize,
-  } = useOptionSize();
+    handleRemoveSizeOption,
+  } = useProductSizeOptions();
 
   return (
     <CardSection title="옵션">
@@ -44,7 +44,7 @@ export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {
             )}
 
             <div className={styles.sizeButtons}>
-              <Button type="button" onClick={() => handleSelectAllSizes(field)}>
+              <Button type="button" onClick={() => handleToggleAllSizes(field)}>
                 {isAllSelected(field) ? '전체 선택 해제' : '전체 선택'}
               </Button>
 
@@ -53,7 +53,7 @@ export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {
                   key={size}
                   variant="secondary"
                   type="button"
-                  onClick={() => updateSelectedSizes(size, field)}
+                  onClick={() => handleAddSizeOption(size, field)}
                   disabled={
                     Array.isArray(field.value) &&
                     field.value.some((s: { size: string }) => s.size === size)
@@ -85,7 +85,7 @@ export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {
                   onChange={(size, stock) =>
                     handleSizeChange(size, stock, field)
                   }
-                  onDelete={(size) => deleteSelectedSize(size, field)}
+                  onDelete={(size) => handleRemoveSizeOption(size, field)}
                 />
               </>
             )}

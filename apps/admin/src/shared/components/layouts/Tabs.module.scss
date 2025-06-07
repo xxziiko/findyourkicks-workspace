@@ -6,10 +6,13 @@
 
 .tabs {
   @include flex-col;
+
   gap: 32px;
   min-width: 340px;
   padding: 0 16px;
   background-color: $primary;
+
+  //TODO: 에니메이션
 }
 
 .tab {

@@ -1,5 +1,5 @@
 import { OrderComplete, getOrderById } from '@/features/order';
-import { formatDateWithTime } from '@/shared/utils/date';
+import { formatDateWithTime } from '@findyourkicks/shared';
 
 export const dynamic = 'force-static';
 

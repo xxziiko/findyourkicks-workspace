@@ -3,5 +3,5 @@ export const commaizeNumber = (number: number) => {
 };
 
 export const commaizeNumberWithUnit = (number: number, unit: string) => {
-  return `${commaizeNumber(number)}${unit}`;
+  return `${commaizeNumber(number)} ${unit}`;
 };

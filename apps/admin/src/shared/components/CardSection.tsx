@@ -1,5 +1,6 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 import styles from './CardSection.module.scss';
+import { NoData } from './NoData';
 
 interface TableCardProps<T> {
   title: string;
@@ -9,12 +10,12 @@ interface TableCardProps<T> {
 }
 
 interface CardSectionProps extends PropsWithChildren {
-  title: string;
+  title?: string;
 }
 export function CardSection({ children, title }: CardSectionProps) {
   return (
     <section className={styles.card}>
-      <h3>{title}</h3>
+      {title && <h3>{title}</h3>}
 
       {children}
     </section>
@@ -35,8 +36,9 @@ function TableCard<T extends { id: string }>({
             <p key={header}>{header}</p>
           ))}
         </div>
-        {/* TODO: NO DATA COMPONENT */}
-        {data.length === 0 && <p>No data</p>}
+
+        {data.length === 0 && <NoData text="최근 주문 내역이 없습니다." />}
+
         {data.map((item) => (
           <div key={item.id}>{renderRow(item)}</div>
         ))}

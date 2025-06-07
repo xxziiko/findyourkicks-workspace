@@ -1,0 +1,33 @@
+.container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+}
+
+.header {
+  background-color: #f5f5f5;
+  text-align: center;
+  padding: 12px;
+}
+
+.cell {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #f5f5f5;
+  border-right: 1px solid #f5f5f5;
+  min-width: 100px;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &__description {
+    max-width: 200px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

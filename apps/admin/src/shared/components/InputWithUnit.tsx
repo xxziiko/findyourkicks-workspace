@@ -12,7 +12,13 @@ interface InputWithUnitProps {
 export function InputWithUnit({ id, unit, ...props }: InputWithUnitProps) {
   return (
     <div className={styles.container}>
-      <input name={id} className={styles.input} {...props} data-testid={id} />
+      <input
+        name={id}
+        className={styles.input}
+        {...props}
+        data-testid={id}
+        autoComplete="off"
+      />
       {unit}
     </div>
   );

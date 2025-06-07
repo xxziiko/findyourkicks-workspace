@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@findyourkicks/shared": "workspace:*",
+    "@tanstack/react-table": "^8.21.3",
     "react-router-dom": "^7.6.0"
   },
   "devDependencies": {
