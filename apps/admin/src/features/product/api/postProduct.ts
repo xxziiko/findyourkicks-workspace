@@ -1,9 +1,9 @@
 import { supabase } from '@/shared/utils';
 import { handleError } from '@findyourkicks/shared';
-import { type ProductForm, formSchema } from '../types';
+import { type ProductRegisterForm, registerFormSchema } from '../types';
 
-const postProduct = async (product: ProductForm) => {
-  const validatedProduct = formSchema.parse(product);
+const postProduct = async (product: ProductRegisterForm) => {
+  const validatedProduct = registerFormSchema.parse(product);
   const { category, brand, productName, description, price, images, sizes } =
     validatedProduct;
 

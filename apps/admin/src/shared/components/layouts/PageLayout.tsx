@@ -34,7 +34,7 @@ const TAB_TITLES = [
 ] as const;
 
 export function PageLayout() {
-  const { openTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
+  const { isCloseTabs, toggleTab, resetTabs, openSubTabs, toggleSubTab } =
     useToggleTab();
   const title = useActiveTabTitle();
   const { isOpen: isOpenSidebar, toggleSidebar } = useSidebarControl();
@@ -50,7 +50,7 @@ export function PageLayout() {
           <div key={title}>
             <Tabs.Title onClick={() => toggleTab(title)}>{title}</Tabs.Title>
 
-            <Tabs.Tab isActive={openTabs[title]}>
+            <Tabs.Tab isActive={!isCloseTabs[title]}>
               {children.map(({ title, path }) => (
                 <Tabs.TabItem
                   key={title}

@@ -4,5 +4,6 @@ export * from './queries';
 export * from './useProductSizeOptions';
 export * from './useImageUploader';
 export * from './useFormDraft';
-export * from './useProductForm';
+export * from './useProductRegisterForm';
 export * from './useProductFormField';
+export * from './useSearchProducts';

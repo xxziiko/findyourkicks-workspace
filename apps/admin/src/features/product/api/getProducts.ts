@@ -1,6 +1,7 @@
 import { supabase } from '@/shared';
 import { handleError } from '@findyourkicks/shared';
 import { z } from 'zod';
+import type { ProductSearchForm } from '../types';
 
 const productsSchema = z.object({
   id: z.string(),
@@ -34,12 +35,22 @@ interface ProductResponse {
   status: string;
 }
 
-const getProducts = async (): Promise<Product[]> => {
+const getFilteredProducts = async (
+  filters: ProductSearchForm,
+): Promise<Product[]> => {
+  const { search, status, category, brand, period } = filters;
   const data = (await supabase
-    .rpc('get_filtered_products_by_name')
+    .rpc('get_filtered_products_by_name', {
+      search,
+      status,
+      category,
+      brand,
+      start_date: period.startDate,
+      end_date: period.endDate,
+    })
     .then(handleError)) as ProductResponse[];
 
   return data.map((product) => productsSchema.parse(product));
 };
 
-export { getProducts, type Product };
+export { getFilteredProducts, type Product };

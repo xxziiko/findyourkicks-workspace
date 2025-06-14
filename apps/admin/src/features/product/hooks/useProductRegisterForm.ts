@@ -1,6 +1,6 @@
 import {
-  type ProductForm,
-  formSchema,
+  type ProductRegisterForm,
+  registerFormSchema,
   useFormDraft,
   useImageUploader,
   useProductMutation,
@@ -21,8 +21,8 @@ const defaultValues = {
   images: [],
 };
 
-export function useProductForm({ onSuccess }: { onSuccess: () => void }) {
-  const parsedDraft = getDraft<ProductForm>();
+export function useProductRegisterForm({ onSuccess }: { onSuccess: () => void }) {
+  const parsedDraft = getDraft<ProductRegisterForm>();
   const {
     register,
     handleSubmit,
@@ -32,8 +32,8 @@ export function useProductForm({ onSuccess }: { onSuccess: () => void }) {
     watch,
     getValues,
     formState: { errors },
-  } = useForm<ProductForm>({
-    resolver: zodResolver(formSchema),
+  } = useForm<ProductRegisterForm>({
+    resolver: zodResolver(registerFormSchema),
     defaultValues: parsedDraft ?? defaultValues,
   });
 

@@ -1,16 +1,24 @@
 import {
   type Product,
   ProductListTable,
-  productQueries,
+  type ProductSearchForm,
   useProductFormField,
+  useSearchProducts,
+  useSearchProductsQuery,
 } from '@/features/product';
-import { CardSection, InputWithUnit } from '@/shared/components';
+import {
+  CardSection,
+  DatePicker,
+  InputWithUnit,
+  NoData,
+} from '@/shared/components';
 import {
   Button,
   Dropdown,
   commaizeNumberWithUnit,
 } from '@findyourkicks/shared';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { Controller } from 'react-hook-form';
 import styles from './Products.module.scss';
 
 const filteredProducts = (products: Product[], status: string) =>
@@ -20,37 +28,62 @@ const statusMap = [
   {
     id: 'all',
     title: '전체',
-    data: (products: Product[]) => products,
+    options: (products: Product[]) => products,
   },
   {
     id: 'pending',
     title: '판매 대기',
-    data: (products: Product[]) => filteredProducts(products, 'pending'),
+    options: (products: Product[]) => filteredProducts(products, 'pending'),
   },
   {
     id: 'selling',
     title: '판매 중',
-    data: (products: Product[]) => filteredProducts(products, 'selling'),
+    options: (products: Product[]) => filteredProducts(products, 'selling'),
   },
   {
     id: 'soldOut',
     title: '품절',
-    data: (products: Product[]) => filteredProducts(products, 'soldOut'),
+    options: (products: Product[]) => filteredProducts(products, 'soldOut'),
   },
 ];
 
 export default function Products() {
-  const { data: products } = useSuspenseQuery(productQueries.list());
+  const { handleSubmit, control, updateFilteredProducts, products } =
+    useSearchProducts();
   const { categories, brands } = useProductFormField();
+
+  const cardSections = [
+    {
+      id: 'status',
+      subTitle: '판매 상태',
+      options: statusMap,
+    },
+    {
+      id: 'category',
+      subTitle: '카테고리',
+      options: categories.map(({ category_id, name }) => ({
+        id: category_id,
+        title: name,
+      })),
+    },
+    {
+      id: 'brand',
+      subTitle: '브랜드',
+      options: brands.map(({ brand_id, name }) => ({
+        id: brand_id,
+        title: name,
+      })),
+    },
+  ] as const;
 
   return (
     <div className={styles.container}>
       <CardSection>
         <div className={styles.sellerStatus}>
-          {statusMap.map(({ id, title, data }) => (
+          {statusMap.map(({ id, title, options }) => (
             <div key={id}>
               <p>{title}</p>
-              <p>{commaizeNumberWithUnit(data(products).length, '개')}</p>
+              <p>{commaizeNumberWithUnit(options(products).length, '개')}</p>
             </div>
           ))}
         </div>
@@ -58,63 +91,77 @@ export default function Products() {
 
       <CardSection>
         <CardSection.ListItem subTitle="검색어">
-          <InputWithUnit id="search" placeholder="검색어를 입력해주세요." />
-        </CardSection.ListItem>
-        <CardSection.ListItem subTitle="판매 상태">
-          <Dropdown
-            selected={statusMap[0].title}
-            onChange={() => {}}
-            id="sellingStatus"
-          >
-            <Dropdown.Trigger />
-            <Dropdown.Menu>
-              {statusMap.map(({ id, title }) => (
-                <Dropdown.Item key={id} text={title} />
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+          <Controller
+            name="search"
+            control={control}
+            render={({ field }) => (
+              <InputWithUnit
+                id="search"
+                placeholder="검색어를 입력해주세요."
+                {...field}
+              />
+            )}
+          />
         </CardSection.ListItem>
 
-        <CardSection.ListItem subTitle="카테고리">
-          <Dropdown
-            selected={'카테고리를 선택해주세요.'}
-            onChange={() => {}}
-            id="category"
-          >
-            <Dropdown.Trigger />
-            <Dropdown.Menu>
-              {categories.map(({ category_id, name }) => (
-                <Dropdown.Item key={category_id} text={name} />
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+        {cardSections.map(({ id, subTitle, options }) => (
+          <CardSection.ListItem key={id} subTitle={subTitle}>
+            <Controller
+              name={id as Exclude<keyof ProductSearchForm, 'period'>}
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  selected={field.value as string}
+                  onChange={field.onChange}
+                  id={id}
+                >
+                  <Dropdown.Trigger />
+                  <Dropdown.Menu>
+                    {options.map(({ id, title }) => (
+                      <Dropdown.Item key={id} text={title} />
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
+            />
+          </CardSection.ListItem>
+        ))}
+
+        <CardSection.ListItem subTitle="기간 조회 (등록일)">
+          <Controller
+            name="period"
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                value={[
+                  dayjs(field.value.startDate),
+                  dayjs(field.value.endDate),
+                ]}
+                onChange={field.onChange}
+              />
+            )}
+          />
         </CardSection.ListItem>
 
-        <CardSection.ListItem subTitle="브랜드">
-          <Dropdown
-            selected={'브랜드를 선택해주세요.'}
-            onChange={() => {}}
-            id="brand"
-          >
-            <Dropdown.Trigger />
-            <Dropdown.Menu>
-              {brands.map(({ brand_id, name }) => (
-                <Dropdown.Item key={brand_id} text={name} />
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </CardSection.ListItem>
-
-        <CardSection.ListItem subTitle="기간 조회" />
-
-        <div className={styles.buttons}>
-          <Button variant="primary">조회</Button>
-          <Button variant="secondary">초기화</Button>
-        </div>
+        <form
+          className={styles.buttons}
+          onSubmit={handleSubmit(updateFilteredProducts)}
+        >
+          <Button type="submit" variant="primary">
+            조회
+          </Button>
+          <Button type="button" variant="secondary">
+            초기화
+          </Button>
+        </form>
       </CardSection>
 
       <CardSection>
-        <ProductListTable products={products} />
+        {products.length > 0 ? (
+          <ProductListTable products={products} />
+        ) : (
+          <NoData text="검색 결과가 없습니다." />
+        )}
       </CardSection>
     </div>
   );

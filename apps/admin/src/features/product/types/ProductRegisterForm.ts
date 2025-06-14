@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const formSchema = z.object({
+const registerFormSchema = z.object({
   category: z.string({ required_error: '카테고리를 선택해주세요.' }),
   brand: z.string({ required_error: '브랜드를 선택해주세요.' }),
   productName: z.string().min(1, { message: '상품명을 입력해주세요.' }),
@@ -23,6 +23,6 @@ const formSchema = z.object({
     .min(1, { message: '사이즈를 선택해주세요.' }),
 });
 
-type ProductForm = z.infer<typeof formSchema>;
+type ProductRegisterForm = z.infer<typeof registerFormSchema>;
 
-export { formSchema, type ProductForm };
+export { registerFormSchema, type ProductRegisterForm };

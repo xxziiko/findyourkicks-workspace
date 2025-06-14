@@ -1,4 +1,4 @@
-import { type ProductForm, useProductFormField } from '@/features/product';
+import { type ProductRegisterForm, useProductFormField } from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
 import {
@@ -32,9 +32,9 @@ const INPUT_FIELDS = [
 ];
 
 interface ProductBasicFormProps {
-  control: Control<ProductForm>;
-  register: UseFormRegister<ProductForm>;
-  errors: FieldErrors<ProductForm>;
+  control: Control<ProductRegisterForm>;
+  register: UseFormRegister<ProductRegisterForm>;
+  errors: FieldErrors<ProductRegisterForm>;
 }
 
 export function ProductBasicForm({
@@ -52,7 +52,7 @@ export function ProductBasicForm({
             <div className={styles.dropdown}>
               <Controller
                 control={control}
-                name={id as keyof ProductForm}
+                name={id as keyof ProductRegisterForm}
                 render={({ field }) => (
                   <Dropdown
                     id={id}
@@ -71,10 +71,10 @@ export function ProductBasicForm({
                 )}
               />
 
-              {errors[id as keyof ProductForm] && (
+              {errors[id as keyof ProductRegisterForm] && (
                 <ErrorMessage
                   id={id}
-                  error={errors[id as keyof ProductForm]?.message}
+                  error={errors[id as keyof ProductRegisterForm]?.message}
                 />
               )}
             </div>
@@ -88,14 +88,14 @@ export function ProductBasicForm({
             id={id}
             placeholder={placeholder}
             unit={unit}
-            {...register(id as keyof ProductForm, {
+            {...register(id as keyof ProductRegisterForm, {
               valueAsNumber: id === 'price',
             })}
           />
-          {errors[id as keyof ProductForm] && (
+          {errors[id as keyof ProductRegisterForm] && (
             <ErrorMessage
               id={id}
-              error={errors[id as keyof ProductForm]?.message}
+              error={errors[id as keyof ProductRegisterForm]?.message}
             />
           )}
         </CardSection>
