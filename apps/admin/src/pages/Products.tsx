@@ -3,6 +3,7 @@ import {
   ProductListTable,
   type ProductSearchForm,
   useProductFormField,
+  useProductStatusQuery,
   useSearchProducts,
 } from '@/features/product';
 import {
@@ -22,31 +23,18 @@ import dayjs from 'dayjs';
 import { Controller } from 'react-hook-form';
 import styles from './Products.module.scss';
 
-const filteredProducts = (products: Product[], status: string) =>
-  products.filter((product) => product.status === status);
+const statusMap = {
+  all: '전체',
+  pending: '판매 대기',
+  selling: '판매 중',
+  soldout: '품절',
+} as const;
 
-const statusMap = [
-  {
-    id: 'all',
-    title: '전체',
-    options: (products: Product[]) => products,
-  },
-  {
-    id: 'pending',
-    title: '판매 대기',
-    options: (products: Product[]) => filteredProducts(products, 'pending'),
-  },
-  {
-    id: 'selling',
-    title: '판매 중',
-    options: (products: Product[]) => filteredProducts(products, 'selling'),
-  },
-  {
-    id: 'soldOut',
-    title: '품절',
-    options: (products: Product[]) => filteredProducts(products, 'soldOut'),
-  },
-];
+type Status = keyof typeof statusMap;
+type ProductSearchFormKeyExcludePeriod = Exclude<
+  keyof ProductSearchForm,
+  'period'
+>;
 
 export default function Products() {
   const {
@@ -59,13 +47,18 @@ export default function Products() {
     handlePageChange,
   } = useSearchProducts();
   const { list, last_page: lastPage, current_page: currentPage } = products;
+
+  const { data: statuses } = useProductStatusQuery();
   const { categories, brands } = useProductFormField();
 
   const cardSections = [
     {
       id: 'status',
       subTitle: '판매 상태',
-      options: statusMap,
+      options: Object.entries(statusMap).map(([id, title]) => ({
+        id,
+        title,
+      })),
     },
     {
       id: 'category',
@@ -90,16 +83,16 @@ export default function Products() {
       className={styles.container}
       onSubmit={handleSubmit(updateFilteredProducts)}
     >
-      {/* <CardSection>
+      <CardSection>
         <div className={styles.sellerStatus}>
-          {statusMap.map(({ id, title, options }) => (
-            <div key={id}>
-              <p>{title}</p>
-              <p>{commaizeNumberWithUnit(options(total), '개')}</p>
+          {Object.entries(statuses).map(([status, count]) => (
+            <div key={status}>
+              <p>{statusMap[status as Status]}</p>
+              <p>{commaizeNumberWithUnit(count, '개')}</p>
             </div>
           ))}
         </div>
-      </CardSection> */}
+      </CardSection>
 
       <CardSection>
         <CardSection.ListItem subTitle="상품명">
@@ -119,7 +112,7 @@ export default function Products() {
         {cardSections.map(({ id, subTitle, options }) => (
           <CardSection.ListItem key={id} subTitle={subTitle}>
             <Controller
-              name={id as Exclude<keyof ProductSearchForm, 'period'>}
+              name={id as ProductSearchFormKeyExcludePeriod}
               control={control}
               render={({ field }) => (
                 <Dropdown

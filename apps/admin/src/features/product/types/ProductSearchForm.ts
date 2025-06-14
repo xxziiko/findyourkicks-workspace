@@ -27,5 +27,10 @@ const productSearchFormSchema = z
   );
 
 type ProductSearchForm = z.infer<typeof productSearchFormSchema>;
+type ProductSearchFormKey = keyof ProductSearchForm;
 
-export { productSearchFormSchema, type ProductSearchForm };
+export {
+  productSearchFormSchema,
+  type ProductSearchForm,
+  type ProductSearchFormKey,
+};

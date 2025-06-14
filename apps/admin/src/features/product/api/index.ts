@@ -4,3 +4,4 @@ export * from './postProduct';
 export * from './uploadImages';
 export * from './getBrands';
 export * from './getCategories';
+export * from './getProductStatus';

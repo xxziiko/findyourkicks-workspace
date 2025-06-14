@@ -1,5 +1,6 @@
 import {
   type ProductSearchForm,
+  type ProductSearchFormKey,
   productQueries,
   productSearchFormSchema,
 } from '@/features/product';
@@ -50,7 +51,7 @@ export const useSearchProducts = () => {
     const filtered = Object.fromEntries(
       Object.keys(dirtyFields).map((key) => [
         key,
-        form[key as keyof ProductSearchForm],
+        form[key as ProductSearchFormKey],
       ]),
     ) as Partial<ProductSearchForm>;
 

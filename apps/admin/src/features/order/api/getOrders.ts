@@ -9,6 +9,7 @@ const statusMap = {
 const getOrdersSchema = z.object({});
 
 type OrderItem = z.infer<typeof getOrdersSchema>;
+type OrderStatus = keyof typeof statusMap;
 
 // TODO:
 const getOrders = async () => {
@@ -19,7 +20,7 @@ const getOrders = async () => {
   return data.map(({ order_status, ...order }) =>
     getOrdersSchema.parse({
       ...order,
-      orderStatus: statusMap[order_status as keyof typeof statusMap],
+      orderStatus: statusMap[order_status as OrderStatus],
     }),
   );
 };

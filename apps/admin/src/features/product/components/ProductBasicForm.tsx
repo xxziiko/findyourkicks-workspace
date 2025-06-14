@@ -1,4 +1,7 @@
-import { type ProductRegisterForm, useProductFormField } from '@/features/product';
+import {
+  type ProductRegisterForm,
+  useProductFormField,
+} from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
 import {
@@ -37,6 +40,8 @@ interface ProductBasicFormProps {
   errors: FieldErrors<ProductRegisterForm>;
 }
 
+type ProductBasicFormKey = keyof ProductRegisterForm;
+
 export function ProductBasicForm({
   control,
   register,
@@ -52,7 +57,7 @@ export function ProductBasicForm({
             <div className={styles.dropdown}>
               <Controller
                 control={control}
-                name={id as keyof ProductRegisterForm}
+                name={id as ProductBasicFormKey}
                 render={({ field }) => (
                   <Dropdown
                     id={id}
@@ -71,10 +76,10 @@ export function ProductBasicForm({
                 )}
               />
 
-              {errors[id as keyof ProductRegisterForm] && (
+              {errors[id as ProductBasicFormKey] && (
                 <ErrorMessage
                   id={id}
-                  error={errors[id as keyof ProductRegisterForm]?.message}
+                  error={errors[id as ProductBasicFormKey]?.message}
                 />
               )}
             </div>
@@ -88,14 +93,14 @@ export function ProductBasicForm({
             id={id}
             placeholder={placeholder}
             unit={unit}
-            {...register(id as keyof ProductRegisterForm, {
+            {...register(id as ProductBasicFormKey, {
               valueAsNumber: id === 'price',
             })}
           />
-          {errors[id as keyof ProductRegisterForm] && (
+          {errors[id as ProductBasicFormKey] && (
             <ErrorMessage
               id={id}
-              error={errors[id as keyof ProductRegisterForm]?.message}
+              error={errors[id as ProductBasicFormKey]?.message}
             />
           )}
         </CardSection>
