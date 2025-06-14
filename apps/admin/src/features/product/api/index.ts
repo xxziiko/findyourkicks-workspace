@@ -1,4 +1,4 @@
-export * from './getProducts';
+export * from './getFilteredProducts';
 export * from './getRecentProducts';
 export * from './postProduct';
 export * from './uploadImages';

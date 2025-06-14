@@ -4,12 +4,12 @@ import {
   type ProductSearchForm,
   useProductFormField,
   useSearchProducts,
-  useSearchProductsQuery,
 } from '@/features/product';
 import {
   CardSection,
   DatePicker,
   InputWithUnit,
+  Loading,
   NoData,
 } from '@/shared/components';
 import {
@@ -17,6 +17,7 @@ import {
   Dropdown,
   commaizeNumberWithUnit,
 } from '@findyourkicks/shared';
+import { Pagination } from 'antd';
 import dayjs from 'dayjs';
 import { Controller } from 'react-hook-form';
 import styles from './Products.module.scss';
@@ -48,8 +49,16 @@ const statusMap = [
 ];
 
 export default function Products() {
-  const { handleSubmit, control, updateFilteredProducts, products } =
-    useSearchProducts();
+  const {
+    handleSubmit,
+    control,
+    updateFilteredProducts,
+    products,
+    isLoading,
+    resetForm,
+    handlePageChange,
+  } = useSearchProducts();
+  const { list, last_page: lastPage, current_page: currentPage } = products;
   const { categories, brands } = useProductFormField();
 
   const cardSections = [
@@ -77,27 +86,30 @@ export default function Products() {
   ] as const;
 
   return (
-    <div className={styles.container}>
-      <CardSection>
+    <form
+      className={styles.container}
+      onSubmit={handleSubmit(updateFilteredProducts)}
+    >
+      {/* <CardSection>
         <div className={styles.sellerStatus}>
           {statusMap.map(({ id, title, options }) => (
             <div key={id}>
               <p>{title}</p>
-              <p>{commaizeNumberWithUnit(options(products).length, '개')}</p>
+              <p>{commaizeNumberWithUnit(options(total), '개')}</p>
             </div>
           ))}
         </div>
-      </CardSection>
+      </CardSection> */}
 
       <CardSection>
-        <CardSection.ListItem subTitle="검색어">
+        <CardSection.ListItem subTitle="상품명">
           <Controller
             name="search"
             control={control}
             render={({ field }) => (
               <InputWithUnit
                 id="search"
-                placeholder="검색어를 입력해주세요."
+                placeholder="상품명을 입력해주세요."
                 {...field}
               />
             )}
@@ -134,8 +146,8 @@ export default function Products() {
             render={({ field }) => (
               <DatePicker
                 value={[
-                  dayjs(field.value.startDate),
-                  dayjs(field.value.endDate),
+                  dayjs(field.value.startDate, 'YYYY.MM.DD'),
+                  dayjs(field.value.endDate, 'YYYY.MM.DD'),
                 ]}
                 onChange={field.onChange}
               />
@@ -143,26 +155,56 @@ export default function Products() {
           />
         </CardSection.ListItem>
 
-        <form
-          className={styles.buttons}
-          onSubmit={handleSubmit(updateFilteredProducts)}
-        >
+        <div className={styles.buttons}>
           <Button type="submit" variant="primary">
             조회
           </Button>
-          <Button type="button" variant="secondary">
+          <Button type="button" variant="secondary" onClick={() => resetForm()}>
             초기화
           </Button>
-        </form>
+        </div>
       </CardSection>
 
       <CardSection>
-        {products.length > 0 ? (
-          <ProductListTable products={products} />
+        {isLoading && <Loading />}
+
+        {list.length > 0 && !isLoading ? (
+          <ProductList
+            products={list}
+            lastPage={lastPage}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         ) : (
           <NoData text="검색 결과가 없습니다." />
         )}
       </CardSection>
-    </div>
+    </form>
+  );
+}
+
+function ProductList({
+  products,
+  lastPage,
+  currentPage,
+  onPageChange,
+}: {
+  products: Product[];
+  lastPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}) {
+  return (
+    <>
+      <ProductListTable products={products} />
+      <Pagination
+        total={lastPage}
+        current={currentPage}
+        onChange={onPageChange}
+        align="center"
+        showSizeChanger={false}
+        showQuickJumper={false}
+      />
+    </>
   );
 }

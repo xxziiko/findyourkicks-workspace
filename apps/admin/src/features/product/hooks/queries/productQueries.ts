@@ -8,8 +8,8 @@ import {
 import { createQueries as createProductQueries } from '@findyourkicks/shared';
 
 export const productQueries = createProductQueries('product', {
-  list: () => ({
-    queryFn: (filters: ProductSearchForm) => getFilteredProducts(filters),
+  list: (params: Partial<ProductSearchForm>) => ({
+    queryFn: () => getFilteredProducts(params),
   }),
   recent: (limit: number) => ({ queryFn: () => getRecentProducts(limit) }),
   brand: () => ({ queryFn: getBrands }),

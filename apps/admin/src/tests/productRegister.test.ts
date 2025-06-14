@@ -30,7 +30,6 @@ test.describe('상품 등록', () => {
     await page.goto('http://localhost:5173/');
 
     await expect(page.getByText('상품관리')).toBeVisible();
-    await page.getByText('상품관리').click();
     await page.getByText('상품 등록').click();
 
     // 기본 정보 입력
@@ -83,8 +82,7 @@ test.describe('상품 등록', () => {
     await page.goto('http://localhost:5173/');
 
     await expect(page.getByText('상품관리')).toBeVisible();
-    await page.getByText('상품관리').click();
-    await page.getByText('상품 등록').first().click();
+    await page.getByText('상품 등록').click();
 
     // 등록 버튼 클릭
     await page.getByRole('button', { name: '등록하기' }).click();
@@ -98,7 +96,6 @@ test.describe('상품 등록', () => {
     await page.goto('http://localhost:5173/');
 
     await expect(page.getByText('상품관리')).toBeVisible();
-    await page.getByText('상품관리').click();
     await page.getByText('상품 등록').click();
 
     await page.getByRole('button', { name: '전체 선택' }).click();

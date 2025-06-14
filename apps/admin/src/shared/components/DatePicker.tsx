@@ -3,6 +3,7 @@ import type { Dayjs } from 'dayjs';
 import styles from './DatePicker.module.scss';
 
 type DatePickerProps = [Dayjs, Dayjs];
+const { RangePicker } = AntdDatePicker;
 
 export function DatePicker({
   onChange,
@@ -11,8 +12,6 @@ export function DatePicker({
   value: DatePickerProps;
   onChange: (dates: DatePickerProps) => void;
 }) {
-  const { RangePicker } = AntdDatePicker;
-
   return (
     <RangePicker
       id={{ start: 'startDate', end: 'endDate' }}
@@ -23,6 +22,7 @@ export function DatePicker({
         const [startDate, endDate] = dates as DatePickerProps;
         onChange([startDate, endDate]);
       }}
+      format={'YYYY.MM.DD'}
     />
   );
 }
