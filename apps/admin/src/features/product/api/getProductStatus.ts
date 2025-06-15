@@ -19,4 +19,4 @@ const getProductStatus = async (): Promise<ProductStatus> => {
   return productStatusSchema.parse(data);
 };
 
-export { getProductStatus };
+export { getProductStatus, type ProductStatus };

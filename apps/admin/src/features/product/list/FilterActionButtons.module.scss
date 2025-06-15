@@ -1,0 +1,5 @@
+.buttons {
+  @include flex-center;
+  align-items: center;
+  gap: 15px;
+}
