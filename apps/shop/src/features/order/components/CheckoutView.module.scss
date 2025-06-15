@@ -1,11 +1,11 @@
 .layout {
-  @include split-layout(3rem, 0, 1024px);
   min-height: 80vh;
   padding-bottom: 5rem;
+  @include split-layout(3rem, 0, 1024px);
 
   &__left {
-    min-width: 55%;
     @include flex-col;
+    min-width: 55%;
     gap: 1rem;
   }
 
