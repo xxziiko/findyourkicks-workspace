@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 
 export function useToggleTab() {
-  const [openTabs, setOpenTabs] = useState<Record<string, boolean>>({});
+  const [isCloseTabs, setIsCloseTabs] = useState<Record<string, boolean>>({});
   const [openSubTabs, setOpenSubTabs] = useState<Record<string, boolean>>({});
 
   const toggleTab = useCallback((title: string) => {
-    setOpenTabs((prev) => ({
+    setIsCloseTabs((prev) => ({
       ...prev,
       [title]: !prev[title],
     }));
@@ -28,5 +28,5 @@ export function useToggleTab() {
     setOpenSubTabs({});
   }, []);
 
-  return { openTabs, openSubTabs, toggleTab, toggleSubTab, resetTabs };
+  return { isCloseTabs, openSubTabs, toggleTab, toggleSubTab, resetTabs };
 }

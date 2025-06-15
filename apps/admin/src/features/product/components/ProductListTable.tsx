@@ -1,6 +1,7 @@
 import type { Product } from '@/features/product';
 import { NoData } from '@/shared/components';
 import {
+  Button,
   commaizeNumberWithUnit,
   formatDateDefault,
 } from '@findyourkicks/shared';
@@ -10,6 +11,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { Link } from 'react-router-dom';
 import styles from './ProductListTable.module.scss';
 
 const statusMap = {
@@ -66,13 +68,11 @@ const columns: ColumnDef<Product>[] = [
     accessorKey: 'image',
     header: '이미지',
     cell: (info) => (
-      <img
-        src={info.getValue() as string}
-        alt="product"
-        width={20}
-        height={20}
-        loading="lazy"
-      />
+      <Button variant="secondary" size="small">
+        <Link to={info.getValue() as string} target="_blank" rel="noreferrer">
+          미리보기
+        </Link>
+      </Button>
     ),
   },
   {

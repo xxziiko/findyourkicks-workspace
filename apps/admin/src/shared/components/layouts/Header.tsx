@@ -1,6 +1,6 @@
 import { useSignOutMutation } from '@/features/auth';
 import { PATH } from '@/shared';
-import { PanelLeftCloseIcon, PanelLeftOpenIcon } from 'lucide-react';
+import { ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 
@@ -22,9 +22,9 @@ export function Header({ text, isOpenSidebar, toggleSidebar }: HeaderProps) {
     <header className={styles.header}>
       <div className={styles.headerTitle}>
         {isOpenSidebar ? (
-          <PanelLeftCloseIcon onClick={toggleSidebar} />
+          <ArrowLeftFromLineIcon onClick={toggleSidebar} size={32} />
         ) : (
-          <PanelLeftOpenIcon onClick={toggleSidebar} />
+          <ArrowRightFromLineIcon onClick={toggleSidebar} size={32} />
         )}
         <h2>{text}</h2>
       </div>

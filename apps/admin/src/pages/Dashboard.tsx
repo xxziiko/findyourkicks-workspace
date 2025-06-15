@@ -5,13 +5,11 @@ import {
 } from '@/features/order';
 import { type ProductItem, useRecentProductsQuery } from '@/features/product';
 import { CardSection, PATH } from '@/shared';
-import { format } from 'date-fns';
+import { formatDateDefault } from '@findyourkicks/shared';
 import { Link } from 'react-router-dom';
 import styles from './Dashboard.module.scss';
 
-const formatOrderDate = (date: string) => {
-  return format(new Date(date), 'yyyy.MM.dd');
-};
+
 
 export default function Dashboard() {
   const { data: orders } = useRecentOrdersQuery();
@@ -51,7 +49,7 @@ export default function Dashboard() {
           <Link to={`${PATH.orders}/${id}`} key={id}>
             <div className={styles.listItem}>
               <p>{orderId}</p>
-              <p>{formatOrderDate(orderDate)}</p>
+              <p>{formatDateDefault(orderDate)}</p>
               <p>{orderStatus}</p>
             </div>
           </Link>
@@ -68,7 +66,7 @@ export default function Dashboard() {
             <div className={styles.listItem}>
               <p>{id}</p>
               <p>{title}</p>
-              <p>{formatOrderDate(createdAt)}</p>
+              <p>{formatDateDefault(createdAt)}</p>
             </div>
           </Link>
         )}

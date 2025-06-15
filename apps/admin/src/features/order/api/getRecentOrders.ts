@@ -14,12 +14,13 @@ const recentOrdersSchema = z.object({
 });
 
 type RecentOrderItem = z.infer<typeof recentOrdersSchema>;
+type RecentOrderStatus = keyof typeof statusMap;
 
 interface RecentOrderResponse {
   order_item_id: string;
   order_id: string;
   order_date: string;
-  order_status: keyof typeof statusMap;
+  order_status: RecentOrderStatus;
 }
 
 const getRecentOrders = async (limit: number) => {

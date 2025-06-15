@@ -1,8 +1,8 @@
 import { useBrandQuery, useCategoryQuery } from './queries';
 
 export function useProductFormField() {
-  const { data: categories = [] } = useCategoryQuery();
-  const { data: brands = [] } = useBrandQuery();
+  const { data: categories  } = useCategoryQuery();
+  const { data: brands  } = useBrandQuery();
 
   const selectFields = [
     {
