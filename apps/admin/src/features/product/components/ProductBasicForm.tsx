@@ -1,6 +1,10 @@
-import { type ProductForm, useProductFormField } from '@/features/product';
+import {
+  type ProductRegisterForm,
+  useProductFormField,
+} from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
+import { Radio } from 'antd';
 import {
   type Control,
   Controller,
@@ -32,10 +36,12 @@ const INPUT_FIELDS = [
 ];
 
 interface ProductBasicFormProps {
-  control: Control<ProductForm>;
-  register: UseFormRegister<ProductForm>;
-  errors: FieldErrors<ProductForm>;
+  control: Control<ProductRegisterForm>;
+  register: UseFormRegister<ProductRegisterForm>;
+  errors: FieldErrors<ProductRegisterForm>;
 }
+
+type ProductBasicFormKey = keyof ProductRegisterForm;
 
 export function ProductBasicForm({
   control,
@@ -52,7 +58,7 @@ export function ProductBasicForm({
             <div className={styles.dropdown}>
               <Controller
                 control={control}
-                name={id as keyof ProductForm}
+                name={id as ProductBasicFormKey}
                 render={({ field }) => (
                   <Dropdown
                     id={id}
@@ -71,10 +77,10 @@ export function ProductBasicForm({
                 )}
               />
 
-              {errors[id as keyof ProductForm] && (
+              {errors[id as ProductBasicFormKey] && (
                 <ErrorMessage
                   id={id}
-                  error={errors[id as keyof ProductForm]?.message}
+                  error={errors[id as ProductBasicFormKey]?.message}
                 />
               )}
             </div>
@@ -88,18 +94,38 @@ export function ProductBasicForm({
             id={id}
             placeholder={placeholder}
             unit={unit}
-            {...register(id as keyof ProductForm, {
+            {...register(id as ProductBasicFormKey, {
               valueAsNumber: id === 'price',
             })}
           />
-          {errors[id as keyof ProductForm] && (
+          {errors[id as ProductBasicFormKey] && (
             <ErrorMessage
               id={id}
-              error={errors[id as keyof ProductForm]?.message}
+              error={errors[id as ProductBasicFormKey]?.message}
             />
           )}
         </CardSection>
       ))}
+
+      <CardSection title="상품 개시 상태">
+        <div className={styles.status}>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Radio.Group
+                className={styles.radioGroup}
+                value={field.value}
+                onChange={field.onChange}
+                options={[
+                  { label: '판매대기', value: 'pending' },
+                  { label: '판매', value: 'selling' },
+                ]}
+              />
+            )}
+          />
+        </div>
+      </CardSection>
     </div>
   );
 }

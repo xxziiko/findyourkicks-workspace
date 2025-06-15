@@ -1,6 +1,6 @@
 import {
   OptionSizeTable,
-  type ProductForm,
+  type ProductRegisterForm,
   useProductSizeOptions,
 } from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
@@ -11,8 +11,8 @@ import { type Control, Controller, type FieldErrors } from 'react-hook-form';
 import styles from './ProductOptionForm.module.scss';
 
 interface ProductOptionFormProps {
-  errors: FieldErrors<ProductForm>;
-  control: Control<ProductForm>;
+  errors: FieldErrors<ProductRegisterForm>;
+  control: Control<ProductRegisterForm>;
 }
 
 export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {

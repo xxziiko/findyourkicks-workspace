@@ -3,7 +3,7 @@ import {
   ProductBasicForm,
   ProductImageUploader,
   ProductOptionForm,
-  useProductForm,
+  useProductRegisterForm,
 } from '@/features/product';
 import { PATH } from '@/shared';
 import { Modal, useModalControl } from '@findyourkicks/shared';
@@ -23,7 +23,7 @@ export default function ProductRegister() {
     errors,
     savedTime,
     previews,
-  } = useProductForm({
+  } = useProductRegisterForm({
     onSuccess: () => {
       toggleModal();
     },

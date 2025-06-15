@@ -19,6 +19,7 @@
 
 .right {
   @include flex-center;
+  flex-direction: column;
   width: 100%;
 
   &__container {

@@ -62,17 +62,17 @@ export default function Login() {
       </div>
 
       <div className={styles.right}>
+        <div className={styles.testContainer}>
+          {TEST_DATA.map(({ label, value }) => (
+            <div className={styles.testItem} key={label}>
+              <p className={styles.itemLabel}>{label}</p>
+              <p>{value}</p>
+            </div>
+          ))}
+        </div>
+
         <div className={styles.rightContainer}>
           <h3 className={styles.title}>로그인</h3>
-
-          {/* <div className={styles.testContainer}>
-            {TEST_DATA.map(({ label, value }) => (
-              <div className={styles.testItem} key={label}>
-                <p className={styles.itemLabel}>{label}</p>
-                <p>{value}</p>
-              </div>
-            ))}
-          </div> */}
 
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.formContainer}>
