@@ -11,7 +11,7 @@ import {
   type FieldErrors,
   type UseFormRegister,
 } from 'react-hook-form';
-import styles from './ProductBasicForm.module.scss';
+import styles from './ProductInfoFormSection.module.scss';
 
 const INPUT_FIELDS = [
   {
@@ -35,19 +35,19 @@ const INPUT_FIELDS = [
   },
 ];
 
-interface ProductBasicFormProps {
+interface ProductInfoFormSectionProps {
   control: Control<ProductRegisterForm>;
   register: UseFormRegister<ProductRegisterForm>;
   errors: FieldErrors<ProductRegisterForm>;
 }
 
-type ProductBasicFormKey = keyof ProductRegisterForm;
+type ProductInfoFormKey = keyof ProductRegisterForm;
 
-export function ProductBasicForm({
+export function ProductInfoFormSection({
   control,
   register,
   errors,
-}: ProductBasicFormProps) {
+}: ProductInfoFormSectionProps) {
   const { selectFields } = useProductFormField();
 
   return (
@@ -58,7 +58,7 @@ export function ProductBasicForm({
             <div className={styles.dropdown}>
               <Controller
                 control={control}
-                name={id as ProductBasicFormKey}
+                name={id as ProductInfoFormKey}
                 render={({ field }) => (
                   <Dropdown
                     id={id}
@@ -77,10 +77,10 @@ export function ProductBasicForm({
                 )}
               />
 
-              {errors[id as ProductBasicFormKey] && (
+              {errors[id as ProductInfoFormKey] && (
                 <ErrorMessage
                   id={id}
-                  error={errors[id as ProductBasicFormKey]?.message}
+                  error={errors[id as ProductInfoFormKey]?.message}
                 />
               )}
             </div>
@@ -94,14 +94,14 @@ export function ProductBasicForm({
             id={id}
             placeholder={placeholder}
             unit={unit}
-            {...register(id as ProductBasicFormKey, {
+            {...register(id as ProductInfoFormKey, {
               valueAsNumber: id === 'price',
             })}
           />
-          {errors[id as ProductBasicFormKey] && (
+          {errors[id as ProductInfoFormKey] && (
             <ErrorMessage
               id={id}
-              error={errors[id as ProductBasicFormKey]?.message}
+              error={errors[id as ProductInfoFormKey]?.message}
             />
           )}
         </CardSection>

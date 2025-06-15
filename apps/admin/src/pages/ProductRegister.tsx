@@ -1,8 +1,8 @@
 import {
-  FormActions,
-  ProductBasicForm,
-  ProductImageUploader,
-  ProductOptionForm,
+  ProductImageFormSection,
+  ProductInfoFormSection,
+  ProductOptionFormSection,
+  RegisterActionButtons,
   useProductRegisterForm,
 } from '@/features/product';
 import { PATH } from '@/shared';
@@ -33,20 +33,20 @@ export default function ProductRegister() {
     <>
       <form className={styles.form} onSubmit={handleSubmitForm}>
         <div className={styles.container}>
-          <ProductBasicForm
+          <ProductInfoFormSection
             control={control}
             register={register}
             errors={errors}
           />
-          <ProductOptionForm errors={errors} control={control} />
-          <ProductImageUploader
+          <ProductOptionFormSection errors={errors} control={control} />
+          <ProductImageFormSection
             previews={previews}
             onInputChange={handleImageInputChange}
             errors={errors}
           />
         </div>
 
-        <FormActions
+        <RegisterActionButtons
           onResetClick={handleReset}
           onDraftClick={handleDraftToLocal}
           savedTime={savedTime}

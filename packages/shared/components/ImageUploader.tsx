@@ -1,21 +1,21 @@
 'use client';
 import { overlay } from 'overlay-kit';
-import { Button, Carousel, Thumbnail } from '../components';
+import { Button, Carousel, Thumbnail } from '.';
 import { useFileInputTrigger } from '../hooks';
-import styles from './ImageUploadInput.module.scss';
+import styles from './ImageUploader.module.scss';
 
-interface ImageUploadInputProps {
+interface ImageUploaderProps {
   previews: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   maxCount?: number;
   onUpload?: (files: File[]) => Promise<string[]>;
 }
 
-export function ImageUploadInput({
+export function ImageUploader({
   maxCount = 1,
   previews,
   onChange,
-}: ImageUploadInputProps) {
+}: ImageUploaderProps) {
   const { ref: fileInputRef, triggerClick } = useFileInputTrigger();
 
   const handleCarousel = () => {

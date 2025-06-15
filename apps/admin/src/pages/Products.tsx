@@ -159,14 +159,13 @@ export default function Products() {
       </CardSection>
 
       <CardSection>
-        {isLoading && <Loading />}
-
-        {list.length > 0 && !isLoading ? (
+        {list.length > 0 ? (
           <ProductList
             products={list}
             lastPage={lastPage}
             currentPage={currentPage}
             onPageChange={handlePageChange}
+            isLoading={isLoading}
           />
         ) : (
           <NoData text="검색 결과가 없습니다." />
@@ -181,15 +180,22 @@ function ProductList({
   lastPage,
   currentPage,
   onPageChange,
+  isLoading,
 }: {
   products: Product[];
   lastPage: number;
   currentPage: number;
   onPageChange: (page: number) => void;
+  isLoading: boolean;
 }) {
   return (
     <>
-      <ProductListTable products={products} />
+      {products.length === 0 ? (
+        <NoData text="상품 데이터가 없습니다." />
+      ) : (
+        <ProductListTable products={products} isLoading={isLoading} />
+      )}
+
       <Pagination
         total={lastPage}
         current={currentPage}

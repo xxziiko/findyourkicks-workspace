@@ -1,22 +1,22 @@
 import type { ProductRegisterForm } from '@/features/product';
 import { CardSection, ErrorMessage } from '@/shared/components';
-import { ImageUploadInput } from '@findyourkicks/shared';
+import { ImageUploader } from '@findyourkicks/shared';
 import type { FieldErrors } from 'react-hook-form';
-import styles from './ProductImageUploader.module.scss';
+import styles from './ProductImageFormSection.module.scss';
 
 const MAX_IMAGE_COUNT = 1;
 
-interface ProductImageUploaderProps {
+interface ProductImageFormSectionProps {
   errors: FieldErrors<ProductRegisterForm>;
   previews: string[];
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function ProductImageUploader({
+export function ProductImageFormSection({
   errors,
   previews,
   onInputChange,
-}: ProductImageUploaderProps) {
+}: ProductImageFormSectionProps) {
   return (
     <CardSection title="상품 이미지">
       <p className={styles.description}>
@@ -28,7 +28,7 @@ export function ProductImageUploader({
         <ErrorMessage id="images" error={errors.images?.message} />
       )}
 
-      <ImageUploadInput
+      <ImageUploader
         maxCount={MAX_IMAGE_COUNT}
         previews={previews}
         onChange={onInputChange}

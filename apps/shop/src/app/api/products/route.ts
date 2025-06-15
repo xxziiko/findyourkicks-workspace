@@ -37,6 +37,7 @@ export async function GET(request: Request) {
   const { data: products, error } = await supabase
     .from('product_with_details')
     .select('*')
+    .eq('status', 'selling')
     .range(from, to)
     .order('created_at', { ascending: false })
     .order('product_id', { ascending: true });
