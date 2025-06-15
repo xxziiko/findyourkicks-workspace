@@ -21,6 +21,9 @@ const registerFormSchema = z.object({
       }),
     )
     .min(1, { message: '사이즈를 선택해주세요.' }),
+  status: z.enum(['selling', 'pending'], {
+    required_error: '상품 개시 상태를 선택해주세요.',
+  }),
 });
 
 type ProductRegisterForm = z.infer<typeof registerFormSchema>;

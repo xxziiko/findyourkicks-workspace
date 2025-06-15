@@ -4,6 +4,7 @@ import {
 } from '@/features/product';
 import { CardSection, ErrorMessage, InputWithUnit } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
+import { Radio } from 'antd';
 import {
   type Control,
   Controller,
@@ -105,6 +106,26 @@ export function ProductBasicForm({
           )}
         </CardSection>
       ))}
+
+      <CardSection title="상품 개시 상태">
+        <div className={styles.status}>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Radio.Group
+                className={styles.radioGroup}
+                value={field.value}
+                onChange={field.onChange}
+                options={[
+                  { label: '판매대기', value: 'pending' },
+                  { label: '판매', value: 'selling' },
+                ]}
+              />
+            )}
+          />
+        </div>
+      </CardSection>
     </div>
   );
 }
