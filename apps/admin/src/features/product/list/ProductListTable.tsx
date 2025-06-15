@@ -1,5 +1,5 @@
 import type { Product } from '@/features/product';
-import { NoData } from '@/shared/components';
+import { Loading } from '@/shared/components';
 import {
   Button,
   commaizeNumberWithUnit,
@@ -87,9 +87,13 @@ const columns: ColumnDef<Product>[] = [
 
 interface ProductListTableProps {
   products: Product[];
+  isLoading: boolean;
 }
 
-export function ProductListTable({ products }: ProductListTableProps) {
+export function ProductListTable({
+  products,
+  isLoading,
+}: ProductListTableProps) {
   const table = useReactTable({
     data: products,
     columns,
@@ -98,35 +102,37 @@ export function ProductListTable({ products }: ProductListTableProps) {
 
   return (
     <div className={styles.container}>
-      <table className={styles.table}>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className={styles.header}>
-                  {header.isPlaceholder
-                    ? null
-                    : (header.column.columnDef.header as string)}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <table className={styles.table}>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} className={styles.header}>
+                    {header.isPlaceholder
+                      ? null
+                      : (header.column.columnDef.header as string)}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
 
-        <tbody>
-          {products.length === 0 && <NoData text="상품 데이터가 없습니다." />}
-
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className={styles.cell}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className={styles.cell}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

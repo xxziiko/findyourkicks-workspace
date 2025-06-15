@@ -1,17 +1,17 @@
 import { Button, formatDateWithTime } from '@findyourkicks/shared';
-import styles from './FormActions.module.scss';
+import styles from './RegisterActionButtons.module.scss';
 
-interface FormActionsProps {
+interface RegisterActionButtonsProps {
   onResetClick: () => void;
   onDraftClick: () => void;
   savedTime: string;
 }
 
-export function FormActions({
+export function RegisterActionButtons({
   onResetClick,
   onDraftClick,
   savedTime,
-}: FormActionsProps) {
+}: RegisterActionButtonsProps) {
   return (
     <div className={styles.container}>
       <div className={styles.saved}>

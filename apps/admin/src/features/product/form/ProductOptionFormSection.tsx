@@ -8,14 +8,17 @@ import { SIZES } from '@/shared/constants';
 import { Button } from '@findyourkicks/shared';
 import type { ChangeEvent } from 'react';
 import { type Control, Controller, type FieldErrors } from 'react-hook-form';
-import styles from './ProductOptionForm.module.scss';
+import styles from './ProductOptionFormSection.module.scss';
 
-interface ProductOptionFormProps {
+interface ProductOptionFormSectionProps {
   errors: FieldErrors<ProductRegisterForm>;
   control: Control<ProductRegisterForm>;
 }
 
-export function ProductOptionForm({ errors, control }: ProductOptionFormProps) {
+export function ProductOptionFormSection({
+  errors,
+  control,
+}: ProductOptionFormSectionProps) {
   const {
     isAllSelected,
     handleAllStockChange,
