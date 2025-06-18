@@ -1,5 +1,5 @@
-import { supabase } from '@/shared';
-import { handleError } from '@findyourkicks/shared';
+import { api } from '@/shared';
+import { API_PATH } from '@/shared/constants/apiPath';
 import { type ProductRegisterForm, registerFormSchema } from '../types';
 
 const postProduct = async (product: ProductRegisterForm) => {
@@ -15,8 +15,8 @@ const postProduct = async (product: ProductRegisterForm) => {
     status,
   } = validatedProduct;
 
-  return await supabase
-    .rpc('insert_product_with_inventory', {
+  return await api.post(API_PATH.products, {
+    body: {
       _brand: brand,
       _category: category,
       _title: productName,
@@ -25,8 +25,8 @@ const postProduct = async (product: ProductRegisterForm) => {
       _images: images,
       _sizes: sizes,
       _status: status,
-    })
-    .then(handleError);
+    },
+  });
 };
 
 export { postProduct };

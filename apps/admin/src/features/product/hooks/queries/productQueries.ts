@@ -1,7 +1,7 @@
 import {
   type ProductSearchForm,
   getBrands,
-  getCategories,
+  getCategory,
   getFilteredProducts,
   getProductStatus,
   getRecentProducts,
@@ -14,6 +14,6 @@ export const productQueries = createProductQueries('product', {
   }),
   recent: (limit: number) => ({ queryFn: () => getRecentProducts(limit) }),
   brand: () => ({ queryFn: getBrands }),
-  category: () => ({ queryFn: getCategories }),
+  category: () => ({ queryFn: getCategory }),
   status: () => ({ queryFn: getProductStatus }),
 });

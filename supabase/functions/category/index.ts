@@ -1,11 +1,10 @@
 import { createClient } from 'npm:@supabase/supabase-js';
+import { corsHeaders } from '../_shared/cors.ts';
 import { withApiHandler } from '../_shared/withApiHandler.ts';
 
-interface ProductStatus {
-  all: number;
-  pending: number;
-  selling: number;
-  soldout: number;
+interface Category {
+  category_id: string;
+  name: string;
 }
 
 const supabase = createClient(
@@ -16,6 +15,6 @@ const supabase = createClient(
 Deno.serve(async (req: Request) => {
   return withApiHandler(
     req,
-    async (req) => await supabase.rpc('get_all_products_status'),
+    async (req) => await supabase.from('categories').select('*'),
   );
 });

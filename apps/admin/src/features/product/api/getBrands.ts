@@ -1,5 +1,5 @@
-import { supabase } from '@/shared';
-import { handleError } from '@findyourkicks/shared';
+import { api } from '@/shared';
+import { API_PATH } from '@/shared/constants/apiPath';
 import { z } from 'zod';
 
 const brandsSchema = z.object({
@@ -10,10 +10,7 @@ const brandsSchema = z.object({
 type Brand = z.infer<typeof brandsSchema>;
 
 const getBrands = async (): Promise<Brand[]> => {
-  const data = (await supabase
-    .from('brands')
-    .select('*')
-    .then(handleError)) as Brand[];
+  const data = await api.get<Brand[]>(API_PATH.brands);
 
   return data.map((brand) => brandsSchema.parse(brand));
 };

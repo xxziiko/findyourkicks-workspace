@@ -1,5 +1,5 @@
-import { supabase } from '@/shared';
-import { handleError } from '@findyourkicks/shared';
+import { api } from '@/shared';
+import { API_PATH } from '@/shared/constants/apiPath';
 import { z } from 'zod';
 
 const recentProductsSchema = z.object({
@@ -17,16 +17,9 @@ interface ProductResponse {
 }
 
 const getRecentProducts = async (limit: number) => {
-  let query = supabase
-    .from('products')
-    .select('product_id, title, created_at')
-    .order('created_at', { ascending: false });
-
-  if (typeof limit === 'number') {
-    query = query.limit(limit);
-  }
-
-  const data = (await query.then(handleError)) as ProductResponse[];
+  const data = await api.get<ProductResponse[]>(API_PATH.productsRecent, {
+    params: { limit },
+  });
 
   return data.map(({ product_id, title, created_at }) =>
     recentProductsSchema.parse({
