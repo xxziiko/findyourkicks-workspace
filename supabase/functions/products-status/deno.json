@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2",
+    "@supabase/functions-js": "https://esm.sh/@supabase/functions-js@0.2.0"
+  },
+  "compilerOptions": {
+    "lib": ["dom", "esnext", "deno.ns", "deno.window", "deno.worker"],
+    "types": [
+      "https://deno.land/x/deno@v1.40.5/mod.d.ts",
+      "https://deno.land/std@0.208.0/http/server.d.ts"
+    ]
+  }
+}

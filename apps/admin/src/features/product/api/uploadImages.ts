@@ -1,4 +1,4 @@
-import { supabase } from '@/shared/utils';
+import { supabase } from '@/shared';
 import { z } from 'zod';
 
 const uploadImagesSchema = z.object({

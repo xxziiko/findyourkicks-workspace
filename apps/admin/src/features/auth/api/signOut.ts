@@ -1,4 +1,4 @@
-import { supabase } from '@/shared/utils';
+import { supabase } from '@/shared';
 import { assert } from '@findyourkicks/shared';
 
 export const signOut = async () => {

@@ -1,5 +1,5 @@
-import { supabase } from '@/shared';
-import { handleError } from '@findyourkicks/shared';
+import { api } from '@/shared';
+import { API_PATH } from '@/shared/constants/apiPath';
 import { z } from 'zod';
 
 const productStatusSchema = z.object({
@@ -12,9 +12,7 @@ const productStatusSchema = z.object({
 type ProductStatus = z.infer<typeof productStatusSchema>;
 
 const getProductStatus = async (): Promise<ProductStatus> => {
-  const data = (await supabase
-    .rpc('get_all_products_status')
-    .then(handleError)) as ProductStatus;
+  const data = await api.get<ProductStatus>(API_PATH.productsStatus);
 
   return productStatusSchema.parse(data);
 };

@@ -1,4 +1,4 @@
-import { sanitizeFileName, supabase } from '@/shared/utils';
+import { sanitizeFileName, supabase } from '@/shared';
 import { assert } from '@findyourkicks/shared';
 import { useCallback, useId } from 'react';
 import { z } from 'zod';

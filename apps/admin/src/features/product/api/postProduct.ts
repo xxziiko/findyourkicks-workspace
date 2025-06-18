@@ -1,4 +1,4 @@
-import { supabase } from '@/shared/utils';
+import { supabase } from '@/shared';
 import { handleError } from '@findyourkicks/shared';
 import { type ProductRegisterForm, registerFormSchema } from '../types';
 
