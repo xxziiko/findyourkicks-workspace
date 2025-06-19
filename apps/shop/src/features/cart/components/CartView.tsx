@@ -15,12 +15,15 @@ interface CartViewProps {
   totalPriceWithDeliveryFee: number;
   isAllChecked: boolean;
   checkedItems: { [cartId: string]: boolean };
-  onCreateOrderSheet: () => void;
-  onCreateOrderSheetForSingleProduct: (cartItemId: string) => void;
-  onToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onToggle: (e: React.ChangeEvent<HTMLInputElement>, cartId: string) => void;
-  onQuantityChange: (cartItemId: string, quantity: number) => void;
-  onDelete: (cartItemId: string) => void;
+  handleOrderSheet: () => void;
+  handleOrderSheetForSingleProduct: (cartItemId: string) => void;
+  handleToggleAll: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleToggle: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    cartId: string,
+  ) => void;
+  handleCartQuantityChange: (cartItemId: string, quantity: number) => void;
+  handleDelete: (cartItemId: string) => void;
 }
 
 export default function CartView(props: CartViewProps) {
@@ -29,8 +32,12 @@ export default function CartView(props: CartViewProps) {
     totalProduct,
     totalPrice,
     totalPriceWithDeliveryFee,
-    onCreateOrderSheet,
-    onCreateOrderSheetForSingleProduct,
+    handleOrderSheet,
+    handleOrderSheetForSingleProduct,
+    handleToggleAll,
+    handleToggle,
+    handleCartQuantityChange,
+    handleDelete,
     ...cartTableProps
   } = props;
   return isMutatingOrderSheet ? (
@@ -39,7 +46,11 @@ export default function CartView(props: CartViewProps) {
     <section className={styles.section}>
       <CartTable
         {...cartTableProps}
-        onCreateOrderSheetForSingleProduct={onCreateOrderSheetForSingleProduct}
+        onToggleAll={handleToggleAll}
+        onToggle={handleToggle}
+        onQuantityChange={handleCartQuantityChange}
+        onDelete={handleDelete}
+        onCreateOrderSheetForSingleProduct={handleOrderSheetForSingleProduct}
       />
 
       <CheckoutSummary
@@ -50,7 +61,7 @@ export default function CartView(props: CartViewProps) {
 
       <Button
         isLoading={isMutatingOrderSheet}
-        onClick={onCreateOrderSheet}
+        onClick={handleOrderSheet}
         disabled={totalProduct === 0}
         radius
       >
