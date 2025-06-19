@@ -18,7 +18,6 @@ const productSchema = z.object({
   status: z.string(),
 });
 
-// TODO: parse 필요
 const productsSchema = z.object({
   list: z.array(productSchema),
   total: z.number(),
@@ -33,7 +32,7 @@ const getFilteredProducts = async (
   params: Partial<ProductSearchForm>,
 ): Promise<Products> => {
   const { search, status, category, brand, period, page } = params;
-  const data = await api.get(API_PATH.productsFiltered, {
+  const data = await api.get(API_PATH.products, {
     params: {
       search,
       status,

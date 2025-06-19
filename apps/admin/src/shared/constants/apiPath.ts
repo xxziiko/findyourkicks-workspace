@@ -5,6 +5,6 @@ export const API_PATH = {
   productsRecent: '/products-recent',
   productsFiltered: '/products-filtered',
   products: '/products',
-  uploadImages: '/upload-images',
+  uploadImages: '/image-upload',
   product: '/products',
 } as const;

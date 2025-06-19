@@ -10,7 +10,11 @@ const BUCKET_NAME = 'products';
 
 Deno.serve(async (req: Request) => {
   return withApiHandler(req, async (req) => {
-    const { filePath, webpFile } = await req.json();
+    const url = new URL(req.url);
+    const params = url.searchParams;
+
+    const filePath = params.get('filePath') ?? '';
+    const webpFile = params.get('webpFile') ?? '';
 
     await supabase.storage.from(BUCKET_NAME).upload(filePath, webpFile, {
       upsert: true,
