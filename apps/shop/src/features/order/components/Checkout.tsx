@@ -17,7 +17,7 @@ import { useCheckoutAgreement, useDeliveryMessage } from '@/shared/hooks';
 export default function Checkout({
   orderSheet,
 }: { orderSheet: OrderSheetByIdResponse }) {
-  const { orderSheetItems, orderSheetId, deliveryAddress } = orderSheet;
+  const { orderSheetItems, orderSheetId } = orderSheet;
 
   const { isAllCheckedAgreement } = useCheckoutAgreement();
 
@@ -25,7 +25,7 @@ export default function Checkout({
     createOrderSheetSummary(orderSheetItems);
 
   const { deliveryMessage } = useDeliveryMessage();
-  const { data: defaultAddress } = useDefaultAddressQuery({ deliveryAddress });
+  const { data: defaultAddress } = useDefaultAddressQuery();
   const {
     isModalOpen,
     modalView,

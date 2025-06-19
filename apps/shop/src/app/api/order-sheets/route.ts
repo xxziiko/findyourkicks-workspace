@@ -26,8 +26,23 @@ export async function POST(req: Request) {
     .single();
 
   if (defaultAddressError) {
-    // 없으면 초기 고객
     console.error('defaultAddressError', defaultAddressError);
+    // 없으면 초기 고객
+    const { data: address, error: addressError } = await supabase
+      .from('user_addresses')
+      .insert({
+        user_id: user.id,
+        is_default: true,
+      })
+      .select('address_id')
+      .single();
+
+    console.log('address', address);
+
+    if (addressError) {
+      console.error('addressError', addressError);
+      return NextResponse.json({ error: '주소 생성 실패' }, { status: 500 });
+    }
   }
 
   // 1. 주문서 생성
