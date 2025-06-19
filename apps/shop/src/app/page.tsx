@@ -22,9 +22,12 @@ export default async function Home() {
   );
 }
 
+const BRANDS = ['vans', 'nike'] as const;
+
 async function Products() {
-  const vansProducts = await fetchProductsByBrand('vans');
-  const nikeProducts = await fetchProductsByBrand('nike');
+  const [vansProducts, nikeProducts] = await Promise.all(
+    BRANDS.map(async (brand) => await fetchProductsByBrand(brand)),
+  );
 
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
