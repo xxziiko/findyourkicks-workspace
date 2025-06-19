@@ -118,7 +118,7 @@ export function ProductInfoFormSection({
                 value={field.value}
                 onChange={field.onChange}
                 options={[
-                  { label: '판매대기', value: 'pending' },
+                  { label: '판매 대기', value: 'pending' },
                   { label: '판매', value: 'selling' },
                 ]}
               />
