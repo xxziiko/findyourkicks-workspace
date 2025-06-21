@@ -5,3 +5,4 @@ export { default as CheckoutView } from './CheckoutView';
 export { default as OrderComplete } from './OrderComplete';
 export { default as OrderHistoryList } from './OrderHistoryList';
 export * from './layouts/OrderListLayout';
+export * from './layouts/OrderListLoading';

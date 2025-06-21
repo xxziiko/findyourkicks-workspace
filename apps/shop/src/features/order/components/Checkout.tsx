@@ -11,7 +11,6 @@ import {
   useAddressModal,
   useDefaultAddressQuery,
 } from '@/features/user/address';
-
 import { useCheckoutAgreement, useDeliveryMessage } from '@/shared/hooks';
 
 export default function Checkout({

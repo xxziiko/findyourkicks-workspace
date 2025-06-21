@@ -1,6 +1,5 @@
 'use client';
 
-import Loading from '@/app/loading';
 import { CartTable } from '@/features/cart';
 import type { CartList } from '@/features/cart';
 import { CheckoutSummary } from '@/features/order';
@@ -40,9 +39,7 @@ export default function CartView(props: CartViewProps) {
     handleDelete,
     ...cartTableProps
   } = props;
-  return isMutatingOrderSheet ? (
-    <Loading />
-  ) : (
+  return (
     <section className={styles.section}>
       <CartTable
         {...cartTableProps}

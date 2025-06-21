@@ -48,11 +48,11 @@ const AGREEMENT_TEXT = [
   '(필수) 개인정보 수집/이용 동의',
   '(필수) 개인정보 제 3자 제공 동의',
   '(필수) 결제대행 서비스 이용약관',
-];
+] as const;
 
 function AgreementSection() {
   const { isAllChecked, checkedItems, handleToggleAll, handleToggle } =
-    useCheckBoxGroup(AGREEMENT_TEXT, false);
+    useCheckBoxGroup(AGREEMENT_TEXT as unknown as string[], false);
   const { setIsAllCheckedAgreement } = useCheckoutAgreement();
 
   useEffect(() => {

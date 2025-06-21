@@ -1,7 +1,6 @@
 'use client';
 
 import { Header, Providers } from '@/app/_layouts';
-import Loading from '@/app/loading';
 import { AuthGuard } from '@/features/auth';
 import { ErrorBoundary, GlobalPortal } from '@findyourkicks/shared';
 import Image from 'next/image';
@@ -13,7 +12,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     <GlobalPortal.Provider>
       <ErrorBoundary>
         <Providers>
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={null}>
             <AuthGuard>
               <Header />
               <main className={styles.main}>{children}</main>
