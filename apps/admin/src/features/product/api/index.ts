@@ -3,5 +3,5 @@ export * from './getRecentProducts';
 export * from './postProduct';
 export * from './uploadImages';
 export * from './getBrands';
-export * from './getCategories';
+export * from './getCategory';
 export * from './getProductStatus';

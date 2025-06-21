@@ -1,4 +1,4 @@
-import { supabase } from '@/shared/utils';
+import { supabase } from '@/shared';
 import { useEffect, useState } from 'react';
 import { useAdmin } from './useAdmin';
 

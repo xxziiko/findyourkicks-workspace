@@ -1,4 +1,5 @@
-import { supabase } from '@/shared/utils';
+import { api } from '@/shared';
+import { API_PATH } from '@/shared/constants/apiPath';
 import { z } from 'zod';
 
 const uploadImagesSchema = z.object({
@@ -7,15 +8,18 @@ const uploadImagesSchema = z.object({
 
 type UploadImages = z.infer<typeof uploadImagesSchema>;
 
-const BUCKET_NAME = 'products';
-
 const uploadImage = async ({
   filePath,
   webpFile,
 }: { filePath: string; webpFile: File }) => {
-  await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(filePath, webpFile, { upsert: true });
+  const data = await api.post<UploadImages>(API_PATH.uploadImages, {
+    body: {
+      filePath,
+      webpFile,
+    },
+  });
+
+  return data;
 };
 
 export { uploadImage, type UploadImages };

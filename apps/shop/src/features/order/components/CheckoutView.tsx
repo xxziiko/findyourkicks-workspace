@@ -77,7 +77,7 @@ export default function CheckoutView({
 
         <Button
           onClick={onPayment}
-          disabled={!isAllChecked || !defaultAddress.addressId}
+          disabled={!isAllChecked || !defaultAddress?.address}
           isLoading={isMutating}
           radius
         >

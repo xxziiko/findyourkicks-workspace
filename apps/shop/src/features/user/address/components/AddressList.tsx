@@ -8,7 +8,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import styles from './AddressList.module.scss';
 
 export default function AddressList({ onClose }: { onClose: () => void }) {
-  //FIXME: create address 후 업데이트 안되는 이유는?
   const { data: addresses } = useUserAddressesQuery();
   const { mutate: mutateDefaultAddress } = useUpdateAddressMutation();
   const queryClient = useQueryClient();

@@ -16,7 +16,7 @@ const KEYS: (keyof UserAddress)[] = [
 ] as const;
 
 function mapAddressData(data: UserAddress | null) {
-  if (!data) return [];
+  if (!data?.address) return [];
 
   return KEYS.map((key, index) => ({
     subtitle: DELIVERY_SUBTITLE[index],

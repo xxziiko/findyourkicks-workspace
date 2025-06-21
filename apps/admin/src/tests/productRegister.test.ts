@@ -40,9 +40,9 @@ test.describe('상품 등록', () => {
       await page.getByTestId(id).fill(value);
     }
 
-    await page.getByRole('radio', { name: '판매', exact: true }).check();
+    await page.getByRole('radio', { name: '판매 대기', exact: true }).check();
     await expect(
-      page.getByRole('radio', { name: '판매', exact: true }),
+      page.getByRole('radio', { name: '판매 대기', exact: true }),
     ).toBeChecked();
 
     // 사이즈 옵션 선택 및 재고 입력

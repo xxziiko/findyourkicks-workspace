@@ -1,3 +1,5 @@
+'use client';
+
 import type { UserAddressForm } from '@/features/user/address';
 import { useEffect } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';

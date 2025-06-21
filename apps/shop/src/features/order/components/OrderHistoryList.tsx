@@ -1,7 +1,7 @@
 'use client';
-import MyOrdersLoading from '@/app/(shop)/my/orders/loading';
 import {
   OrderListLayout,
+  OrderListLoading,
   OrderProduct,
   useOrderPagination,
 } from '@/features/order';
@@ -25,7 +25,7 @@ export default function OrderHistoryList() {
 
   return (
     <div>
-      <Suspense fallback={<MyOrdersLoading />}>
+      <Suspense fallback={<OrderListLoading />}>
         <article className={styles.article}>
           {isEmpty && (
             <NoData

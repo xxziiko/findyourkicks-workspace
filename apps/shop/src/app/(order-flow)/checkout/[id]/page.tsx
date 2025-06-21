@@ -2,8 +2,8 @@ import { Checkout } from '@/features/order';
 import type { OrderSheetByIdResponse } from '@/features/order-sheet/types';
 import { ENDPOINTS } from '@/shared/constants';
 import { api, getCookieString } from '@/shared/utils';
-import { Suspense } from 'react';
-import Loading from './loading';
+
+export const dynamic = 'force-dynamic';
 
 export default async function CheckoutPage({
   params,
@@ -12,11 +12,7 @@ export default async function CheckoutPage({
 
   const orderSheet = await getOrderSheetBy(id);
 
-  return (
-    <Suspense fallback={<Loading />}>
-      <Checkout orderSheet={orderSheet} />
-    </Suspense>
-  );
+  return <Checkout orderSheet={orderSheet} />;
 }
 
 async function getOrderSheetBy(id: string) {
