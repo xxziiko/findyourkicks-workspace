@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     includePaths: [path.join(__dirname, 'src', 'shared', 'styles')],
     prependData: `@use "../../packages/shared/styles/variables" as *; @use "../../packages/shared/styles/mixins" as *;`,
   },
+  output: 'standalone',
 };
 
 export default nextConfig;
