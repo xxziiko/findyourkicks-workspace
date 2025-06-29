@@ -116,7 +116,7 @@
 > 사용자 서비스와 도메인을 공유하며 상품 운영 및 이미지 업로드 등 실제 운영 흐름을 반영한 기능을 구현했습니다.
 
 #### 보러가기
-🔗 https://findyourkicks-admin.vercel.app/ 
+🔗 https://findyourkicks-admin.site/
 
 ### 작업기간
 2025.05 ~  
