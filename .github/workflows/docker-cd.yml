@@ -1,0 +1,69 @@
+name: CD - Deploy Changed Apps to EC2
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shop_changed: ${{ steps.filter.outputs.shop }}
+      admin_changed: ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Detect Changed Apps
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            shop:
+              - 'apps/shop/**'
+              - 'packages/shared/**'
+            admin:
+              - 'apps/admin/**'
+              - 'packages/shared/**'
+
+  deploy:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Add SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy on EC2 via SSH
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            # Admin 배포
+            if [[ "${{ needs.detect-changes.outputs.admin_changed }}" == "true" ]]; then
+              echo "▶️ Deploying ADMIN"
+              docker pull xxxziiko/findyourkicks-admin:latest
+              docker stop findyourkicks-admin || true
+              docker rm findyourkicks-admin || true
+              docker run -d --name findyourkicks-admin -p 3000:3000 xxxziiko/findyourkicks-admin:latest
+            fi
+
+            # Shop 배포
+            if [[ "${{ needs.detect-changes.outputs.shop_changed }}" == "true" ]]; then
+              echo "▶️ Deploying SHOP"
+              docker pull xxxziiko/findyourkicks-shop:latest
+              docker stop findyourkicks-shop || true
+              docker rm findyourkicks-shop || true
+              docker run -d --name findyourkicks-shop -p 3001:3000 xxxziiko/findyourkicks-shop:latest
+            fi
+
+            # Nginx Reload
+            sudo systemctl reload nginx
+          EOF

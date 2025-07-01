@@ -1,0 +1,63 @@
+name: CI - Docker Build and Push Changed Apps
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  REGISTRY: docker.io
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shop_changed: ${{ steps.filter.outputs.shop }}
+      admin_changed: ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Detect Changed Apps
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            shop:
+              - 'apps/shop/**'
+              - 'packages/shared/**'
+            admin:
+              - 'apps/admin/**'
+              - 'packages/shared/**'
+
+  docker-login:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Docker Hub
+        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
+  build-and-push-shop:
+    needs: [detect-changes, docker-login]
+    if: needs.detect-changes.outputs.shop_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build shop image
+        run: docker compose up --build
+
+      - name: Push shop image
+        run: docker push $DOCKER_USERNAME/findyourkicks-shop:latest
+
+  build-and-push-admin:
+    needs: [detect-changes, docker-login]
+    if: needs.detect-changes.outputs.admin_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build admin image
+        run: docker compose up --build
+
+      - name: Push admin image
+        run: docker push $DOCKER_USERNAME/findyourkicks-admin:latest
