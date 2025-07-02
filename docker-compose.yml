@@ -3,8 +3,8 @@ version: '3.8'
 services:
   admin:
     build:
-      context: ./apps/admin
-      dockerfile: apps/admin/Dockerfile
+      context: apps/admin
+      dockerfile: Dockerfile
     platform: linux/amd64
     image: xxxziiko/findyourkicks-admin
     ports:
