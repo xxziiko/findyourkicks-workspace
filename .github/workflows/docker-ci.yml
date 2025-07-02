@@ -49,7 +49,7 @@ jobs:
   #     - uses: actions/checkout@v3
 
   #     - name: Build shop image
-  #       run: docker compose up --build
+  #       run: docker compose build shop
 
   #     - name: Push shop image
   #       run: docker push $DOCKER_USERNAME/findyourkicks-shop:latest
@@ -65,4 +65,4 @@ jobs:
         run: docker compose build admin
 
       - name: Push admin image
-        run: docker push $DOCKER_USERNAME/findyourkicks-admin:latest
+        run: docker push ${DOCKER_USERNAME}/findyourkicks-admin:latest
