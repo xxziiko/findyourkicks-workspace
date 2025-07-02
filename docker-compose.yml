@@ -3,7 +3,7 @@ version: '3.8'
 services:
   admin:
     build:
-      context: .
+      context: ./apps/admin
       dockerfile: apps/admin/Dockerfile
     platform: linux/amd64
     image: xxxziiko/findyourkicks-admin
