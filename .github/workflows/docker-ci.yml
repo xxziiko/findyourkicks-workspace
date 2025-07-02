@@ -33,7 +33,8 @@ jobs:
             admin:
               - 'apps/admin/**'
               - 'packages/shared/**'
-
+              - 'github/workflows/**'
+              
   docker-login:
     runs-on: ubuntu-latest
     steps:
