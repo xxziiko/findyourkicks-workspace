@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat/docker-setup
 
 env:
   REGISTRY: docker.io
