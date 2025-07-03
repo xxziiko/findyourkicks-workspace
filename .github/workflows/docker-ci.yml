@@ -33,7 +33,7 @@ jobs:
             admin:
               - 'apps/admin/**'
               - 'packages/shared/**'
-              - 'github/workflows/**'
+              - '.github/workflows/**'
               
 
 
