@@ -1,0 +1,67 @@
+# ───────────────────────────────────────────────────────────────
+# ✅ Pre-CI - Build & Turbo Cache for PR 검증
+# 
+# 이 워크플로우는 PR 생성 시 전체 모노레포 프로젝트를 설치하고
+# 빌드 및 테스트하여, main 브랜치에 병합되기 전 배포 가능한
+# 상태인지 사전에 검증하는 역할을 합니다.
+#
+# 주요 목적:
+# 1. PR 생성 시 자동 실행되어 사전 검증 수행
+# 2. 모노레포 내 build 스크립트를 가진 모든 앱/패키지를 빌드
+# 3. Turbo의 캐시 기능을 활용해 이후 빌드 성능을 최적화
+# 4. 추후 CD 단계에 영향을 줄 수 있는 빌드/환경 문제를 사전에 탐지
+# ───────────────────────────────────────────────────────────────
+
+name: Pre-Deploy CI (Turbo Cache + Build)
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  install-and-build:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      - name: ⬇ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🟣 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: 🔵 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: ♻️ Restore pnpm store cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: 📦 Install dependencies
+        run: pnpm install
+      
+      - name: 📝 Create .env.production for shop
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
+      - name: ⚡️ Build all apps/packages
+        run: pnpm turbo run build --cache-dir=".turbo"
+
+      - name: ♻️ Cache turbo build
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/package.json') }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
