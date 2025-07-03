@@ -21,6 +21,7 @@ jobs:
           host: ${{ env.EC2_HOST }}
           username: ${{ env.EC2_USER }}
           key: ${{ env.SSH_KEY }}
+          port: 22
           script: |
             sudo docker pull ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
             sudo docker stop ${{ env.DOCKERHUB_ADMIN }}
