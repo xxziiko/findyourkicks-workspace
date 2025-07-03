@@ -13,6 +13,8 @@ env:
   DOCKERHUB_ADMIN: ${{ secrets.DOCKERHUB_ADMIN }}
   DOCKERHUB_SHOP: ${{ secrets.DOCKERHUB_SHOP }}
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
 jobs:
   detect-changes:
@@ -46,7 +48,13 @@ jobs:
     needs: [detect-changes]
     if: needs.detect-changes.outputs.admin_changed == 'true'
     runs-on: ubuntu-latest
+      
     steps:
+      - name: create .env.production
+        run: |
+          echo "SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/admin/.env.production
+          echo "SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/admin/.env.production
+          
       - name: Checkout
         uses: actions/checkout@v3
       
@@ -67,7 +75,7 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
-          # cache-from: type=local,src=/tmp/.buildx-cache
+          cache-from: type=local,src=/tmp/.buildx-cache
           
       - name: Trigger CD
         uses: peter-evans/repository-dispatch@v2
