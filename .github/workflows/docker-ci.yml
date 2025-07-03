@@ -12,6 +12,8 @@ env:
   REGISTRY: docker.io
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKERHUB_ADMIN: ${{ secrets.DOCKERHUB_ADMIN }}
+  DOCKERHUB_SHOP: ${{ secrets.DOCKERHUB_SHOP }}
 
 jobs:
   detect-changes:
@@ -65,5 +67,5 @@ jobs:
           file: apps/admin/Dockerfile
           push: true
           platform: linux/amd64
-          tags: ${{ env.DOCKER_USERNAME }}/findyourkicks-admin:latest
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
