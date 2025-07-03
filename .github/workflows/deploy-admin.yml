@@ -3,9 +3,6 @@ name: CD - Admin App Deploy
 on:
   repository_dispatch:
     types: [deploy-admin]
-  push:
-    branches:
-      - feat/docker-setup
     
 env:
   EC2_HOST: ${{ secrets.EC2_HOST }}
