@@ -35,34 +35,32 @@ jobs:
               - 'packages/shared/**'
               - 'github/workflows/**'
               
-  docker-login:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Log in to Docker Hub
-        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
 
   # build-and-push-shop:
-  #   needs: [detect-changes, docker-login]
+  #   needs: [detect-changes]
   #   if: needs.detect-changes.outputs.shop_changed == 'true'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - name: Build shop image
-  #       run: docker compose build shop
-
-  #     - name: Push shop image
-  #       run: docker push $DOCKER_USERNAME/findyourkicks-shop:latest
 
   build-and-push-admin:
-    needs: [detect-changes, docker-login]
+    needs: [detect-changes]
     if: needs.detect-changes.outputs.admin_changed == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Build admin image
-        run: docker compose build admin
-
-      - name: Push admin image
-        run: docker push "${DOCKER_USERNAME}"/findyourkicks-admin:latest
+      - name: Build and push production image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/admin/Dockerfile
+          push: true
+          platform: linux/amd64
+          tags: ${{ env.DOCKER_USERNAME }}/findyourkicks-admin:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
