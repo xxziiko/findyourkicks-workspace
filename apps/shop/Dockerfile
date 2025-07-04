@@ -13,12 +13,13 @@ FROM base AS installer
 
 WORKDIR /workspace
 COPY --from=builder /workspace/out/json/ ./
-COPY  apps/shop/.env ./apps/shop/.env
 
 RUN npm install -g pnpm@10.10.0
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /workspace/out/full/ ./
+COPY  apps/shop/.env.production ./apps/shop/.env.production
+
 RUN pnpm run build --filter=shop
 
 FROM node:20-slim AS runner

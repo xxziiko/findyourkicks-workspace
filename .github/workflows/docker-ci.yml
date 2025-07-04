@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - shop/deploy
 
 env:
   REGISTRY: docker.io
@@ -16,6 +17,10 @@ env:
   SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
   API_URL: ${{ secrets.API_URL }}
   ADMIN_BASE_URL: ${{ secrets.ADMIN_BASE_URL }}
+  SHOP_BASE_URL: ${{ secrets.SHOP_BASE_URL }}
+  TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
+  TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
+  TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
   
 
 jobs:
@@ -42,9 +47,46 @@ jobs:
               
 
 
-  # build-and-push-shop:
-  #   needs: [detect-changes]
-  #   if: needs.detect-changes.outputs.shop_changed == 'true'
+  build-and-push-shop:
+    needs: [detect-changes]
+    if: needs.detect-changes.outputs.shop_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create .env.production file for Vite build
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_API_URL=${{ env.SHOP_BASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_SHOP_BASE_URL=${{ env.SHOP_BASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_TOSS_CLIENT_KEY=${{ env.TOSS_CLIENT_KEY }}" >> apps/shop/.env.production
+          echo "TOSS_SECRET_KEY=${{ env.TOSS_SECRET_KEY }}" >> apps/shop/.env.production
+          echo "TEST_ACCOUNT_PW=${{ env.TEST_ACCOUNT_PW }}" >> apps/shop/.env.production
+        working-directory: ${{ github.workspace }}
+
+      - name: Debug - Verify .env.production content
+        run: |
+          echo "--- Content of apps/shop/.env.production ---"
+          cat apps/shop/.env.production
+          echo "--- End Content ---"
+        working-directory: ${{ github.workspace }}
+
+      - name: Build and push production image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          platform: linux/amd64
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
+          no-cache: true
+      - name: Trigger CD
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ env.GH_TOKEN }}
+          event-type: deploy-shop
 
   build-and-push-admin:
     needs: [detect-changes]
@@ -62,13 +104,6 @@ jobs:
           echo "VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/admin/.env.production
           echo "VITE_API_URL=${{ env.API_URL }}" >> apps/admin/.env.production
           echo "VITE_ADMIN_BASE_URL=${{ env.ADMIN_BASE_URL }}" >> apps/admin/.env.production
-        working-directory: ${{ github.workspace }}
-      
-      - name: Debug - Verify .env.production content
-        run: |
-          echo "--- Content of apps/admin/.env.production ---"
-          cat apps/admin/.env.production
-          echo "--- End Content ---"
         working-directory: ${{ github.workspace }}
 
       - name: Log in to Docker Hub
