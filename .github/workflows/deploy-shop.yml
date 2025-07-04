@@ -27,4 +27,4 @@ jobs:
             sudo docker pull ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
             sudo docker stop ${{ env.DOCKERHUB_SHOP }}
             sudo docker rm ${{ env.DOCKERHUB_SHOP }}
-            sudo docker run -d --name ${{ env.DOCKERHUB_SHOP }} -p 3000:3000 ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
+            sudo docker run -d --name ${{ env.DOCKERHUB_SHOP }} -p 3001:3001 ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
