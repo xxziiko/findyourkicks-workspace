@@ -61,6 +61,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # ------------------------------
+      - name: Debug - List contents of apps/admin
+        run: |
+          echo "Listing files in apps/admin directory:"
+          ls -la apps/admin/
+          echo "Checking if .env.production exists:"
+          test -f apps/admin/.env.production && echo ".env.production exists!" || echo ".env.production DOES NOT exist!"
+          echo "--- End Debug ---"
+    # ------------------------------
+
       - name: Build and push production image
         uses: docker/build-push-action@v5
         with:
