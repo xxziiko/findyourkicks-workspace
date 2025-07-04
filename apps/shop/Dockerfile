@@ -13,29 +13,27 @@ FROM base AS installer
 
 WORKDIR /workspace
 COPY --from=builder /workspace/out/json/ ./
-COPY apps/shop/.env.production ./apps/shop/.env.production
 
 RUN npm install -g pnpm@10.10.0
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /workspace/out/full/ ./
+COPY  apps/shop/.env.production ./apps/shop/.env.production
+
 RUN pnpm run build --filter=shop
 
 FROM node:20-slim AS runner
 
 WORKDIR /workspace
 
-RUN npm install -g serve
-
-ENV NODE_ENV=production
-
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=installer /workspace/apps/shop/.next/standalone ./.next/standalone
-COPY --from=installer /workspace/apps/shop/.next/static \
+
+COPY --from=installer  --chown=nextjs:nodejs /workspace/apps/shop/.next/standalone ./.next/standalone
+COPY --from=installer  --chown=nextjs:nodejs /workspace/apps/shop/.next/static \
       ./.next/standalone/apps/shop/.next/static
-COPY --from=installer /workspace/apps/shop/public \
+COPY --from=installer  --chown=nextjs:nodejs /workspace/apps/shop/public \
       ./.next/standalone/apps/shop/public
 
 USER nextjs
