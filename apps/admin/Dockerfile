@@ -22,7 +22,7 @@ FROM base AS installer
 
 WORKDIR /workspace
 COPY --from=builder /workspace/out/json/ ./
-COPY apps/admin/.env.production ./apps/admin/.env.production
+COPY apps/admin/.env.production .env.production
 
 RUN npm install -g pnpm@10.10.0
 RUN pnpm install --frozen-lockfile

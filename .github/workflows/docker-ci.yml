@@ -69,7 +69,7 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
+          # cache-from: type=local,src=/tmp/.buildx-cache
           env: |
             SUPABASE_URL=${{ env.SUPABASE_URL }}
             SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}
