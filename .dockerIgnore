@@ -4,7 +4,6 @@
 .env.*.local
 .env.development
 .env.test
-.env.production
 
 # 패키지 매니저 파일 및 디렉토리
 node_modules
