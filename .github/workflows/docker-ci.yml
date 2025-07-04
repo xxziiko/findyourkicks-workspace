@@ -37,13 +37,14 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           filters: |
-            # shop:
-            #   - 'apps/shop/**'
-            #   - 'packages/shared/**'
+            shop:
+              - 'apps/shop/**'
+              - 'packages/shared/**'
+              - '.github/workflows/**'
+            
             admin:
               - 'apps/admin/**'
               - 'packages/shared/**'
-              - '.github/workflows/**'
               
 
 
