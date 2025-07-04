@@ -1,8 +1,8 @@
 import { path } from '@/shared/utils';
 
-const ROOT_CART = '/cart';
-const ROOT_USER = '/users';
-const ROOT_AUTH = '/auth';
+const ROOT_CART = '/api/cart';
+const ROOT_USER = '/api/users';
+const ROOT_AUTH = '/api/auth';
 
 export const ENDPOINTS = {
   cart: ROOT_CART,
