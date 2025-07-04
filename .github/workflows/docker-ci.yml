@@ -55,6 +55,21 @@ jobs:
           
       - name: Checkout
         uses: actions/checkout@v4
+        
+      - name: Create .env.production file for Vite build
+        run: |
+          echo "VITE_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/admin/.env.production
+          echo "VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/admin/.env.production
+          echo "VITE_API_URL=${{ env.API_URL }}" >> apps/admin/.env.production
+          echo "VITE_ADMIN_BASE_URL=${{ env.ADMIN_BASE_URL }}" >> apps/admin/.env.production
+        working-directory: ${{ github.workspace }}
+      
+      - name: Debug - Verify .env.production content
+        run: |
+          echo "--- Content of apps/admin/.env.production ---"
+          cat apps/admin/.env.production
+          echo "--- End Content ---"
+        working-directory: ${{ github.workspace }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -74,11 +89,6 @@ jobs:
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
           no-cache: true
-          build-args: |
-            VITE_SUPABASE_URL=${{ env.SUPABASE_URL }}
-            VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}
-            VITE_API_URL=${{ env.API_URL }}
-            VITE_ADMIN_BASE_URL=${{ env.ADMIN_BASE_URL }}
           
       - name: Trigger CD
         uses: peter-evans/repository-dispatch@v2
