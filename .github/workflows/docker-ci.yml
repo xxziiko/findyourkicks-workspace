@@ -12,6 +12,11 @@ env:
   DOCKERHUB_ADMIN: ${{ secrets.DOCKERHUB_ADMIN }}
   DOCKERHUB_SHOP: ${{ secrets.DOCKERHUB_SHOP }}
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+  API_URL: ${{ secrets.API_URL }}
+  ADMIN_BASE_URL: ${{ secrets.ADMIN_BASE_URL }}
+  
 
 jobs:
   detect-changes:
@@ -20,7 +25,7 @@ jobs:
       shop_changed: ${{ steps.filter.outputs.shop }}
       admin_changed: ${{ steps.filter.outputs.admin }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Detect Changed Apps
         id: filter
@@ -33,7 +38,7 @@ jobs:
             admin:
               - 'apps/admin/**'
               - 'packages/shared/**'
-              - 'github/workflows/**'
+              - '.github/workflows/**'
               
 
 
@@ -45,10 +50,12 @@ jobs:
     needs: [detect-changes]
     if: needs.detect-changes.outputs.admin_changed == 'true'
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       
+    steps:
+          
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -66,7 +73,12 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
-          # cache-from: type=local,src=/tmp/.buildx-cache
+          no-cache: true
+          build-args: |
+            VITE_SUPABASE_URL=${{ env.SUPABASE_URL }}
+            VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}
+            VITE_API_URL=${{ env.API_URL }}
+            VITE_ADMIN_BASE_URL=${{ env.ADMIN_BASE_URL }}
           
       - name: Trigger CD
         uses: peter-evans/repository-dispatch@v2
