@@ -27,6 +27,7 @@ RUN npm install -g pnpm@10.10.0
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /workspace/out/full/ ./
+COPY apps/admin/.env.production ./apps/admin/.env.production
 
 RUN pnpm run build --filter=admin
 
