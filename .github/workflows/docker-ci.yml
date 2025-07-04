@@ -21,7 +21,7 @@ jobs:
       shop_changed: ${{ steps.filter.outputs.shop }}
       admin_changed: ${{ steps.filter.outputs.admin }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Detect Changed Apps
         id: filter
@@ -50,7 +50,7 @@ jobs:
     steps:
           
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
