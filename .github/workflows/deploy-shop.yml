@@ -3,7 +3,7 @@ name: CD - Shop App Deploy
 on:
   repository_dispatch:
     types: [deploy-shop]
-
+  workflow_dispatch:
     
 env:
   EC2_HOST: ${{ secrets.EC2_HOST }}
