@@ -17,7 +17,7 @@ env:
   SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
   API_URL: ${{ secrets.API_URL }}
   ADMIN_BASE_URL: ${{ secrets.ADMIN_BASE_URL }}
-  SHOP_BASE_URL: ${{ secrets.SHOP_BASE_URL }}
+  SHOP_API_URL: ${{ secrets.SHOP_API_URL }}
   TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
   TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
   TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
@@ -60,7 +60,7 @@ jobs:
         run: |
           echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
-          echo "NEXT_PUBLIC_API_URL=${{ env.SHOP_BASE_URL }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_API_URL=${{ env.SHOP_API_URL }}" >> apps/shop/.env.production
           echo "NEXT_PUBLIC_SHOP_BASE_URL=${{ env.SHOP_BASE_URL }}" >> apps/shop/.env.production
           echo "NEXT_PUBLIC_TOSS_CLIENT_KEY=${{ env.TOSS_CLIENT_KEY }}" >> apps/shop/.env.production
           echo "TOSS_SECRET_KEY=${{ env.TOSS_SECRET_KEY }}" >> apps/shop/.env.production
@@ -84,7 +84,7 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
-          no-cache: true
+          cache-from: type=local,src=./docker-cache
 
       - name: Trigger CD
         uses: peter-evans/repository-dispatch@v2
@@ -127,7 +127,7 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
-          no-cache: true
+          cache-from: type=local,src=./docker-cache
           
       - name: Trigger CD
         uses: peter-evans/repository-dispatch@v2
