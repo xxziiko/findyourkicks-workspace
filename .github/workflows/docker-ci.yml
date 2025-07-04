@@ -83,6 +83,7 @@ jobs:
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
           no-cache: true
+
       - name: Trigger CD
         uses: peter-evans/repository-dispatch@v2
         with:
