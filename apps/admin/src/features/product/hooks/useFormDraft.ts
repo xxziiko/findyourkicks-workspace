@@ -7,7 +7,9 @@ export function useFormDraft({
   watch,
 }: {
   getValues: () => ProductRegisterForm;
-  watch: (callback: (data: ProductRegisterForm) => void) => { unsubscribe: () => void };
+  watch: (callback: (data: ProductRegisterForm) => void) => {
+    unsubscribe: () => void;
+  };
 }) {
   const [savedTime, setSavedTime] = useState<string>('');
 

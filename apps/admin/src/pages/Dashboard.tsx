@@ -9,8 +9,6 @@ import { formatDateDefault } from '@findyourkicks/shared';
 import { Link } from 'react-router-dom';
 import styles from './Dashboard.module.scss';
 
-
-
 export default function Dashboard() {
   const { data: orders } = useRecentOrdersQuery();
   const { data: products } = useRecentProductsQuery();
