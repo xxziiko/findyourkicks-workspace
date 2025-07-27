@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - shop/deploy
+      - fix
 
 env:
   REGISTRY: docker.io
