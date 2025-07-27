@@ -1,4 +1,4 @@
-import { fetchProducts } from '@/features/product/apis';
+import { fetchProducts } from '@/features/product/actions';
 import { createQueries } from '@findyourkicks/shared';
 
 export const productKeys = {

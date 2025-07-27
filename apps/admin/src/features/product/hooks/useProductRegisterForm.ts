@@ -21,7 +21,9 @@ const defaultValues = {
   images: [],
 };
 
-export function useProductRegisterForm({ onSuccess }: { onSuccess: () => void }) {
+export function useProductRegisterForm({
+  onSuccess,
+}: { onSuccess: () => void }) {
   const parsedDraft = getDraft<ProductRegisterForm>();
   const {
     register,

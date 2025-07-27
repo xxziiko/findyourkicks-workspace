@@ -18,7 +18,7 @@ RUN npm install -g pnpm@10.10.0
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /workspace/out/full/ ./
-COPY  apps/shop/.env.production ./apps/shop/.env.production
+COPY  apps/shop/.env ./apps/shop/.env
 
 RUN pnpm run build --filter=shop
 

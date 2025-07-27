@@ -14,10 +14,10 @@ interface ProductImageProps {
   priority?: boolean;
 }
 
-const ProductImage = ({ width, height, ...props }: ProductImageProps) => {
+const ProductImage = ({ width, height, src, ...props }: ProductImageProps) => {
   return (
     <figure className={styles.image} style={{ width, height }}>
-      <Image {...props} fill sizes="100%" />
+      <Image {...props} src={src} fill sizes="100%" />
     </figure>
   );
 };

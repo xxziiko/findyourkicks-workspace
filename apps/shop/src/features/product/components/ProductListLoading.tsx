@@ -8,9 +8,6 @@ const mockArray = Array.from({ length: 100 }, (_, i) => i);
 export function ProductListLoading() {
   return (
     <div>
-      <div className={styles.banner}>
-        <Skeleton width="100%" height="400px" />
-      </div>
       <div className={styles.list}>
         {mockArray.map((key) => (
           <CardSkeleton key={key} />
