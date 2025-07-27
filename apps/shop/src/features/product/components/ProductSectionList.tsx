@@ -1,6 +1,5 @@
 'use client';
 import {
-  BannerSlide,
   ProductListLoading,
   ProductSection,
   SECTION_TITLE,
@@ -25,10 +24,6 @@ export function ProductSectionList({ sections }: ProductSectionListProps) {
   return (
     <>
       {!allLoaded && <ProductListLoading />}
-
-      <section className={styles.banner}>
-        <BannerSlide />
-      </section>
 
       {sections.map(({ title, products }) => (
         <ProductSection

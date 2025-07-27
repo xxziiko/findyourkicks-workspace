@@ -8,3 +8,4 @@ export * from './ProductListLoading';
 export * from './ProductSection';
 export * from './BannerSlide';
 export * from './ProductSectionList';
+export * from './BannerLoading';

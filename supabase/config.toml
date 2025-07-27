@@ -73,6 +73,12 @@ file_size_limit = "50MiB"
 [storage.image_transformation]
 enabled = true
 
+# ✅ 추가 설정
+[storage.buckets.products]
+public = true
+file_size_limit = "50MiB"
+allowed_mime_types = ["image/png", "image/jpeg", "image/webp"]
+
 # Uncomment to configure local storage buckets
 # [storage.buckets.images]
 # public = false

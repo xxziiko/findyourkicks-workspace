@@ -4,7 +4,6 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import Image from 'next/image';
 import styles from './BannerSlide.module.scss';
 
 const BANNERS = [
@@ -38,13 +37,7 @@ export function BannerSlide() {
     >
       {BANNERS.map(({ src, alt }) => (
         <SwiperSlide className={styles.swiper__slide} key={src}>
-          <Image
-            src={src}
-            layout="responsive"
-            alt={alt}
-            width={1216}
-            height={500}
-          />
+          <img src={src} alt={alt} width={1216} height={500} />
         </SwiperSlide>
       ))}
     </Swiper>
