@@ -57,15 +57,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create .env.production file for Vite build
+      - name: Create .env file for Vite build
         run: |
-          echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env.production
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env.production
-          echo "NEXT_PUBLIC_API_URL=${{ env.SHOP_API_URL }}" >> apps/shop/.env.production
-          echo "NEXT_PUBLIC_SHOP_BASE_URL=${{ env.SHOP_BASE_URL }}" >> apps/shop/.env.production
-          echo "NEXT_PUBLIC_TOSS_CLIENT_KEY=${{ env.TOSS_CLIENT_KEY }}" >> apps/shop/.env.production
-          echo "TOSS_SECRET_KEY=${{ env.TOSS_SECRET_KEY }}" >> apps/shop/.env.production
-          echo "TEST_ACCOUNT_PW=${{ env.TEST_ACCOUNT_PW }}" >> apps/shop/.env.production
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/shop/.env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/shop/.env
+          echo "NEXT_PUBLIC_API_URL=${{ env.SHOP_API_URL }}" >> apps/shop/.env
+          echo "NEXT_PUBLIC_SHOP_BASE_URL=${{ env.SHOP_BASE_URL }}" >> apps/shop/.env
+          echo "NEXT_PUBLIC_TOSS_CLIENT_KEY=${{ env.TOSS_CLIENT_KEY }}" >> apps/shop/.env
+          echo "TOSS_SECRET_KEY=${{ env.TOSS_SECRET_KEY }}" >> apps/shop/.env
+          echo "TEST_ACCOUNT_PW=${{ env.TEST_ACCOUNT_PW }}" >> apps/shop/.env
         working-directory: ${{ github.workspace }}
       
       - name: Log in to Docker Hub
@@ -103,7 +103,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Create .env.production file for Vite build
+      - name: Create .env file for Vite build
         run: |
           echo "VITE_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/admin/.env.production
           echo "VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/admin/.env.production
