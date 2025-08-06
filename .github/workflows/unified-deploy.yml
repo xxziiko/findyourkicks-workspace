@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 env:
+  REGISTRY: docker.io
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKERHUB_ADMIN: ${{ secrets.DOCKERHUB_ADMIN }}
@@ -14,10 +15,11 @@ env:
   EC2_HOST: ${{ secrets.EC2_HOST }}
   EC2_USER: ${{ secrets.EC2_USER }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
-  # 환경변수들 추가
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
   SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
   API_URL: ${{ secrets.API_URL }}
+  ADMIN_BASE_URL: ${{ secrets.ADMIN_BASE_URL }}
   SHOP_API_URL: ${{ secrets.SHOP_API_URL }}
   SHOP_BASE_URL: ${{ secrets.SHOP_BASE_URL }}
   TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
@@ -40,8 +42,10 @@ jobs:
           filters: |
             shop:
               - 'apps/shop/**'
+              - 'packages/shared/**'
             admin:
               - 'apps/admin/**'
+              - 'packages/shared/**'
             nginx:
               - 'nginx/**'
               - 'docker-compose.prod.yml'
@@ -58,9 +62,10 @@ jobs:
 
       - name: Create .env file for Admin
         run: |
-          echo "VITE_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/admin/.env
-          echo "VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/admin/.env
-          echo "VITE_API_URL=${{ env.API_URL }}" >> apps/admin/.env
+          echo "VITE_SUPABASE_URL=${{ env.SUPABASE_URL }}" >> apps/admin/.env.production
+          echo "VITE_SUPABASE_ANON_KEY=${{ env.SUPABASE_ANON_KEY }}" >> apps/admin/.env.production
+          echo "VITE_API_URL=${{ env.API_URL }}" >> apps/admin/.env.production
+          echo "VITE_ADMIN_BASE_URL=${{ env.ADMIN_BASE_URL }}" >> apps/admin/.env.production
         working-directory: ${{ github.workspace }}
 
       - name: Log in to Docker Hub
@@ -75,13 +80,12 @@ jobs:
       - name: Build and push Admin image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/admin
-          file: ./apps/admin/Dockerfile
+          context: .
+          file: apps/admin/Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
+          platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=local,src=./docker-cache
 
   # Shop 앱 빌드
   build-shop:
@@ -115,13 +119,12 @@ jobs:
       - name: Build and push Shop image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/shop
-          file: ./apps/shop/Dockerfile
+          context: .
+          file: apps/shop/Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
+          platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=local,src=./docker-cache
 
   # Nginx 빌드
   build-nginx:
@@ -149,8 +152,7 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_NGINX }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=local,src=./docker-cache
 
   # 통합 배포
   deploy:
