@@ -2,7 +2,7 @@ name: Unified CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, migrate-to-docker]  # migrate-to-docker 브랜치 추가
   workflow_dispatch:
 
 env:
@@ -31,48 +31,12 @@ jobs:
           filters: |
             shop:
               - 'apps/shop/**'
-              - 'packages/shared/**'
             admin:
               - 'apps/admin/**'
-              - 'packages/shared/**'
             nginx:
               - 'nginx/**'
-              - 'docker-compose*.yml'
-
-  # Shop 앱 빌드
-  build-shop:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.shop_changed == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Create .env file for build
-        run: |
-          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> apps/shop/.env
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> apps/shop/.env
-          echo "NEXT_PUBLIC_API_URL=${{ secrets.SHOP_API_URL }}" >> apps/shop/.env
-          echo "NEXT_PUBLIC_TOSS_CLIENT_KEY=${{ secrets.TOSS_CLIENT_KEY }}" >> apps/shop/.env
-          echo "TOSS_SECRET_KEY=${{ secrets.TOSS_SECRET_KEY }}" >> apps/shop/.env
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ env.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push Shop image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: apps/shop/Dockerfile
-          push: true
-          platform: linux/amd64
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
+              - 'docker-compose.prod.yml'
+              - '.github/workflows/unified-deploy.yml'
 
   # Admin 앱 빌드
   build-admin:
@@ -82,12 +46,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Create .env file for build
-        run: |
-          echo "VITE_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> apps/admin/.env
-          echo "VITE_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> apps/admin/.env
-          echo "VITE_API_URL=${{ secrets.API_URL }}" >> apps/admin/.env
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -101,11 +59,42 @@ jobs:
       - name: Build and push Admin image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: apps/admin/Dockerfile
+          context: ./apps/admin
+          file: ./apps/admin/Dockerfile
           push: true
-          platform: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Shop 앱 빌드
+  build-shop:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shop_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Shop image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/shop
+          file: ./apps/shop/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   # Nginx 빌드
   build-nginx:
@@ -133,47 +122,115 @@ jobs:
           push: true
           platform: linux/amd64
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_NGINX }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   # 통합 배포
   deploy:
-    needs: [detect-changes, build-shop, build-admin, build-nginx]
-    if: always() && !failure() && (needs.build-shop.result == 'success' || needs.build-admin.result == 'success' || needs.build-nginx.result == 'success' || needs.build-shop.result == 'skipped' || needs.build-admin.result == 'skipped' || needs.build-nginx.result == 'skipped')
+    needs: [detect-changes, build-admin, build-shop, build-nginx]
+    if: always() && !cancelled() && !failure()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy Infrastructure
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ env.EC2_HOST }}
           username: ${{ env.EC2_USER }}
           key: ${{ env.SSH_KEY }}
           script: |
-            # 프로젝트 디렉토리로 이동
-            cd /home/ubuntu/findyourkicks-workspace
-            
-            # 최신 코드 pull
-            git pull origin main
-            
             # 환경변수 설정
             export DOCKER_USERNAME=${{ env.DOCKER_USERNAME }}
             export DOCKERHUB_ADMIN=${{ env.DOCKERHUB_ADMIN }}
             export DOCKERHUB_SHOP=${{ env.DOCKERHUB_SHOP }}
             export DOCKERHUB_NGINX=${{ env.DOCKERHUB_NGINX }}
-            
-            # 최신 이미지들 pull
-            docker compose -f docker-compose.prod.yml pull
-            
-            # 서비스 재시작 (무중단 배포)
-            docker compose -f docker-compose.prod.yml up -d
-            
+
+            # 기존 서비스 중지
+            echo "🛑 기존 서비스 중지..."
+            sudo systemctl stop nginx || true
+            sudo systemctl disable nginx || true
+            docker stop findyourkicks-admin findyourkicks-shop findyourkicks-nginx || true
+            docker rm findyourkicks-admin findyourkicks-shop findyourkicks-nginx || true
+
+            # Docker Compose 파일 생성
+            echo "📋 Docker Compose 설정..."
+            cat > docker-compose.yml << 'EOF'
+            services:
+              nginx:
+                image: ${DOCKER_USERNAME}/${DOCKERHUB_NGINX}:latest
+                container_name: findyourkicks-nginx
+                ports:
+                  - "80:80"
+                  - "443:443"
+                volumes:
+                  - /etc/letsencrypt:/etc/letsencrypt:ro
+                  - /var/lib/letsencrypt:/var/lib/letsencrypt:ro
+                  - nginx_logs:/var/log/nginx
+                depends_on:
+                  - admin
+                  - shop
+                networks:
+                  - findyourkicks-network
+                restart: unless-stopped
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost/ping"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+                  start_period: 40s
+
+              admin:
+                image: ${DOCKER_USERNAME}/${DOCKERHUB_ADMIN}:latest
+                container_name: findyourkicks-admin
+                environment:
+                  - NODE_ENV=production
+                networks:
+                  - findyourkicks-network
+                restart: unless-stopped
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+
+              shop:
+                image: ${DOCKER_USERNAME}/${DOCKERHUB_SHOP}:latest
+                container_name: findyourkicks-shop
+                environment:
+                  - NODE_ENV=production
+                networks:
+                  - findyourkicks-network
+                restart: unless-stopped
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+
+            networks:
+              findyourkicks-network:
+                driver: bridge
+
+            volumes:
+              nginx_logs:
+                driver: local
+            EOF
+
+            # 최신 이미지 풀 및 배포
+            echo "🚀 새로운 Docker 스택 시작..."
+            docker compose pull
+            docker compose up -d
+
+            # 배포 확인
+            echo "✅ 배포 상태 확인..."
+            sleep 10
+            docker compose ps
+            docker compose logs --tail=20
+
             # 헬스체크
-            echo "Waiting for services to start..."
-            sleep 30
+            echo "🏥 서비스 헬스체크..."
+            curl -f http://localhost/ping || echo "Nginx 헬스체크 실패"
             
-            # 각 서비스 헬스체크
-            curl -f https://findyourkicks.shop/ping || exit 1
-            curl -f https://findyourkicks-admin.site/ping || exit 1
-            
-            echo "Deployment completed successfully!" 
+            echo "🎉 배포 완료!" 

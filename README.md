@@ -34,6 +34,15 @@
 >Next.js App Router와 Supabase를 활용하여 **상품 탐색부터 주문까지**의 구매 흐름을 클라이언트 중심으로 설계했습니다. <br/>
 >기존 서비스 개발 히스토리는 [findyourkicks 저장소](https://github.com/xxziiko/findyourkicks)에서 확인하실 수 있습니다.
 
+
+<br/>
+
+### 인프라
+<img width="973" height="517" alt="image" src="https://github.com/user-attachments/assets/7f8b5905-8773-4a60-b8fd-531f2e005c2a" />
+
+
+
+
 <br/>
 
 #### 보러가기
