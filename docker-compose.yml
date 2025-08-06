@@ -1,15 +1,17 @@
+version: '3.8'
+
 services:
+  # Nginx 리버스 프록시
   nginx:
-    image: ${DOCKER_USERNAME}/${DOCKERHUB_NGINX}:latest
+    image: ${DOCKER_USERNAME}/findyourkicks-nginx:latest
     container_name: findyourkicks-nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      # Let's Encrypt SSL 인증서 마운트
+      # Let's Encrypt 인증서 및 설정
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/lib/letsencrypt:/var/lib/letsencrypt:ro
-      # Nginx 로그
       - nginx_logs:/var/log/nginx
     depends_on:
       - admin
@@ -18,12 +20,12 @@ services:
       - findyourkicks-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/ping"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/ping"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
 
+  # Admin 앱
   admin:
     image: ${DOCKER_USERNAME}/${DOCKERHUB_ADMIN}:latest
     container_name: findyourkicks-admin
@@ -33,26 +35,27 @@ services:
       - findyourkicks-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
 
+  # Shop 앱
   shop:
     image: ${DOCKER_USERNAME}/${DOCKERHUB_SHOP}:latest
     container_name: findyourkicks-shop
     environment:
       - NODE_ENV=production
+      - PORT=3001
+      - HOSTNAME=0.0.0.0
     networks:
       - findyourkicks-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
 
 networks:
   findyourkicks-network:
