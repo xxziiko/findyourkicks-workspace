@@ -19,6 +19,7 @@ env:
   API_URL: ${{ secrets.API_URL }}
   ADMIN_BASE_URL: ${{ secrets.ADMIN_BASE_URL }}
   SHOP_API_URL: ${{ secrets.SHOP_API_URL }}
+  SHOP_BASE_URL: ${{ secrets.SHOP_BASE_URL }}
   TOSS_CLIENT_KEY: ${{ secrets.TOSS_CLIENT_KEY }}
   TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
   TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
@@ -30,6 +31,7 @@ jobs:
     outputs:
       shop_changed: ${{ steps.filter.outputs.shop }}
       admin_changed: ${{ steps.filter.outputs.admin }}
+      nginx_changed: ${{ steps.filter.outputs.nginx }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,6 +48,10 @@ jobs:
             admin:
               - 'apps/admin/**'
               - 'packages/shared/**'
+            
+            nginx:
+              - 'nginx/**'
+              - 'docker-compose.yml'
               
 
 
@@ -87,7 +93,7 @@ jobs:
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_SHOP }}:latest
           cache-from: type=local,src=./docker-cache
 
-      - name: Trigger CD
+      - name: Trigger Shop Deployment
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ env.GH_TOKEN }}
@@ -130,8 +136,41 @@ jobs:
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKERHUB_ADMIN }}:latest
           cache-from: type=local,src=./docker-cache
           
-      - name: Trigger CD
+      - name: Trigger Admin Deployment
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ env.GH_TOKEN }}
           event-type: deploy-admin
+
+  build-and-push-nginx:
+    needs: [detect-changes]
+    if: needs.detect-changes.outputs.nginx_changed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push nginx image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx
+          file: nginx/Dockerfile
+          push: true
+          platform: linux/amd64
+          tags: ${{ env.DOCKER_USERNAME }}/findyourkicks-nginx:latest
+          
+      - name: Trigger Full Stack Deployment
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ env.GH_TOKEN }}
+          event-type: deploy-stack
