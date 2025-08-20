@@ -72,13 +72,6 @@ jobs:
         working-directory: apps/shop
         run: pnpm exec playwright test
 
-      - name: 📊 Upload Shop test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report-shop
-          path: apps/shop/playwright-report/
-          retention-days: 30
 
   # Admin 앱 E2E 테스트 
   e2e-test-admin:
@@ -117,11 +110,3 @@ jobs:
           else
             echo "No Playwright tests found for admin app"
           fi
-
-      - name: 📊 Upload Admin test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report-admin
-          path: apps/admin/playwright-report/
-          retention-days: 30
