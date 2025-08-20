@@ -17,18 +17,7 @@ name: E2E Test CI
 
 on:
   pull_request:
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-  push:
-    branches: [main, test]
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
+
 
 jobs:
   # 변경사항 감지 (unified-deploy.yml과 동일한 패턴)
