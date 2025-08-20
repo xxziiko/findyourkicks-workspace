@@ -20,7 +20,7 @@ on:
 
 
 jobs:
-  # 변경사항 감지 (unified-deploy.yml과 동일한 패턴)
+
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -39,7 +39,7 @@ jobs:
               - 'apps/admin/**'
               - 'packages/shared/**'
 
-  # Shop 앱 E2E 테스트 (변경된 경우에만)
+  # Shop 앱 E2E 테스트 
   e2e-test-shop:
     needs: detect-changes
     if: needs.detect-changes.outputs.shop_changed == 'true'
@@ -80,7 +80,7 @@ jobs:
           path: apps/shop/playwright-report/
           retention-days: 30
 
-  # Admin 앱 E2E 테스트 (변경된 경우에만)
+  # Admin 앱 E2E 테스트 
   e2e-test-admin:
     needs: detect-changes
     if: needs.detect-changes.outputs.admin_changed == 'true'
