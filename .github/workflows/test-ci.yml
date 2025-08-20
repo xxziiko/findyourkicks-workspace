@@ -1,0 +1,138 @@
+# ───────────────────────────────────────────────────────────────
+# 🧪 E2E Test CI - 변경된 앱만 선택적 테스트 실행
+# 
+# 이 워크플로우는 PR 생성 시 변경된 앱만을 감지하여
+# 해당 앱의 E2E 테스트를 실행함으로써, main 브랜치에 병합되기 전
+# 사용자 경험에 영향을 줄 수 있는 기능적 문제를 사전에 검증하는 역할을 합니다.
+#
+# 주요 목적:
+# 1. PR 생성 시 변경된 앱만 선택적으로 E2E 테스트 실행
+# 2. dorny/paths-filter를 활용한 정확한 변경사항 감지
+# 3. 병렬 실행으로 전체 CI 시간 최적화
+# 4. 추후 배포 단계에서 발생할 수 있는 기능적 문제를 사전에 탐지
+# 5. 기존 unified-deploy.yml과 일관된 변경사항 감지 패턴 유지
+# ───────────────────────────────────────────────────────────────
+
+name: E2E Test CI
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  push:
+    branches: [main, test]
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+
+jobs:
+  # 변경사항 감지 (unified-deploy.yml과 동일한 패턴)
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shop_changed: ${{ steps.filter.outputs.shop }}
+      admin_changed: ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            shop:
+              - 'apps/shop/**'
+              - 'packages/shared/**'
+            admin:
+              - 'apps/admin/**'
+              - 'packages/shared/**'
+
+  # Shop 앱 E2E 테스트 (변경된 경우에만)
+  e2e-test-shop:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shop_changed == 'true'
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      - name: ⬇ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🎭 Setup Playwright
+        run: pnpm exec playwright install --with-deps
+
+      - name: �� Run Shop E2E tests
+        working-directory: apps/shop
+        run: pnpm exec playwright test
+
+      - name: 📊 Upload Shop test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-shop
+          path: apps/shop/playwright-report/
+          retention-days: 30
+
+  # Admin 앱 E2E 테스트 (변경된 경우에만)
+  e2e-test-admin:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.admin_changed == 'true'
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+    steps:
+      - name: ⬇ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🎭 Setup Playwright
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🧪 Run Admin E2E tests
+        working-directory: apps/admin
+        run: |
+          if [ -f "package.json" ] && grep -q "playwright" "package.json"; then
+            pnpm exec playwright test
+          else
+            echo "No Playwright tests found for admin app"
+          fi
+
+      - name: 📊 Upload Admin test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-admin
+          path: apps/admin/playwright-report/
+          retention-days: 30
