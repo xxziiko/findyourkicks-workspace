@@ -11,7 +11,7 @@ const getOrdersSchema = z.object({});
 type OrderItem = z.infer<typeof getOrdersSchema>;
 type OrderStatus = keyof typeof statusMap;
 
-// TODO:
+
 const getOrders = async () => {
   const query = supabase.from('orders_view').select('*').then(handleError);
 
