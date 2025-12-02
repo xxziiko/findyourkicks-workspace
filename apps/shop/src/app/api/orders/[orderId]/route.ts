@@ -60,7 +60,7 @@ export async function GET(
   const response = {
     orderId,
     orderDate: orders[0].order_date,
-    status: orders[0].status || 'paid', // 기본값 'paid'
+    status: orders[0].status ?? 'paid', // 기본값 'paid'
     trackingNumber: orders[0].tracking_number || null,
     payment: {
       paymentKey: payment[0].payment_key,
