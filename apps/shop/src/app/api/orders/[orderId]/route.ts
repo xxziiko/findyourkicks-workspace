@@ -39,9 +39,29 @@ export async function GET(
     return NextResponse.json({ error: '주문 주소 조회 실패' }, { status: 500 });
   }
 
+  // 주문 상품 정보 조회
+  const { data: orderItems, error: itemsError } = await supabase
+    .from('order_items')
+    .select(`
+      *,
+      products:product_id (
+        product_id,
+        title,
+        image
+      )
+    `)
+    .eq('order_id', orderId);
+
+  if (itemsError) {
+    console.error('itemsError', itemsError);
+    return NextResponse.json({ error: '주문 상품 조회 실패' }, { status: 500 });
+  }
+
   const response = {
     orderId,
     orderDate: orders[0].order_date,
+    status: orders[0].status || 'paid', // 기본값 'paid'
+    trackingNumber: orders[0].tracking_number || null,
     payment: {
       paymentKey: payment[0].payment_key,
       paymentMethod: payment[0].payment_method,
@@ -55,6 +75,15 @@ export async function GET(
       address: addresses[0].address,
       message: addresses[0].message,
     },
+    products: orderItems.map((item) => ({
+      id: item.order_item_id,
+      productId: item.product_id,
+      title: item.products.title,
+      image: item.products.image,
+      size: item.size,
+      quantity: item.quantity,
+      price: item.price,
+    })),
   };
 
   return NextResponse.json(response);

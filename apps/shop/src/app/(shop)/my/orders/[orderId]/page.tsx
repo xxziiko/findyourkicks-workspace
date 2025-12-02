@@ -1,4 +1,4 @@
-import { getOrderById } from '@/features/order';
+import { OrderDetail, getOrderById } from '@/features/order';
 
 export default async function OrderDetailPage({
   params,
@@ -6,6 +6,7 @@ export default async function OrderDetailPage({
   params: Promise<{ orderId: string }>;
 }) {
   const { orderId } = await params;
+  const order = await getOrderById(orderId);
 
-  return <div>OrderDetailPage</div>;
+  return <OrderDetail order={order} />;
 }
