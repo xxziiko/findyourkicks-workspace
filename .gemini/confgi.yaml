@@ -1,0 +1,34 @@
+have_fun: false
+language: "ko"
+memory_config:
+  disabled: false
+code_review:
+  disable: true
+  comment_severity_threshold: MEDIUM
+  max_review_comments: 10
+  pull_request_opened:
+    help: false
+    summary: true
+    code_review: true
+    include_drafts: true
+ignore_patterns:
+  - "*.md"
+  - "*.json"
+  - "*.lock"
+  - "pnpm-lock.yaml"
+  - "package-lock.json"
+  - "yarn.lock"
+  - "*.config.js"
+  - "*.config.ts"
+  - ".github/**"
+  - "node_modules/**"
+  - "dist/**"
+  - ".next/**"
+  - "coverage/**"
+  - "**/*.scss"
+  - "**/*.css"
+  - "**/*.html"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.ts"
+  - "**/*.json"
