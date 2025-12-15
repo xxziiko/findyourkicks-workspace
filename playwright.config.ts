@@ -24,6 +24,22 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
+  // Start dev server before running tests
+  webServer: [
+    {
+      command: 'pnpm --filter shop dev',
+      url: 'http://localhost:3000',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    {
+      command: 'pnpm --filter admin dev',
+      url: 'http://localhost:5173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+  ],
+
   // Configure projects for major browsers.
   projects: [
     {
