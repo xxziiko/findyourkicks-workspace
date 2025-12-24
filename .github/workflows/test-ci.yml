@@ -72,6 +72,8 @@ jobs:
 
       - name: 🧪 Run Shop E2E tests
         run: pnpm exec playwright test --project=shop-public --project=shop-setup --project=shop
+        env:
+          PLAYWRIGHT_WEBSERVER: shop
 
 
   # Admin 앱 E2E 테스트 
@@ -107,3 +109,5 @@ jobs:
 
       - name: 🧪 Run Admin E2E tests
         run: pnpm exec playwright test --project=admin-setup --project=admin
+        env:
+          PLAYWRIGHT_WEBSERVER: admin
