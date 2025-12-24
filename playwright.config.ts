@@ -1,5 +1,28 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// 환경 변수에 따라 필요한 서버만 시작
+const webServerTarget = process.env.PLAYWRIGHT_WEBSERVER;
+
+const shopServer = {
+  command: 'pnpm --filter shop dev',
+  url: 'http://localhost:3000',
+  reuseExistingServer: !process.env.CI,
+  timeout: 120 * 1000,
+};
+
+const adminServer = {
+  command: 'pnpm --filter admin dev',
+  url: 'http://localhost:5173',
+  reuseExistingServer: !process.env.CI,
+  timeout: 120 * 1000,
+};
+
+const getWebServers = () => {
+  if (webServerTarget === 'shop') return [shopServer];
+  if (webServerTarget === 'admin') return [adminServer];
+  return [shopServer, adminServer]; // 기본값: 둘 다 시작 (로컬 개발용)
+};
+
 export default defineConfig({
   // Look for test files in the "tests" directory, relative to this configuration file.
   testDir: '.',
@@ -23,6 +46,9 @@ export default defineConfig({
     // Collect trace when retrying the failed test.
     trace: 'on-first-retry',
   },
+
+  // Start dev server before running tests
+  webServer: getWebServers(),
 
   // Configure projects for major browsers.
   projects: [

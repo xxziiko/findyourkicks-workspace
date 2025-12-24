@@ -1,0 +1,57 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 36px 0;
+  margin-bottom: 32px;
+}
+
+.section {
+  padding: 32px 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid $primary;
+}
+
+.infoBox {
+  border: 1px solid $gray-light;
+  border-radius: $radius-base;
+  padding: 16px 24px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid $gray-light;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.label {
+  font-weight: 500;
+  font-size: $font-m;
+}
+
+.value {
+  text-align: right;
+  font-size: $font-m;
+}
+
+.productList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

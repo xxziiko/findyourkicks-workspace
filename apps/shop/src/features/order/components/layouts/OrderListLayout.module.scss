@@ -1,3 +1,14 @@
+.link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 .section {
   @include flex-col;
   gap: 12px;
@@ -13,10 +24,4 @@
 .section__head {
   @include flex-between;
   align-items: center;
-
-  a {
-    font-size: 14px;
-    color: $gray-dark;
-    text-decoration: underline;
-  }
 }
