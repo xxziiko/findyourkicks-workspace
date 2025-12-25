@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 *storybook.log
+
+# playwright test artifacts
+storageState.json
+.test-order-sheet-id

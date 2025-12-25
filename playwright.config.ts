@@ -71,7 +71,7 @@ export default defineConfig({
     },
     {
       name: 'shop-setup',
-      testMatch: ['apps/shop/src/tests/**/*.setup.ts'],
+      testMatch: ['apps/shop/src/tests/login.setup.ts'],
       use: {
         baseURL: 'http://localhost:3000',
       },
