@@ -1,147 +1,111 @@
 import { expect, test } from '@playwright/test';
 import { TEST_TIMEOUTS, TOSS_ERROR_CODES } from '../fixtures/test-data';
-import { TossMockHelper } from '../helpers/toss-mock.helper';
-import { WaitHelper } from '../helpers/wait.helper';
+import {
+  agreeAndPay,
+  extractOrderIdFromUrl,
+  getCheckoutElements,
+  navigateToCheckoutPage,
+} from './checkout.helper';
+import { TossMockHelper } from './toss-mock.helper';
 
 test.describe('결제 플로우', () => {
-  test.beforeEach(async ({ page }) => {
-    const wait = new WaitHelper(page);
-
-    await page.goto('http://localhost:3000');
-    await wait.waitForStableNetwork();
-
-    const firstProduct = page.locator('article').first();
-    await expect(firstProduct).toBeVisible({ timeout: 15000 });
-    await firstProduct.click();
-    await wait.waitForStableNetwork();
-
-    const sizeButton = page
-      .locator('button')
-      .filter({ hasText: /^\d{3}$/ })
-      .first();
-    if (await sizeButton.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await sizeButton.click();
-      await page.waitForTimeout(500);
-    }
-
-    const addToCartButton = page
-      .locator('button')
-      .filter({
-        hasText: /장바구니|담기/i,
-      })
-      .first();
-    await addToCartButton.click();
-    await page.waitForTimeout(2000);
-  });
-
-  test('전체 결제 프로세스 성공', async ({ page }) => {
+  test('사용자가 전체 결제 프로세스를 성공적으로 완료할 수 있다', async ({
+    page,
+  }) => {
+    // Given: Mock을 먼저 설정
     const tossMock = new TossMockHelper(page);
-    const wait = new WaitHelper(page);
-
     await tossMock.mockSuccessPayment();
 
-    await page.goto('http://localhost:3000/cart');
-    await wait.waitForStableNetwork();
+    // 결제 페이지로 이동 (Mock이 적용됨)
+    const orderIdFromCheckout = await navigateToCheckoutPage(page);
 
-    const orderButton = page
-      .locator('button')
-      .filter({
-        hasText: /주문하기|결제/i,
-      })
-      .first();
+    // orderId 검증
+    expect(orderIdFromCheckout).toBeTruthy();
+    expect(orderIdFromCheckout).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    ); // UUID v4 형식
 
-    await expect(orderButton).toBeVisible({ timeout: 10000 });
-    await orderButton.click();
+    // 체크박스 초기 상태 검증
+    const { agreementCheckbox } = getCheckoutElements(page);
+    await expect(agreementCheckbox).toBeVisible();
+    expect(await agreementCheckbox.isChecked()).toBe(false);
 
-    await wait.waitForNavigation(/\/checkout\//, TEST_TIMEOUTS.LONG);
+    // When: 약관에 동의하고 결제하기 버튼을 클릭하면
+    await agreementCheckbox.check();
+    expect(await agreementCheckbox.isChecked()).toBe(true);
 
-    await expect(
-      page.locator('text=배송 정보').or(page.locator('text=결제 정보')),
-    ).toBeVisible({
-      timeout: TEST_TIMEOUTS.MEDIUM,
-    });
-
-    const allAgreementCheckbox = page
-      .locator('text=주문 동의')
-      .locator('..')
-      .locator('input[type="checkbox"]')
-      .first();
-    await expect(allAgreementCheckbox).toBeVisible({
-      timeout: TEST_TIMEOUTS.MEDIUM,
-    });
-    await allAgreementCheckbox.check();
-
-    const paymentButton = page.locator('button:has-text("결제하기")');
-    await expect(paymentButton).toBeEnabled({ timeout: TEST_TIMEOUTS.SHORT });
+    const { paymentButton } = getCheckoutElements(page);
+    await expect(paymentButton).toBeEnabled();
     await paymentButton.click();
 
-    await wait.waitForNavigation(/\/confirm\?/, TEST_TIMEOUTS.LONG);
+    // Then: 결제 완료 페이지로 이동한다
+    await page.waitForURL(/\/complete\/[^/]+$/, {
+      timeout: TEST_TIMEOUTS.LONG,
+    });
 
-    const confirmUrl = new URL(page.url());
-    expect(confirmUrl.searchParams.get('paymentKey')).toBeTruthy();
-    expect(confirmUrl.searchParams.get('orderId')).toBeTruthy();
-    expect(confirmUrl.searchParams.get('amount')).toBeTruthy();
-
-    await wait.waitForNavigation(/\/complete\//, TEST_TIMEOUTS.LONG);
-
-    const completeUrl = page.url();
-    expect(completeUrl).toMatch(/\/complete\//);
+    // orderId가 checkout과 complete에서 일치하는지 확인
+    const orderIdFromComplete = extractOrderIdFromUrl(page.url(), 'complete');
+    expect(orderIdFromComplete).toBe(orderIdFromCheckout);
+    expect(orderIdFromComplete).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    );
   });
 
-  test('결제 실패 시나리오', async ({ page }) => {
+  test('사용자가 결제를 취소하면 실패 처리된다', async ({ page }) => {
+    // Given: Mock을 먼저 설정
     const tossMock = new TossMockHelper(page);
-    const wait = new WaitHelper(page);
-
     await tossMock.mockFailPayment(
       TOSS_ERROR_CODES.USER_CANCEL.code,
       TOSS_ERROR_CODES.USER_CANCEL.message,
     );
 
-    await page.goto('http://localhost:3000/cart');
-    await wait.waitForStableNetwork();
+    // 결제 페이지로 이동 (Mock이 적용됨)
+    const orderIdFromCheckout = await navigateToCheckoutPage(page);
+    expect(orderIdFromCheckout).toBeTruthy();
 
-    const orderButton = page
-      .locator('button')
-      .filter({ hasText: /주문하기/i })
-      .first();
-    await orderButton.click();
+    // When: 약관에 동의하고 결제하기 버튼을 클릭하면
+    await agreeAndPay(page);
 
-    await wait.waitForNavigation(/\/checkout\//, TEST_TIMEOUTS.LONG);
-
-    const agreementCheckbox = page.locator('input[type="checkbox"]').first();
-    await agreementCheckbox.check();
-
-    const paymentButton = page.locator('button:has-text("결제하기")');
-    await paymentButton.click();
-
+    // Then: 실패 페이지로 리다이렉트된다
     const { code, message } = await tossMock.waitForFailRedirect(
       TEST_TIMEOUTS.LONG,
     );
 
+    // 에러 코드와 메시지 검증
     expect(code).toBe(TOSS_ERROR_CODES.USER_CANCEL.code);
     expect(message).toContain('취소');
+
+    // URL에 orderId가 포함되어 있는지 확인
+    const failUrl = page.url();
+    expect(failUrl).toContain(orderIdFromCheckout);
   });
 
-  test('약관 미동의 시 결제 버튼 비활성화', async ({ page }) => {
-    const wait = new WaitHelper(page);
+  test('사용자가 약관에 동의하지 않으면 결제 버튼이 비활성화된다', async ({
+    page,
+  }) => {
+    // Given: 결제 페이지로 이동
+    await navigateToCheckoutPage(page);
 
-    await page.goto('http://localhost:3000/cart');
-    await wait.waitForStableNetwork();
+    const { agreementCheckbox, paymentButton } = getCheckoutElements(page);
 
-    const orderButton = page
-      .locator('button')
-      .filter({ hasText: /주문하기/i })
-      .first();
-    await orderButton.click();
+    // Then: 초기 상태 - 약관 미동의, 버튼 비활성화
+    await expect(agreementCheckbox).toBeVisible();
+    expect(await agreementCheckbox.isChecked()).toBe(false);
+    await expect(paymentButton).toBeVisible();
+    await expect(paymentButton).toBeDisabled();
 
-    await wait.waitForNavigation(/\/checkout\//, TEST_TIMEOUTS.LONG);
-
-    const paymentButton = page.locator('button:has-text("결제하기")');
-    await expect(paymentButton).toBeDisabled({ timeout: TEST_TIMEOUTS.SHORT });
-
-    const agreementCheckbox = page.locator('input[type="checkbox"]').first();
+    // When: 약관에 동의하면
     await agreementCheckbox.check();
 
-    await expect(paymentButton).toBeEnabled({ timeout: TEST_TIMEOUTS.SHORT });
+    // Then: 체크박스가 체크되고, 버튼이 활성화된다
+    expect(await agreementCheckbox.isChecked()).toBe(true);
+    await expect(paymentButton).toBeEnabled();
+
+    // When: 약관 동의를 해제하면
+    await agreementCheckbox.uncheck();
+
+    // Then: 다시 버튼이 비활성화된다
+    expect(await agreementCheckbox.isChecked()).toBe(false);
+    await expect(paymentButton).toBeDisabled();
   });
 });

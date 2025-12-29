@@ -4,6 +4,7 @@ import styles from './CheckBox.module.scss';
 type CheckBoxProps = {
   checked?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  'aria-label'?: string;
 };
 
 const CheckBox = (props: CheckBoxProps) => {

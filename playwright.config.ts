@@ -77,6 +77,16 @@ export default defineConfig({
       },
     },
     {
+      name: 'shop-payment-setup',
+      testMatch: ['apps/shop/src/tests/payment/payment.setup.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'apps/shop/storageState.json',
+        baseURL: 'http://localhost:3000',
+      },
+      dependencies: ['shop-setup'],
+    },
+    {
       name: 'shop',
       testMatch: ['apps/shop/src/tests/**/*.test.ts'],
       use: {
@@ -85,6 +95,16 @@ export default defineConfig({
         baseURL: 'http://localhost:3000',
       },
       dependencies: ['shop-setup'],
+    },
+    {
+      name: 'shop-payment',
+      testMatch: ['apps/shop/src/tests/payment/*.test.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'apps/shop/paymentStorageState.json',
+        baseURL: 'http://localhost:3000',
+      },
+      dependencies: ['shop-payment-setup'],
     },
 
     {

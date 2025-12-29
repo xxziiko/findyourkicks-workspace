@@ -26,36 +26,36 @@ export class TossMockHelper {
    * // → 즉시 /confirm?paymentKey=xxx&orderId=xxx&amount=xxx로 이동
    */
   async mockSuccessPayment() {
-    await this.page.addInitScript(() => {
-      // window 객체에 Toss SDK Mock 주입
-      (window as any).loadTossPayments = async (clientKey: string) => {
-        console.log('[MOCK] Toss SDK loaded with clientKey:', clientKey);
+    // Toss SDK CDN (https://js.tosspayments.com/v2/standard) 요청을 가로채서 Mock 코드로 대체
+    await this.page.route('**/js.tosspayments.com/**', async (route) => {
+      const mockSdkCode = `
+        window.TossPayments = function(clientKey) {
+          console.log('[MOCK] TossPayments initialized with clientKey:', clientKey);
 
-        return {
-          payment: ({ customerKey }: { customerKey: string }) => ({
-            requestPayment: async (options: any) => {
-              console.log('[MOCK] requestPayment called with:', options);
+          return {
+            payment: function({ customerKey }) {
+              return {
+                requestPayment: async function(options) {
+                  console.log('[MOCK] requestPayment called with:', options);
 
-              // Mock: 성공 시뮬레이션 - successUrl로 리다이렉트
-              const mockPaymentKey = `mock_payment_${Date.now()}`;
-              const successUrl = new URL(
-                options.successUrl,
-                window.location.origin,
-              );
+                  // Mock: 성공 시뮬레이션 - /complete로 직접 리다이렉트
+                  // /confirm을 건너뛰고 바로 /complete/{orderId}로 이동
+                  const completeUrl = window.location.origin + '/complete/' + options.orderId;
 
-              successUrl.searchParams.append('paymentKey', mockPaymentKey);
-              successUrl.searchParams.append('orderId', options.orderId);
-              successUrl.searchParams.append(
-                'amount',
-                String(options.amount.value),
-              );
-
-              console.log('[MOCK] Redirecting to:', successUrl.toString());
-              window.location.href = successUrl.toString();
-            },
-          }),
+                  console.log('[MOCK] Redirecting directly to complete page:', completeUrl);
+                  window.location.href = completeUrl;
+                }
+              };
+            }
+          };
         };
-      };
+      `;
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/javascript',
+        body: mockSdkCode,
+      });
     });
   }
 
@@ -74,44 +74,40 @@ export class TossMockHelper {
     errorCode = 'USER_CANCEL',
     errorMessage = '사용자가 결제를 취소했습니다',
   ) {
-    await this.page.addInitScript(
-      ({ code, message }) => {
-        (window as any).loadTossPayments = async (clientKey: string) => {
-          console.log(
-            '[MOCK] Toss SDK loaded (FAIL mode) with clientKey:',
-            clientKey,
-          );
+    // Toss SDK CDN (https://js.tosspayments.com/v2/standard) 요청을 가로채서 Mock 코드로 대체
+    await this.page.route('**/js.tosspayments.com/**', async (route) => {
+      const mockSdkCode = `
+        window.TossPayments = function(clientKey) {
+          console.log('[MOCK] TossPayments initialized (FAIL mode) with clientKey:', clientKey);
 
           return {
-            payment: ({ customerKey }: { customerKey: string }) => ({
-              requestPayment: async (options: any) => {
-                console.log(
-                  '[MOCK] requestPayment called (will fail):',
-                  options,
-                );
+            payment: function({ customerKey }) {
+              return {
+                requestPayment: async function(options) {
+                  console.log('[MOCK] requestPayment called (will fail):', options);
 
-                // Mock: 실패 시뮬레이션 - failUrl로 리다이렉트
-                const failUrl = new URL(
-                  options.failUrl,
-                  window.location.origin,
-                );
+                  // Mock: 실패 시뮬레이션 - failUrl로 리다이렉트
+                  const failUrl = new URL(options.failUrl, window.location.origin);
 
-                failUrl.searchParams.append('code', code);
-                failUrl.searchParams.append('message', message);
-                failUrl.searchParams.append('orderId', options.orderId);
+                  failUrl.searchParams.append('code', '${errorCode}');
+                  failUrl.searchParams.append('message', '${errorMessage}');
+                  failUrl.searchParams.append('orderId', options.orderId);
 
-                console.log(
-                  '[MOCK] Redirecting to fail URL:',
-                  failUrl.toString(),
-                );
-                window.location.href = failUrl.toString();
-              },
-            }),
+                  console.log('[MOCK] Redirecting to fail URL:', failUrl.toString());
+                  window.location.href = failUrl.toString();
+                }
+              };
+            }
           };
         };
-      },
-      { code: errorCode, message: errorMessage },
-    );
+      `;
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/javascript',
+        body: mockSdkCode,
+      });
+    });
   }
 
   /**

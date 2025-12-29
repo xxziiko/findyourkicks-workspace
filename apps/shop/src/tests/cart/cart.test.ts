@@ -3,6 +3,7 @@ import {
   BUTTON_TEXT,
   TEXT,
   addProductToCart,
+  createOrderSheet,
   navigateToCartPage,
 } from './cart.helpers';
 
@@ -90,5 +91,30 @@ test.describe('장바구니 플로우', () => {
 
     // Then: 장바구니가 비어있다는 메시지가 표시된다
     await expect(page.locator(`text=${TEXT.EMPTY_CART}`)).toBeVisible();
+  });
+
+  test('사용자가 장바구니에서 상품을 선택하고 주문하면 주문서가 생성된다', async ({
+    page,
+  }) => {
+    // Given: 장바구니에 상품이 담겨있고
+    await addProductToCart(page);
+    await navigateToCartPage(page);
+
+    // When: 주문하기 버튼을 클릭하면
+    await createOrderSheet(page);
+
+    // Then: 주문서가 생성된다
+    await expect(page).toHaveURL(/\/checkout\//);
+    await expect(
+      page
+        .getByRole('heading', { level: 4, name: /배송 정보|결제 정보/ })
+        .first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('checkbox', {
+        name: '주문 동의 및 개인정보 수집 이용 동의',
+      }),
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: '결제하기' })).toBeVisible();
   });
 });

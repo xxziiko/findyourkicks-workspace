@@ -27,6 +27,12 @@ export const REGEX = {
 export async function navigateToHomePage(page: Page) {
   await page.goto(URLS.HOME);
   await page.waitForLoadState('networkidle');
+
+  const firstProduct = page
+    .getByRole('link')
+    .filter({ has: page.getByRole('button') })
+    .first();
+  await expect(firstProduct).toBeVisible({ timeout: 10000 });
 }
 
 export async function selectFirstProduct(page: Page) {
@@ -77,4 +83,14 @@ export async function addProductToCart(page: Page) {
   await selectFirstProduct(page);
   await selectFirstAvailableSize(page);
   await addToCartWithApiWait(page);
+}
+
+export async function createOrderSheet(page: Page) {
+  const orderButton = page
+    .getByRole('button', { name: BUTTON_TEXT.ORDER })
+    .last();
+  await expect(orderButton).toBeVisible();
+  await expect(orderButton).toBeEnabled();
+  await orderButton.click();
+  await page.waitForLoadState('networkidle');
 }
