@@ -112,7 +112,6 @@ export default defineConfig({
       testMatch: ['apps/shop/src/tests/login.public.test.ts'],
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'apps/shop/storageState.json',
         baseURL: 'http://localhost:3000',
       },
     },

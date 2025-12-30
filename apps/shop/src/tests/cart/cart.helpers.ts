@@ -2,8 +2,8 @@ import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
 export const URLS = {
-  HOME: 'http://localhost:3000',
-  CART: 'http://localhost:3000/cart',
+  HOME: '/',
+  CART: '/cart',
 } as const;
 
 export const BUTTON_TEXT = {
@@ -28,10 +28,14 @@ export async function navigateToHomePage(page: Page) {
   await page.goto(URLS.HOME);
   await page.waitForLoadState('networkidle');
 
+  // 상품이 로드될 때까지 기다림 (이미지 로드 실패 시에도 작동하도록)
   const firstProduct = page
     .getByRole('link')
     .filter({ has: page.getByRole('button') })
     .first();
+
+  // 상품이 DOM에 나타날 때까지 기다림
+  await firstProduct.waitFor({ state: 'attached', timeout: 15000 });
   await expect(firstProduct).toBeVisible({ timeout: 10000 });
 }
 
@@ -40,10 +44,18 @@ export async function selectFirstProduct(page: Page) {
     .getByRole('link')
     .filter({ has: page.getByRole('button') })
     .first();
+
+  // 상품이 클릭 가능한 상태가 될 때까지 기다림
+  await firstProduct.waitFor({ state: 'attached', timeout: 10000 });
   await expect(firstProduct).toBeVisible();
-  await firstProduct.click();
+
+  // 네비게이션을 기다리면서 클릭
+  await Promise.all([
+    page.waitForURL(REGEX.PRODUCT_URL, { timeout: 10000 }),
+    firstProduct.click(),
+  ]);
+
   await page.waitForLoadState('networkidle');
-  await expect(page).toHaveURL(REGEX.PRODUCT_URL);
 }
 
 export async function selectFirstAvailableSize(page: Page) {
@@ -93,4 +105,29 @@ export async function createOrderSheet(page: Page) {
   await expect(orderButton).toBeEnabled();
   await orderButton.click();
   await page.waitForLoadState('networkidle');
+}
+
+// 장바구니 초기화 (테스트 격리용)
+export async function clearCart(page: Page) {
+  await page.goto(URLS.CART);
+  await page.waitForLoadState('networkidle');
+
+  // 빈 장바구니 메시지가 보이면 이미 비어있음
+  const emptyCartText = page.locator(`text=${TEXT.EMPTY_CART}`);
+  const isEmpty = await emptyCartText.isVisible().catch(() => false);
+  if (isEmpty) {
+    return;
+  }
+
+  // 삭제 버튼이 있는지 확인
+  const deleteButtons = page
+    .locator('button')
+    .filter({ hasText: BUTTON_TEXT.DELETE });
+  const count = await deleteButtons.count();
+
+  // 모든 상품 삭제
+  for (let i = 0; i < count; i++) {
+    await deleteButtons.first().click();
+    await page.waitForLoadState('networkidle');
+  }
 }
