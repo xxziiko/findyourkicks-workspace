@@ -8,6 +8,9 @@ const shopServer = {
   url: 'http://localhost:3000',
   reuseExistingServer: !process.env.CI,
   timeout: 120 * 1000,
+  env: {
+    TEST_ACCOUNT_PW: process.env.TEST_ACCOUNT_PW,
+  },
 };
 
 const adminServer = {
@@ -71,10 +74,20 @@ export default defineConfig({
     },
     {
       name: 'shop-setup',
-      testMatch: ['apps/shop/src/tests/**/*.setup.ts'],
+      testMatch: ['apps/shop/src/tests/login.setup.ts'],
       use: {
         baseURL: 'http://localhost:3000',
       },
+    },
+    {
+      name: 'shop-payment-setup',
+      testMatch: ['apps/shop/src/tests/payment/payment.setup.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'apps/shop/storageState.json',
+        baseURL: 'http://localhost:3000',
+      },
+      dependencies: ['shop-setup'],
     },
     {
       name: 'shop',
@@ -86,13 +99,22 @@ export default defineConfig({
       },
       dependencies: ['shop-setup'],
     },
+    {
+      name: 'shop-payment',
+      testMatch: ['apps/shop/src/tests/payment/*.test.ts'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'apps/shop/paymentStorageState.json',
+        baseURL: 'http://localhost:3000',
+      },
+      dependencies: ['shop-payment-setup'],
+    },
 
     {
       name: 'shop-public',
       testMatch: ['apps/shop/src/tests/login.public.test.ts'],
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'apps/shop/storageState.json',
         baseURL: 'http://localhost:3000',
       },
     },

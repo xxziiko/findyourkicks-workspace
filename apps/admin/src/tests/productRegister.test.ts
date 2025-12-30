@@ -27,7 +27,7 @@ test.describe('상품 등록', () => {
     ] as const;
     const selectedSizes = ['260', '270', '290', '320'] as const;
 
-    await page.goto('http://localhost:5173/');
+    await page.goto('/');
 
     await expect(page.getByText('상품관리')).toBeVisible();
     await page.getByText('상품 등록').click();
@@ -84,7 +84,7 @@ test.describe('상품 등록', () => {
       'images',
     ] as const;
 
-    await page.goto('http://localhost:5173/');
+    await page.goto('/');
 
     await expect(page.getByText('상품관리')).toBeVisible();
     await page.getByText('상품 등록').click();
@@ -98,7 +98,7 @@ test.describe('상품 등록', () => {
   });
 
   test('전체 선택 버튼 동작 테스트', async ({ page }) => {
-    await page.goto('http://localhost:5173/');
+    await page.goto('/');
 
     await expect(page.getByText('상품관리')).toBeVisible();
     await page.getByText('상품 등록').click();

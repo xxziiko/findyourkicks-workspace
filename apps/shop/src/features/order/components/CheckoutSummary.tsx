@@ -62,7 +62,11 @@ function AgreementSection() {
   return (
     <div className={styles.agreement}>
       <div className={styles.agreement__item}>
-        <CheckBox onChange={handleToggleAll} checked={isAllChecked} />
+        <CheckBox
+          aria-label="주문 동의 및 개인정보 수집 이용 동의"
+          onChange={handleToggleAll}
+          checked={isAllChecked}
+        />
         <h4>주문 동의 및 개인정보 수집 이용 동의</h4>
       </div>
 
