@@ -8,6 +8,9 @@ const shopServer = {
   url: 'http://localhost:3000',
   reuseExistingServer: !process.env.CI,
   timeout: 120 * 1000,
+  env: {
+    TEST_ACCOUNT_PW: process.env.TEST_ACCOUNT_PW,
+  },
 };
 
 const adminServer = {

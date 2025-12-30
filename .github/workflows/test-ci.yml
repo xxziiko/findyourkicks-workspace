@@ -75,6 +75,7 @@ jobs:
         run: pnpm exec playwright test --project=shop --project=shop-setup
         env:
           PLAYWRIGHT_WEBSERVER: shop
+          TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
 
 
   # Admin 앱 E2E 테스트 
