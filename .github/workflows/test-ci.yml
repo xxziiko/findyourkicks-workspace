@@ -39,7 +39,7 @@ jobs:
               - 'apps/admin/**'
               - 'packages/shared/**'
 
-  # Shop 앱 E2E 테스트 
+  # Shop 앱 E2E 테스트
   e2e-test-shop:
     needs: detect-changes
     if: needs.detect-changes.outputs.shop_changed == 'true'
@@ -49,6 +49,7 @@ jobs:
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
     steps:
       - name: ⬇ Checkout repository
         uses: actions/checkout@v3
