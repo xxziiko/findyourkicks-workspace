@@ -71,7 +71,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: 🧪 Run Shop E2E tests
-        run: pnpm exec playwright test --project=shop-setup --project=shop-public --project=shop
+        run: pnpm exec playwright test --project=shop --project=shop-setup
         env:
           PLAYWRIGHT_WEBSERVER: shop
 
@@ -108,6 +108,6 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: 🧪 Run Admin E2E tests
-        run: pnpm exec playwright test --project=admin-setup --project=admin
+        run: pnpm exec playwright test --project=admin --project=admin-setup
         env:
           PLAYWRIGHT_WEBSERVER: admin
