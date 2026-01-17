@@ -1,9 +1,8 @@
 name: Unified CI/CD Pipeline
 
 on:
-  # 재배포 시 다시 실행
-  # push:
-  #   branches: [main, migrate-to-docker]  # migrate-to-docker 브랜치 추가
+  push:
+    branches: [main, migrate-to-docker]
   workflow_dispatch:
 
 env:
