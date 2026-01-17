@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
     prependData: `@use "../../packages/shared/styles/variables" as *; @use "../../packages/shared/styles/mixins" as *;`,
   },
   output: 'standalone',
+  trailingSlash: false,
 };
 
 export default nextConfig;
