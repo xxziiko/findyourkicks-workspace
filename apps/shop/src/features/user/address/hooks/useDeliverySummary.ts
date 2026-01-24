@@ -1,4 +1,4 @@
-import type { UserAddress } from '@/features/user/address';
+import type { UserAddress, UserAddressNullable } from '@/features/user/address';
 import { useDeliveryMessage } from '@/shared/hooks';
 
 const DELIVERY_SUBTITLE = [
@@ -15,8 +15,8 @@ const KEYS: (keyof UserAddress)[] = [
   'address',
 ] as const;
 
-function mapAddressData(data: UserAddress | null) {
-  if (!data?.address) return [];
+function mapAddressData(data: UserAddressNullable) {
+  if (!data?.address || data.address.trim() === '') return [];
 
   return KEYS.map((key, index) => ({
     subtitle: DELIVERY_SUBTITLE[index],
@@ -24,7 +24,7 @@ function mapAddressData(data: UserAddress | null) {
   }));
 }
 
-export default function useDeliverySummary(data: UserAddress | null) {
+export default function useDeliverySummary(data: UserAddressNullable) {
   const address = mapAddressData(data);
   const { deliveryMessage, updateDeliveryMessage } = useDeliveryMessage();
 

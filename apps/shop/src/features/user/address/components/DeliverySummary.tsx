@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeliverySummary } from '@/features/user/address';
-import type { UserAddress } from '@/features/user/address';
+import type { UserAddressNullable } from '@/features/user/address';
 import { NoData } from '@/shared/components';
 import { Dropdown } from '@findyourkicks/shared';
 import { CircleAlertIcon } from 'lucide-react';
@@ -16,17 +16,17 @@ const DELIVERY_TEXT = [
 
 export default function DeliverySummary({
   data,
-}: { data: UserAddress | null }) {
+}: {
+  data: UserAddressNullable;
+}) {
   const { address, deliveryMessage, updateDeliveryMessage } =
     useDeliverySummary(data);
 
   return (
     <>
-      {!data?.address && (
+      {!data?.address ? (
         <NoData title="배송지를 입력해주세요!" icon={<CircleAlertIcon />} />
-      )}
-
-      {data?.address && (
+      ) : (
         <>
           {address.map((info) => (
             <div className={styles.delivery__item} key={info.subtitle}>
@@ -36,7 +36,7 @@ export default function DeliverySummary({
           ))}
 
           <div className={styles.delivery__item}>
-            <p className={styles['delivery__sub--last']}>베송 메세지</p>
+            <p className={styles['delivery__sub--last']}>배송 메시지</p>
 
             <Dropdown
               selected={deliveryMessage}
