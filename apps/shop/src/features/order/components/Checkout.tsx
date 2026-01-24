@@ -15,7 +15,9 @@ import { useCheckoutAgreement, useDeliveryMessage } from '@/shared/hooks';
 
 export default function Checkout({
   orderSheet,
-}: { orderSheet: OrderSheetByIdResponse }) {
+}: {
+  orderSheet: OrderSheetByIdResponse;
+}) {
   const { orderSheetItems, orderSheetId } = orderSheet;
 
   const { isAllCheckedAgreement } = useCheckoutAgreement();
@@ -39,6 +41,11 @@ export default function Checkout({
     useOrderItemsMutation();
 
   const handlePayment = () => {
+    if (!defaultAddress?.addressId) {
+      alert('배송지를 먼저 입력해주세요.');
+      return;
+    }
+
     const payload = {
       orderSheetId,
       userAddressId: defaultAddress.addressId,

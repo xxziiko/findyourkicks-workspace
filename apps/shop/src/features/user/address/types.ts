@@ -1,17 +1,24 @@
 import { z } from 'zod';
 
 const userAddressSchema = z.object({
-  addressId: z.string(),
-  alias: z.string(),
-  receiverName: z.string(),
-  receiverPhone: z.string(),
-  address: z.string(),
-  message: z.string(),
-  isDefault: z.boolean().optional(),
+  addressId: z.string().min(1),
+  alias: z.string().min(1),
+  receiverName: z.string().min(1),
+  receiverPhone: z.string().min(1),
+  address: z.string().min(1),
+  message: z.string().default(''),
+  isDefault: z.boolean().default(false),
 });
 
 type UserAddress = z.infer<typeof userAddressSchema>;
 
+type UserAddressNullable = UserAddress | null;
+
 type UserAddresses = UserAddress[];
 
-export { userAddressSchema, type UserAddress, type UserAddresses };
+export {
+  userAddressSchema,
+  type UserAddress,
+  type UserAddressNullable,
+  type UserAddresses,
+};
