@@ -39,7 +39,7 @@ jobs:
               - 'apps/admin/**'
               - 'packages/shared/**'
 
-  # Shop 앱 E2E 테스트 
+  # Shop 앱 E2E 테스트
   e2e-test-shop:
     needs: detect-changes
     if: needs.detect-changes.outputs.shop_changed == 'true'
@@ -47,8 +47,12 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      NEXT_PUBLIC_BASE_URL: http://localhost:3000
+      TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
     steps:
       - name: ⬇ Checkout repository
         uses: actions/checkout@v3
@@ -76,7 +80,7 @@ jobs:
           PLAYWRIGHT_WEBSERVER: shop
 
 
-  # Admin 앱 E2E 테스트 
+  # Admin 앱 E2E 테스트
   e2e-test-admin:
     needs: detect-changes
     if: needs.detect-changes.outputs.admin_changed == 'true'
@@ -84,8 +88,10 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      VITE_API_URL: http://localhost:5173
     steps:
       - name: ⬇ Checkout repository
         uses: actions/checkout@v3
