@@ -17,6 +17,8 @@ name: E2E Test CI
 
 on:
   pull_request:
+    branches:
+      - 'fix/ci'  
 
 
 jobs:
