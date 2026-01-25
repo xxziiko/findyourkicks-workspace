@@ -43,6 +43,7 @@ export default function CheckoutView({
     modalView,
     isModalOpen,
     onModalToggle,
+    onSwitchToFormView,
     onCloseModal,
   } = address;
   const { totalPrice, totalPriceWithDeliveryFee } = price;
@@ -90,7 +91,7 @@ export default function CheckoutView({
           addressModalTitle={modalTitle}
           modalView={modalView}
           isOpen={isModalOpen}
-          onClick={onModalToggle}
+          onClick={onSwitchToFormView}
           onClose={onCloseModal}
         />
       )}

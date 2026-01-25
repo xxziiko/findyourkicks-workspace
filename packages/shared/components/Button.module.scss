@@ -79,6 +79,17 @@
     &--radius {
       border-radius: $radius-sm;
     }
+      
+    &--medium {
+      padding: 8px 16px;
+      border-radius: $radius-xs;
+    }
+
+    &--small {
+      @include button-border-default;
+      padding: 4px 10px;
+      border-radius: $radius-xs;
+    }
   }
 
   &-secondary {
@@ -90,6 +101,12 @@
 
     &--radius {
       border-radius: $radius-sm;
+    }
+
+    &--medium {
+      @include button-border-default;
+      padding: 8px 16px;
+      border-radius: $radius-xs;
     }
 
     &--small {

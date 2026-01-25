@@ -102,7 +102,12 @@ export default function AddressForm({ onClose }: { onClose: () => void }) {
 
         <div className={styles.form__address}>
           <input {...register('zonecode')} readOnly placeholder="우편번호" />
-          <Button variant="secondary" radius onClick={handlePostcode}>
+          <Button
+            variant="secondary"
+            radius
+            onClick={handlePostcode}
+            size="medium"
+          >
             우편번호 찾기
           </Button>
         </div>
@@ -126,11 +131,17 @@ export default function AddressForm({ onClose }: { onClose: () => void }) {
 
       <Modal.Footer
         buttons={[
-          { text: '닫기', onClick: onClose, variant: 'secondary' },
+          {
+            text: '닫기',
+            onClick: onClose,
+            variant: 'secondary',
+            size: 'medium',
+          },
           {
             text: '저장하기',
             onClick: handleSubmit(handleCreateUserAddress),
             variant: 'primary',
+            size: 'medium',
           },
         ]}
       />

@@ -62,7 +62,14 @@ export default function AddressList({ onClose }: { onClose: () => void }) {
       </div>
 
       <Modal.Footer
-        buttons={[{ text: '닫기', onClick: onClose, variant: 'secondary' }]}
+        buttons={[
+          {
+            text: '닫기',
+            onClick: onClose,
+            variant: 'secondary',
+            size: 'medium',
+          },
+        ]}
       />
     </div>
   );
