@@ -1,0 +1,1 @@
+../.subagent/scripts/verify.sh
