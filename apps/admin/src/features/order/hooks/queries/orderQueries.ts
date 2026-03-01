@@ -1,11 +1,18 @@
 import { getOrders, getRecentOrders } from '@/features/order';
-import { createQueries as createOrderQueries } from '@findyourkicks/shared';
+import { queryOptions } from '@tanstack/react-query';
 
-export const orderQueries = createOrderQueries('orders', {
-  list: () => ({
-    queryFn: () => getOrders(),
-  }),
-  recent: (limit: number) => ({
-    queryFn: () => getRecentOrders(limit),
-  }),
-} as const);
+export const orderQueries = {
+  all: () => ['orders'] as const,
+  list: () =>
+    queryOptions({
+      queryKey: [...orderQueries.all(), 'list'] as const,
+      queryFn: () => getOrders(),
+      refetchOnWindowFocus: false,
+    }),
+  recent: (limit: number) =>
+    queryOptions({
+      queryKey: [...orderQueries.all(), 'recent', limit] as const,
+      queryFn: () => getRecentOrders(limit),
+      refetchOnWindowFocus: false,
+    }),
+};

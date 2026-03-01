@@ -1,11 +1,18 @@
 import { fetchCartCount, fetchCartList } from '@/features/cart/apis';
-import { createQueries as createCartQueries } from '@findyourkicks/shared';
+import { queryOptions } from '@tanstack/react-query';
 
-export const cartQueries = createCartQueries('cart', {
-  list: () => ({
-    queryFn: fetchCartList,
-  }),
-  count: () => ({
-    queryFn: fetchCartCount,
-  }),
-} as const);
+export const cartQueries = {
+  all: () => ['cart'] as const,
+  list: () =>
+    queryOptions({
+      queryKey: [...cartQueries.all(), 'list'] as const,
+      queryFn: fetchCartList,
+      refetchOnWindowFocus: false,
+    }),
+  count: () =>
+    queryOptions({
+      queryKey: [...cartQueries.all(), 'count'] as const,
+      queryFn: fetchCartCount,
+      refetchOnWindowFocus: false,
+    }),
+};

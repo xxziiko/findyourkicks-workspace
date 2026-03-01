@@ -2,13 +2,20 @@ import {
   fetchDefaultUserAddress,
   fetchUserAddresses,
 } from '@/features/user/address';
-import { createQueries as createAddressQueries } from '@findyourkicks/shared';
+import { queryOptions } from '@tanstack/react-query';
 
-export const addressQueries = createAddressQueries('address', {
-  default: () => ({
-    queryFn: () => fetchDefaultUserAddress(),
-  }),
-  list: () => ({
-    queryFn: () => fetchUserAddresses(),
-  }),
-} as const);
+export const addressQueries = {
+  all: () => ['address'] as const,
+  default: () =>
+    queryOptions({
+      queryKey: [...addressQueries.all(), 'default'] as const,
+      queryFn: () => fetchDefaultUserAddress(),
+      refetchOnWindowFocus: false,
+    }),
+  list: () =>
+    queryOptions({
+      queryKey: [...addressQueries.all(), 'list'] as const,
+      queryFn: () => fetchUserAddresses(),
+      refetchOnWindowFocus: false,
+    }),
+};

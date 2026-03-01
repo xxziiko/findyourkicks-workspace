@@ -12,8 +12,10 @@ export function useDeleteCartMutation() {
         cartQueries.list().queryKey,
       );
 
-      queryClient.setQueryData(cartQueries.list().queryKey, (old: CartList) =>
-        old.filter((item) => item.cartItemId !== cartItemId),
+      queryClient.setQueryData(
+        cartQueries.list().queryKey,
+        (old: CartList | undefined) =>
+          old?.filter((item) => item.cartItemId !== cartItemId) ?? [],
       );
 
       return { previousCart };

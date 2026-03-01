@@ -1,8 +1,12 @@
 import { fetchOrderHistory } from '@/features/order';
-import { createQueries as createOrderQueries } from '@findyourkicks/shared';
+import { queryOptions } from '@tanstack/react-query';
 
-export const orderQueries = createOrderQueries('order', {
-  history: (page: number) => ({
-    queryFn: () => fetchOrderHistory(page),
-  }),
-} as const);
+export const orderQueries = {
+  all: () => ['order'] as const,
+  history: (page: number) =>
+    queryOptions({
+      queryKey: [...orderQueries.all(), 'history', page] as const,
+      queryFn: () => fetchOrderHistory(page),
+      refetchOnWindowFocus: false,
+    }),
+};

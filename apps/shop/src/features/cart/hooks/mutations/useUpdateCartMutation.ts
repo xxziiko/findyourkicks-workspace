@@ -12,10 +12,12 @@ export function useUpdateCartMutation() {
         cartQueries.list().queryKey,
       );
 
-      queryClient.setQueryData(cartQueries.list().queryKey, (old: CartList) =>
-        old.map((item) =>
-          item.cartItemId === cartItemId ? { ...item, quantity } : item,
-        ),
+      queryClient.setQueryData(
+        cartQueries.list().queryKey,
+        (old: CartList | undefined) =>
+          old?.map((item) =>
+            item.cartItemId === cartItemId ? { ...item, quantity } : item,
+          ) ?? [],
       );
 
       return { previousCart };
