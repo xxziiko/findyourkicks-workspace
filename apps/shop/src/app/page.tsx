@@ -24,10 +24,7 @@ async function Products() {
   ]);
 
   const queryClient = getServerQueryClient();
-  await queryClient.prefetchInfiniteQuery({
-    ...productQueries.list(),
-    initialPageParam: 1,
-  });
+  await queryClient.prefetchInfiniteQuery(productQueries.list());
 
   const sections = [
     {
