@@ -44,14 +44,25 @@ test.describe('검색/필터 플로우', () => {
     // '낮은 가격순' 선택
     await sortSelect.selectOption('price_asc');
 
-    // URL에 sort=price_asc 포함 확인 (라우터 업데이트 대기)
-    await page.waitForURL(/[?&]sort=price_asc/);
+    // waitForURL은 Next.js App Router의 pushState를 놓칠 수 있으므로 waitForFunction으로 폴링
+    await page.waitForFunction(
+      () => window.location.search.includes('sort=price_asc'),
+      { timeout: 30000 },
+    );
     await expect(page).toHaveURL(/[?&]sort=price_asc/);
   });
 
   test('상품 목록이 렌더링된다 (빈 상태도 허용)', async ({ page }) => {
     await page.goto(`${BASE_URL}/products`);
     await page.waitForLoadState('load');
+
+    // useSuspenseInfiniteQuery로 인해 Suspense가 해제될 때까지 대기
+    await page.waitForFunction(
+      () =>
+        document.querySelectorAll('a[href^="/product/"]').length > 0 ||
+        document.body.textContent?.includes('검색 결과가 없습니다.'),
+      { timeout: 30000 },
+    );
 
     // 상품 그리드 아이템이 있거나 빈 상태 메시지가 표시되어야 함
     const hasProducts = await page
