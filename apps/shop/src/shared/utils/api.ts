@@ -34,7 +34,10 @@ export async function request<Response, Body = void>(
     code: responseData.code,
   };
 
-  assert(res.ok, `${error.status}, ${error}`);
+  assert(
+    res.ok,
+    `${error.status}, ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+  );
 
   return responseData;
 }

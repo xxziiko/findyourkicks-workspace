@@ -34,11 +34,12 @@ export default function useProductOption({
 
   const handleSelectSize = useCallback((id: string) => {
     setSelectedOptions((prev) => {
-      //FIXME: 네이밍, 메서드 변경 (findIndex -> find)
-      const index = prev.findIndex((option) => option.size === id);
-      if (index !== -1) {
-        return prev.map((option, i) =>
-          i === index ? { ...option, quantity: option.quantity + 1 } : option,
+      const targetOption = prev.find((option) => option.size === id);
+      if (targetOption) {
+        return prev.map((option) =>
+          option === targetOption
+            ? { ...option, quantity: option.quantity + 1 }
+            : option,
         );
       }
       return [...prev, { size: id, quantity: 1 }];

@@ -1,17 +1,20 @@
 'use client';
 
 import type { UserAddressForm } from '@/features/user/address';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';
 
 export default function useSearchAddress(
   setValue: UseFormSetValue<UserAddressForm>,
 ) {
+  const [scriptError, setScriptError] = useState(false);
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src =
       '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
     script.async = true;
+    script.onerror = () => setScriptError(true);
     document.head.appendChild(script);
 
     return () => {
@@ -53,5 +56,5 @@ export default function useSearchAddress(
     }).open();
   };
 
-  return { handlePostcode };
+  return { handlePostcode, scriptError };
 }

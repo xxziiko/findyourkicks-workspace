@@ -29,6 +29,20 @@ export async function GET(
     );
   }
 
+  if (!orders || orders.length === 0) {
+    return NextResponse.json(
+      { error: '주문을 찾을 수 없습니다.' },
+      { status: 404 },
+    );
+  }
+
+  if (!payment || payment.length === 0) {
+    return NextResponse.json(
+      { error: '결제 정보를 찾을 수 없습니다.' },
+      { status: 404 },
+    );
+  }
+
   const { data: addresses, error: addressesError } = await supabase
     .from('user_addresses')
     .select('*')

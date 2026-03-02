@@ -17,7 +17,6 @@ export async function GET(request: Request) {
       .eq('brand', brand);
 
     if (error) {
-      console.error('error', error.message);
       return NextResponse.json({ error }, { status: 500 });
     }
 
@@ -43,7 +42,6 @@ export async function GET(request: Request) {
     .order('product_id', { ascending: true });
 
   if (error) {
-    console.error(error);
     return NextResponse.json({ error }, { status: 500 });
   }
 
