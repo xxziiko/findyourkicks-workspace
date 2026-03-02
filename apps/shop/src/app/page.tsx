@@ -6,7 +6,7 @@ import {
   SECTION_TITLE,
   productQueries,
 } from '@/features/product';
-import { fetchProductsByBrand } from '@/features/product/actions';
+import { fetchProductsByBrandServer } from '@/features/product/actions.server';
 import { getServerQueryClient } from '@/shared/utils/query/getServerQueryClient';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { Suspense } from 'react';
@@ -19,8 +19,8 @@ export default async function Home() {
 
 async function Products() {
   const [vansProducts, nikeProducts] = await Promise.all([
-    fetchProductsByBrand('vans'),
-    fetchProductsByBrand('nike'),
+    fetchProductsByBrandServer('vans'),
+    fetchProductsByBrandServer('nike'),
   ]);
 
   const queryClient = getServerQueryClient();

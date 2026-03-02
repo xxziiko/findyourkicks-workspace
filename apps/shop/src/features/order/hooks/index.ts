@@ -4,4 +4,6 @@ export * from './createOrderSheetSummary';
 export * from './useCurrentPage';
 
 export * from './mutations/useOrderItemsMutation';
+export * from './mutations/useCancelOrderMutation';
+export * from './mutations/useReturnOrderMutation';
 export * from './queries';
