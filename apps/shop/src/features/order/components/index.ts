@@ -5,5 +5,7 @@ export { default as CheckoutView } from './CheckoutView';
 export { default as OrderComplete } from './OrderComplete';
 export { default as OrderHistoryList } from './OrderHistoryList';
 export * from './OrderDetail';
+export * from './CancelRequestModal';
+export * from './ReturnRequestForm';
 export * from './layouts/OrderListLayout';
 export * from './layouts/OrderListLoading';

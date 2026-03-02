@@ -1,0 +1,39 @@
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  line-height: 1;
+}
+
+.stars--sm {
+  font-size: 14px;
+}
+
+.stars--md {
+  font-size: 20px;
+}
+
+.stars--lg {
+  font-size: 28px;
+}
+
+.star {
+  color: #f59e0b;
+  line-height: 1;
+}
+
+.star--interactive {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: $gray-light;
+  transition: color 0.1s;
+
+  &:hover {
+    color: #f59e0b;
+  }
+}
+
+.star--filled {
+  color: #f59e0b;
+}
