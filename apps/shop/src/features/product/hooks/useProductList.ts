@@ -25,6 +25,7 @@ export default function useProductList() {
 
   return {
     productList,
+    hasNextPage,
     allLoaded,
     isFetchingNextPage,
     loadMoreRef,

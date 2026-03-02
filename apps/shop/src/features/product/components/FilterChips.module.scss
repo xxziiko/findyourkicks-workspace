@@ -1,0 +1,42 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: $primary;
+  color: $secondary;
+  border-radius: $radius-s;
+  font-size: $font-xs;
+
+  &__remove {
+    background: none;
+    border: none;
+    color: $secondary;
+    cursor: pointer;
+    font-size: $font-base;
+    line-height: 1;
+    padding: 0;
+  }
+}
+
+.clearBtn {
+  background: none;
+  border: 1px solid $gray-dark;
+  border-radius: $radius-s;
+  padding: 4px 10px;
+  font-size: $font-xs;
+  color: $gray-dark;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $primary;
+    color: $primary;
+  }
+}
