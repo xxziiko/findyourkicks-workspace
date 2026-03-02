@@ -11,6 +11,9 @@ fi
 
 # 2. E2E 테스트 (shop)
 echo "🔍 E2E 테스트 실행 중..."
+# 기존 dev 서버를 종료해 Playwright가 새 서버를 시작하도록 함
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+sleep 1
 if PLAYWRIGHT_WEBSERVER=shop npx playwright test --project=shop-setup --project=shop; then
   echo "✅ E2E 테스트 완료."
 else
