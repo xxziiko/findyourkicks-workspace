@@ -29,6 +29,10 @@ const TAB_TITLES = [
         title: '주문 내역',
         path: PATH.orders,
       },
+      {
+        title: '반품/교환 관리',
+        path: PATH.returns,
+      },
     ],
   },
 ] as const;

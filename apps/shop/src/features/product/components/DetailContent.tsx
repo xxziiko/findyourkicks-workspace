@@ -26,7 +26,7 @@ export default function DetailContent({
     isOutOfStock,
   } = useProductOption({ productDetail });
 
-  const { brand, price, title, description, inventory, category } =
+  const { brand, price, title, description, inventory, category, rating } =
     productDetail;
 
   const queryClient = useQueryClient();
@@ -59,6 +59,7 @@ export default function DetailContent({
           title={title}
           description={description}
           category={category}
+          rating={rating}
         />
 
         <OptionButtons>

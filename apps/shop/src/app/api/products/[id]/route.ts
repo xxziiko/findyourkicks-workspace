@@ -39,6 +39,12 @@ export async function GET(
 
   if (error) return NextResponse.json({ error }, { status: 500 });
 
+  const { data: ratingSummary } = await supabase
+    .from('product_rating_summary')
+    .select('*')
+    .eq('product_id', id)
+    .maybeSingle();
+
   const flatProduct = {
     productId: product.product_id,
     title: product.title,
@@ -48,6 +54,19 @@ export async function GET(
     brand: product.brand?.name ?? null,
     category: product.category?.name ?? null,
     inventory: product.inventory ?? [],
+    rating: {
+      average: ratingSummary?.average_rating
+        ? Number(ratingSummary.average_rating)
+        : 0,
+      count: ratingSummary?.review_count ?? 0,
+      distribution: {
+        1: ratingSummary?.rating_1 ?? 0,
+        2: ratingSummary?.rating_2 ?? 0,
+        3: ratingSummary?.rating_3 ?? 0,
+        4: ratingSummary?.rating_4 ?? 0,
+        5: ratingSummary?.rating_5 ?? 0,
+      },
+    },
   };
 
   return NextResponse.json(flatProduct);

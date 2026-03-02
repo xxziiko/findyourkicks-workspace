@@ -1,0 +1,104 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  border-radius: $radius-base;
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid $primary;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: $font-m;
+  font-weight: 500;
+}
+
+.required {
+  color: $error;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
+  font-size: $font-m;
+  resize: vertical;
+  font-family: inherit;
+
+  &::placeholder {
+    color: $gray-light;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.cancelBtn {
+  padding: 10px 20px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
+  background-color: #fff;
+  font-size: $font-m;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.submitBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: $radius-xs;
+  background-color: $primary;
+  color: #fff;
+  font-size: $font-m;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

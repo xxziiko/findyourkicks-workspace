@@ -12,6 +12,8 @@ export const ENDPOINTS = {
   orderSheets: '/order-sheets',
   payments: '/payments',
   products: '/products',
+  reviews: '/reviews',
+  reviewUpload: '/reviews/upload',
 } as const;
 
 export const USER_ENDPOINTS = {

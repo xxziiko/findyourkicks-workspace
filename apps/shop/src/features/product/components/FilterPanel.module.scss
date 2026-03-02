@@ -1,0 +1,64 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-base;
+  background-color: $secondary;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__title {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $primary;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+  }
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: $font-sm;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    cursor: pointer;
+    accent-color: $primary;
+  }
+}
+
+.priceRange {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceInput {
+  width: 100px;
+  padding: 6px 10px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
+  font-size: $font-sm;
+  outline: none;
+
+  &:focus {
+    border-color: $primary;
+  }
+}
+
+.priceSep {
+  font-size: $font-sm;
+  color: $gray-dark;
+}

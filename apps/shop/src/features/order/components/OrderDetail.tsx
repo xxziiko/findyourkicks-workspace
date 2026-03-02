@@ -1,11 +1,15 @@
+'use client';
 import { CardLayout } from '@/shared/components/layouts';
 import {
   commaizeNumberWithUnit,
   formatDateDefault,
 } from '@findyourkicks/shared';
+import { useState } from 'react';
 import type { OrderByIdResponse } from '../api/getOrderById';
+import { CancelRequestModal } from './CancelRequestModal';
 import styles from './OrderDetail.module.scss';
 import OrderProduct from './OrderProduct';
+import { ReturnRequestForm } from './ReturnRequestForm';
 
 interface OrderDetailProps {
   order: OrderByIdResponse;
@@ -17,6 +21,13 @@ const STATUS_MAP: Record<string, string> = {
   shipping: '배송중',
   delivered: '배송완료',
   cancelled: '주문취소',
+  cancel_requested: '취소신청',
+  return_requested: '반품신청',
+  return_approved: '반품승인',
+  returned: '반품완료',
+  exchange_requested: '교환신청',
+  exchange_approved: '교환승인',
+  shipped_again: '재발송',
 };
 
 export function OrderDetail({ order }: OrderDetailProps) {
@@ -33,7 +44,22 @@ export function OrderDetail({ order }: OrderDetailProps) {
 }
 
 function OrderInfo({ order }: { order: OrderByIdResponse }) {
-  const { orderId, orderDate, status, trackingNumber } = order;
+  const {
+    orderId,
+    orderDate,
+    status,
+    trackingNumber,
+    cancellationInfo,
+    returnInfo,
+  } = order;
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showReturnForm, setShowReturnForm] = useState(false);
+
+  const canCancel = status === 'paid' || status === 'preparing';
+  const canReturn =
+    status === 'delivered' &&
+    new Date().getTime() - new Date(orderDate).getTime() <=
+      7 * 24 * 60 * 60 * 1000;
 
   return (
     <section className={styles.section}>
@@ -57,7 +83,67 @@ function OrderInfo({ order }: { order: OrderByIdResponse }) {
             <span className={styles.value}>{trackingNumber}</span>
           </div>
         )}
+        {cancellationInfo && (
+          <div className={styles.infoRow}>
+            <span className={styles.label}>취소 사유</span>
+            <span className={styles.value}>{cancellationInfo.reason}</span>
+          </div>
+        )}
+        {returnInfo && (
+          <>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>
+                {returnInfo.returnType === 'exchange' ? '교환' : '반품'} 사유
+              </span>
+              <span className={styles.value}>{returnInfo.reason}</span>
+            </div>
+            {returnInfo.details && (
+              <div className={styles.infoRow}>
+                <span className={styles.label}>상세 사유</span>
+                <span className={styles.value}>{returnInfo.details}</span>
+              </div>
+            )}
+          </>
+        )}
+        {(canCancel || canReturn) && (
+          <div className={styles.infoRow}>
+            <span className={styles.label} />
+            <span className={styles.value}>
+              {canCancel && (
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={() => setShowCancelModal(true)}
+                >
+                  주문 취소
+                </button>
+              )}
+              {canReturn && (
+                <button
+                  type="button"
+                  className={styles.actionBtn}
+                  onClick={() => setShowReturnForm(true)}
+                >
+                  반품/교환 신청
+                </button>
+              )}
+            </span>
+          </div>
+        )}
       </div>
+
+      {showCancelModal && (
+        <CancelRequestModal
+          orderId={orderId}
+          onClose={() => setShowCancelModal(false)}
+        />
+      )}
+      {showReturnForm && (
+        <ReturnRequestForm
+          orderId={orderId}
+          onClose={() => setShowReturnForm(false)}
+        />
+      )}
     </section>
   );
 }

@@ -59,7 +59,6 @@ export async function GET(
   );
 
   if (error) {
-    console.error('주문 조회 실패', error);
     return NextResponse.json(
       { error: '주문 조회 실패', details: error.message },
       { status: 500 },
@@ -280,11 +279,14 @@ export async function POST(req: Request): Promise<NextResponse> {
     .in('cart_item_id', cartItemIds);
 
   if (deleteError) {
-    console.error('장바구니 아이템 삭제 실패:', deleteError);
+    console.error(
+      '장바구니 아이템 삭제 실패 (결제는 완료됨):',
+      deleteError.message,
+      deleteError,
+    );
   }
 
   // 8. 재고 감소
-  console.log('paymentResult.status', paymentResult.status);
   if (paymentResult.status === 'DONE') {
     for (const item of items) {
       const { data, error } = await supabase.rpc('decrease_stock', {
@@ -293,12 +295,12 @@ export async function POST(req: Request): Promise<NextResponse> {
         p_quantity: item.quantity,
       });
 
-      if (data) {
-        console.log('재고 감소 성공:', data);
-      }
-
       if (error) {
-        console.error('재고 감소 실패:', error);
+        console.error(
+          `재고 감소 실패 (결제는 완료됨) - product_id: ${item.product_id}, size: ${item.size}, quantity: ${item.quantity}:`,
+          error.message,
+          error,
+        );
       }
     }
   }

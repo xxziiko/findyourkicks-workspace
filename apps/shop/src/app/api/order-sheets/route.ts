@@ -26,7 +26,6 @@ export async function POST(req: Request) {
     .single();
 
   if (defaultAddressError) {
-    console.error('defaultAddressError', defaultAddressError);
     // 없으면 초기 고객
     const { data: address, error: addressError } = await supabase
       .from('user_addresses')
@@ -37,10 +36,7 @@ export async function POST(req: Request) {
       .select('address_id')
       .single();
 
-    console.log('address', address);
-
     if (addressError) {
-      console.error('addressError', addressError);
       return NextResponse.json({ error: '주소 생성 실패' }, { status: 500 });
     }
   }
@@ -58,7 +54,6 @@ export async function POST(req: Request) {
     .single();
 
   if (orderSheetError || !orderSheet) {
-    console.error('orderSheetError', orderSheetError);
     return NextResponse.json({ error: '주문서 생성 실패' }, { status: 500 });
   }
 
@@ -80,7 +75,6 @@ export async function POST(req: Request) {
     .insert(orderItems);
 
   if (insertError) {
-    console.error('insertError', insertError);
     return NextResponse.json(
       { error: '주문 아이템 생성 실패' },
       { status: 500 },

@@ -42,12 +42,6 @@ const ADDRESS_FIELDS = [
   },
 ] as const;
 
-declare global {
-  interface Window {
-    daum: any;
-  }
-}
-
 const formatUserAddressRequest = (form: UserAddressForm) => ({
   ...form,
   address: `[${form.zonecode}] ${form.roadAddress} ${form.extraAddress}`,
