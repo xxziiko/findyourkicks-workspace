@@ -49,7 +49,6 @@ export async function GET(
     .eq('address_id', orders[0].address_id);
 
   if (addressesError) {
-    console.error('addressesError', addressesError);
     return NextResponse.json({ error: '주문 주소 조회 실패' }, { status: 500 });
   }
 
@@ -67,9 +66,24 @@ export async function GET(
     .eq('order_id', orderId);
 
   if (itemsError) {
-    console.error('itemsError', itemsError);
     return NextResponse.json({ error: '주문 상품 조회 실패' }, { status: 500 });
   }
+
+  // order_cancellations 조회
+  const { data: cancellation } = await supabase
+    .from('order_cancellations')
+    .select('reason, requested_at, status')
+    .eq('order_id', orderId)
+    .order('requested_at', { ascending: false })
+    .maybeSingle();
+
+  // order_returns 조회
+  const { data: returnRequest } = await supabase
+    .from('order_returns')
+    .select('return_type, reason, details, requested_at, status')
+    .eq('order_id', orderId)
+    .order('requested_at', { ascending: false })
+    .maybeSingle();
 
   const response = {
     orderId,
@@ -98,6 +112,22 @@ export async function GET(
       quantity: item.quantity,
       price: item.price,
     })),
+    cancellationInfo: cancellation
+      ? {
+          reason: cancellation.reason,
+          requestedAt: cancellation.requested_at,
+          status: cancellation.status,
+        }
+      : null,
+    returnInfo: returnRequest
+      ? {
+          returnType: returnRequest.return_type,
+          reason: returnRequest.reason,
+          details: returnRequest.details,
+          requestedAt: returnRequest.requested_at,
+          status: returnRequest.status,
+        }
+      : null,
   };
 
   return NextResponse.json(response);
