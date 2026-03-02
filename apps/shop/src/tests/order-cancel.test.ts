@@ -6,6 +6,8 @@ test.describe('주문 취소 플로우', () => {
   test('비인증 상태에서 주문 목록 접근 시 로그인 페이지로 이동한다', async ({
     page,
   }) => {
+    // storageState 쿠키를 제거해 비인증 상태로 테스트
+    await page.context().clearCookies();
     await page.goto(`${BASE_URL}/my/orders`);
     await page.waitForURL(/login/);
 
@@ -16,6 +18,7 @@ test.describe('주문 취소 플로우', () => {
   test('비인증 상태에서 주문 상세 페이지 접근 시 로그인 페이지로 이동한다', async ({
     page,
   }) => {
+    await page.context().clearCookies();
     await page.goto(`${BASE_URL}/my/orders/test-order-id`);
     await page.waitForURL(/login/);
 

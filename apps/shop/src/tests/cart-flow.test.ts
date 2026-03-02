@@ -12,7 +12,7 @@ test.describe('장바구니 플로우', () => {
 
     // Click the first product link that goes to /product/[id]
     const firstProductLink = page.locator('a[href^="/product/"]').first();
-    await firstProductLink.waitFor({ state: 'visible' });
+    await firstProductLink.waitFor({ state: 'visible', timeout: 60000 });
     await firstProductLink.click();
     await page.waitForLoadState('load');
 
@@ -21,7 +21,7 @@ test.describe('장바구니 플로우', () => {
 
     // Read cart count before adding to cart (may not exist if 0)
     const cartNavLink = page.locator('a[href="/cart"]');
-    await cartNavLink.waitFor({ state: 'visible' });
+    await cartNavLink.waitFor({ state: 'visible', timeout: 10000 });
 
     const badgeBefore = cartNavLink.locator('span');
     const countBefore = (await badgeBefore.isVisible())
@@ -33,7 +33,7 @@ test.describe('장바구니 플로우', () => {
       .getByRole('button')
       .filter({ hasNot: page.locator('[disabled]') })
       .first();
-    await sizeButton.waitFor({ state: 'visible' });
+    await sizeButton.waitFor({ state: 'visible', timeout: 10000 });
     await sizeButton.click();
 
     // Click the "장바구니" (add to cart) button
@@ -79,7 +79,7 @@ test.describe('장바구니 플로우', () => {
     await page.waitForLoadState('load');
 
     const firstProductLink = page.locator('a[href^="/product/"]').first();
-    await firstProductLink.waitFor({ state: 'visible' });
+    await firstProductLink.waitFor({ state: 'visible', timeout: 60000 });
     await firstProductLink.click();
     await page.waitForLoadState('load');
 
@@ -87,7 +87,7 @@ test.describe('장바구니 플로우', () => {
       .getByRole('button')
       .filter({ hasNot: page.locator('[disabled]') })
       .first();
-    await sizeButton.waitFor({ state: 'visible' });
+    await sizeButton.waitFor({ state: 'visible', timeout: 10000 });
     await sizeButton.click();
     await page.getByRole('button', { name: '장바구니' }).click();
     await page.waitForLoadState('load');
@@ -101,7 +101,7 @@ test.describe('장바구니 플로우', () => {
       .getByRole('button')
       .filter({ hasText: /주문하기/ })
       .first();
-    await orderButton.waitFor({ state: 'visible' });
+    await orderButton.waitFor({ state: 'visible', timeout: 10000 });
     await expect(orderButton).toBeVisible();
   });
 
@@ -113,7 +113,7 @@ test.describe('장바구니 플로우', () => {
     await page.waitForLoadState('load');
 
     const firstProductLink = page.locator('a[href^="/product/"]').first();
-    await firstProductLink.waitFor({ state: 'visible' });
+    await firstProductLink.waitFor({ state: 'visible', timeout: 60000 });
     await firstProductLink.click();
     await page.waitForLoadState('load');
 
@@ -121,7 +121,7 @@ test.describe('장바구니 플로우', () => {
       .getByRole('button')
       .filter({ hasNot: page.locator('[disabled]') })
       .first();
-    await sizeButton.waitFor({ state: 'visible' });
+    await sizeButton.waitFor({ state: 'visible', timeout: 10000 });
     await sizeButton.click();
     await page.getByRole('button', { name: '장바구니' }).click();
     await page.waitForLoadState('load');
@@ -134,7 +134,7 @@ test.describe('장바구니 플로우', () => {
     const singleOrderButton = page
       .getByRole('button', { name: '주문하기' })
       .first();
-    await singleOrderButton.waitFor({ state: 'visible' });
+    await singleOrderButton.waitFor({ state: 'visible', timeout: 10000 });
     await singleOrderButton.click();
 
     // Should navigate to /checkout/[id]

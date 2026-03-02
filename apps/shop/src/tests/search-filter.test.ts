@@ -44,7 +44,8 @@ test.describe('검색/필터 플로우', () => {
     // '낮은 가격순' 선택
     await sortSelect.selectOption('price_asc');
 
-    // URL에 sort=price_asc 포함 확인
+    // URL에 sort=price_asc 포함 확인 (라우터 업데이트 대기)
+    await page.waitForURL(/[?&]sort=price_asc/);
     await expect(page).toHaveURL(/[?&]sort=price_asc/);
   });
 
