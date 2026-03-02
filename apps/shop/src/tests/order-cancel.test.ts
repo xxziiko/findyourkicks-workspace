@@ -7,7 +7,7 @@ test.describe('주문 취소 플로우', () => {
     page,
   }) => {
     await page.goto(`${BASE_URL}/my/orders`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL(/login/);
 
     // /my/orders는 AUTH_PATHS에 포함되어 있으므로 미인증 시 /login으로 리다이렉트
     await expect(page).toHaveURL(/login/);
@@ -17,7 +17,7 @@ test.describe('주문 취소 플로우', () => {
     page,
   }) => {
     await page.goto(`${BASE_URL}/my/orders/test-order-id`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL(/login/);
 
     // /my/* 경로는 AUTH_PATHS에 포함되어 있으므로 미인증 시 /login으로 리다이렉트
     await expect(page).toHaveURL(/login/);

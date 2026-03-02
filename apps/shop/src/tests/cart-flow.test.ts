@@ -8,13 +8,13 @@ test.describe('장바구니 플로우', () => {
   }) => {
     // Start from home page and navigate to the first available product
     await page.goto(BASE_URL);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Click the first product link that goes to /product/[id]
     const firstProductLink = page.locator('a[href^="/product/"]').first();
     await firstProductLink.waitFor({ state: 'visible' });
     await firstProductLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Verify we are on a product detail page
     await expect(page).toHaveURL(/\/product\//);
@@ -40,7 +40,7 @@ test.describe('장바구니 플로우', () => {
     await page.getByRole('button', { name: '장바구니' }).click();
 
     // Wait for the mutation to settle — badge should update
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Cart badge should now be visible and count should have increased
     await expect(badgeBefore).toBeVisible();
@@ -52,7 +52,7 @@ test.describe('장바구니 플로우', () => {
     page,
   }) => {
     await page.goto(`${BASE_URL}/cart`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Should stay on cart page (authenticated)
     await expect(page).toHaveURL(`${BASE_URL}/cart`);
@@ -76,12 +76,12 @@ test.describe('장바구니 플로우', () => {
   }) => {
     // First ensure there is at least one item in the cart
     await page.goto(BASE_URL);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     const firstProductLink = page.locator('a[href^="/product/"]').first();
     await firstProductLink.waitFor({ state: 'visible' });
     await firstProductLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     const sizeButton = page
       .getByRole('button')
@@ -90,11 +90,11 @@ test.describe('장바구니 플로우', () => {
     await sizeButton.waitFor({ state: 'visible' });
     await sizeButton.click();
     await page.getByRole('button', { name: '장바구니' }).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Navigate to cart
     await page.goto(`${BASE_URL}/cart`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // The bulk order button text contains "주문하기"
     const orderButton = page
@@ -110,12 +110,12 @@ test.describe('장바구니 플로우', () => {
   }) => {
     // Ensure there is at least one item in the cart
     await page.goto(BASE_URL);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     const firstProductLink = page.locator('a[href^="/product/"]').first();
     await firstProductLink.waitFor({ state: 'visible' });
     await firstProductLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     const sizeButton = page
       .getByRole('button')
@@ -124,11 +124,11 @@ test.describe('장바구니 플로우', () => {
     await sizeButton.waitFor({ state: 'visible' });
     await sizeButton.click();
     await page.getByRole('button', { name: '장바구니' }).click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Navigate to cart
     await page.goto(`${BASE_URL}/cart`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
 
     // Click the first individual "주문하기" button (single product order)
     const singleOrderButton = page
