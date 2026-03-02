@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# 1. 프로젝트 빌드
+echo "🔍 프로젝트 빌드 중..."
+if pnpm run build; then
+  echo "✅ 빌드 완료."
+else
+  echo "❌ 빌드 실패."
+  exit 1
+fi
+
+# 2. E2E 테스트 (shop)
+echo "🔍 E2E 테스트 실행 중..."
+if PLAYWRIGHT_WEBSERVER=shop npx playwright test --project=shop-setup --project=shop; then
+  echo "✅ E2E 테스트 완료."
+else
+  echo "❌ E2E 테스트 실패."
+  exit 1
+fi
+
+echo "🎉 pre-push 검사 완료!"
+exit 0
