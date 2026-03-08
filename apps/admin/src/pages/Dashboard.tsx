@@ -3,7 +3,11 @@ import {
   type RecentOrderItem,
   useRecentOrdersQuery,
 } from '@/features/order';
-import { type ProductItem, useRecentProductsQuery } from '@/features/product';
+import {
+  type ProductItem,
+  useProductStatusQuery,
+  useRecentProductsQuery,
+} from '@/features/product';
 import { CardSection, PATH } from '@/shared';
 import { formatDateDefault } from '@findyourkicks/shared';
 import { Link } from 'react-router-dom';
@@ -12,6 +16,7 @@ import styles from './Dashboard.module.scss';
 export default function Dashboard() {
   const { data: orders } = useRecentOrdersQuery();
   const { data: products } = useRecentProductsQuery();
+  const { data: productStatus } = useProductStatusQuery();
 
   const orderCard: CardItem<RecentOrderItem> = {
     id: 'latest-orders',
@@ -28,12 +33,8 @@ export default function Dashboard() {
   };
 
   const productStatistics = [
-    {
-      id: 'product-statistics',
-      title: '상품 통계',
-      items: ['판매 중 상품', '품절 상품'] as const,
-      data: [],
-    },
+    { id: 'selling', title: '판매 중 상품', value: productStatus?.selling ?? 0 },
+    { id: 'soldout', title: '품절 상품', value: productStatus?.soldout ?? 0 },
   ];
 
   return (
@@ -70,16 +71,14 @@ export default function Dashboard() {
         )}
       />
 
-      {productStatistics.map(({ id, title, items, data }) => (
-        <CardSection key={id} title={title}>
-          {items.map((item) => (
-            <div key={item}>
-              <p>{item}</p>
-              <p>{data}</p>
-            </div>
-          ))}
-        </CardSection>
-      ))}
+      <CardSection title="상품 통계">
+        {productStatistics.map(({ id, title, value }) => (
+          <div key={id}>
+            <p>{title}</p>
+            <p>{value}</p>
+          </div>
+        ))}
+      </CardSection>
     </div>
   );
 }

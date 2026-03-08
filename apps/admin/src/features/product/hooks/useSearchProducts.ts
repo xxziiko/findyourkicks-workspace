@@ -1,6 +1,5 @@
 import {
   type ProductSearchForm,
-  type ProductSearchFormKey,
   productQueries,
   productSearchFormSchema,
 } from '@/features/product';
@@ -34,7 +33,6 @@ export const useSearchProducts = () => {
     handleSubmit,
     control,
     reset,
-    formState: { dirtyFields },
   } = useForm<ProductSearchForm>({
     defaultValues,
     resolver: zodResolver(productSearchFormSchema),
@@ -48,14 +46,7 @@ export const useSearchProducts = () => {
   const queryClient = useQueryClient();
 
   const updateFilteredProducts = (form: ProductSearchForm) => {
-    const filtered = Object.fromEntries(
-      Object.keys(dirtyFields).map((key) => [
-        key,
-        form[key as ProductSearchFormKey],
-      ]),
-    ) as Partial<ProductSearchForm>;
-
-    const newParams = { ...filtered, page: 1 };
+    const newParams = { ...form, page: 1 };
     queryClient.fetchQuery(productQueries.list(newParams));
     setParams(newParams);
   };
