@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { uploadReviewImages } from '../api/uploadReviewImages';
+import { MAX_REVIEW_IMAGES } from '../constants';
 import { useCreateReviewMutation } from '../hooks/mutations/useCreateReviewMutation';
 import styles from './ReviewForm.module.scss';
 import StarRating from './StarRating';
@@ -26,8 +27,8 @@ export default function ReviewForm({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    const limited = files.slice(0, 3 - imageFiles.length);
-    setImageFiles((prev) => [...prev, ...limited].slice(0, 3));
+    const limited = files.slice(0, MAX_REVIEW_IMAGES - imageFiles.length);
+    setImageFiles((prev) => [...prev, ...limited].slice(0, MAX_REVIEW_IMAGES));
     e.target.value = '';
   };
 
@@ -53,14 +54,27 @@ export default function ReviewForm({
       setIsUploading(false);
     }
 
+    const uploadedUrls = imageUrls;
+
     createReview(
       {
         productId,
         rating,
         content: content.trim() || undefined,
-        imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+        imageUrls: uploadedUrls.length > 0 ? uploadedUrls : undefined,
       },
-      { onSuccess },
+      {
+        onSuccess,
+        onError: async () => {
+          if (uploadedUrls.length > 0) {
+            await fetch('/api/reviews/upload', {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ urls: uploadedUrls }),
+            });
+          }
+        },
+      },
     );
   };
 
@@ -93,7 +107,9 @@ export default function ReviewForm({
       </div>
 
       <div className={styles.form__field}>
-        <span className={styles.form__label}>사진 ({imageFiles.length}/3)</span>
+        <span className={styles.form__label}>
+          사진 ({imageFiles.length}/{MAX_REVIEW_IMAGES})
+        </span>
         <div className={styles.form__images}>
           {imageFiles.map((file, index) => (
             <div key={index} className={styles.form__imagePreview}>
@@ -113,7 +129,7 @@ export default function ReviewForm({
               </button>
             </div>
           ))}
-          {imageFiles.length < 3 && (
+          {imageFiles.length < MAX_REVIEW_IMAGES && (
             <label className={styles.form__imageAdd}>
               <span>+</span>
               <input
