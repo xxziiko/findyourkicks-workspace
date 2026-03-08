@@ -16,18 +16,20 @@ export default async function DetailPage({
   return (
     <Suspense fallback={<Loading />}>
       <article className={styles.detail}>
-        <figure className={styles.image__box}>
-          <ProductImage
-            src={productDetail.image}
-            alt="product"
-            width="24rem"
-            height="24rem"
-          />
-        </figure>
+        <div className={styles.detail__top}>
+          <figure className={styles.image__box}>
+            <ProductImage
+              src={productDetail.image}
+              alt="product"
+              width="24rem"
+              height="24rem"
+            />
+          </figure>
 
-        <div className={styles.detail__divider} />
+          <div className={styles.detail__divider} />
 
-        <DetailContent productDetail={productDetail} />
+          <DetailContent productDetail={productDetail} />
+        </div>
 
         <ReviewSection productId={id} rating={productDetail.rating} />
       </article>

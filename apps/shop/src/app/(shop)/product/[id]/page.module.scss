@@ -1,10 +1,17 @@
 .detail {
-  @include split-layout(3rem, 10rem 0, 1024px);
+  @include flex-col;
+  gap: 3rem;
+  padding: 10rem 0;
+  width: 100%;
+}
 
-  &__divider {
-    @media (min-width: 1024px) {
-      border-left: 1px solid #dedede;
-    }
+.detail__top {
+  @include split-layout(3rem, 0, 1024px);
+}
+
+.detail__divider {
+  @media (min-width: 1024px) {
+    border-left: 1px solid #dedede;
   }
 }
 
