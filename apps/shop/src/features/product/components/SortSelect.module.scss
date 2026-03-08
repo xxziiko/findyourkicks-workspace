@@ -1,0 +1,13 @@
+.select {
+  padding: 8px 12px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
+  font-size: $font-sm;
+  background-color: $secondary;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: $primary;
+  }
+}

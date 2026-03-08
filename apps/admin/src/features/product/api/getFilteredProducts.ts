@@ -4,7 +4,6 @@ import { z } from 'zod';
 import type { ProductSearchForm } from '../types';
 
 const productSchema = z.object({
-  id: z.string(),
   product_id: z.string(),
   title: z.string(),
   price: z.number(),
@@ -34,11 +33,12 @@ const getFilteredProducts = async (
   const { search, status, category, brand, period, page } = params;
   const data = await api.get(API_PATH.products, {
     params: {
-      search,
-      status,
-      category,
-      brand,
-      period,
+      search: search || undefined,
+      status: (status === '전체' || !status) ? undefined : status,
+      category: (category === '카테고리를 선택해주세요.' || !category) ? undefined : category,
+      brand: (brand === '브랜드를 선택해주세요.' || !brand) ? undefined : brand,
+      startDate: period?.startDate,
+      endDate: period?.endDate,
       page,
     },
   });

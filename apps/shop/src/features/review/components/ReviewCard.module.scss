@@ -1,0 +1,44 @@
+.card {
+  padding: 16px 0;
+  border-bottom: 1px solid $gray-default;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card__date {
+  font-size: $font-sm;
+  color: $gray-dark;
+  margin-left: auto;
+}
+
+.card__content {
+  font-size: $font-sm;
+  line-height: 1.6;
+  color: $primary;
+  margin: 8px 0;
+  white-space: pre-wrap;
+}
+
+.card__images {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.card__image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: $radius-base;
+  border: 1px solid $gray-default;
+}

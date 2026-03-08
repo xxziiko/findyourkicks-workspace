@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
     .eq('is_default', true);
 
   if (addressIdError) {
-    console.error('주소 조회 실패', addressIdError);
     return NextResponse.json({ error: '주소 조회 실패' }, { status: 500 });
   }
 
@@ -26,7 +25,6 @@ export async function POST(req: NextRequest) {
       .eq('address_id', addressId[0].address_id);
 
     if (updateDefaultAddressError) {
-      console.error('기본 배송지 초기화 실패', updateDefaultAddressError);
       return NextResponse.json(
         { error: '기본 배송지 초기화 실패' },
         { status: 500 },
@@ -48,7 +46,6 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (newAddressError) {
-    console.error('주소 생성 실패', newAddressError);
     return NextResponse.json({ error: '주소 생성 실패' }, { status: 500 });
   }
 

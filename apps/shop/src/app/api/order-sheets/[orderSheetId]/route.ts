@@ -59,10 +59,10 @@ export async function GET(
 
   if (deliveryError) {
     console.error('배송 정보 조회 실패', deliveryError);
-    return NextResponse.json({
-      error: '배송 정보를 찾을 수 없습니다.',
-      status: 404,
-    });
+    return NextResponse.json(
+      { error: '배송 정보를 찾을 수 없습니다.' },
+      { status: 404 },
+    );
   }
 
   if (!addressData) {

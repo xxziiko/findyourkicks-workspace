@@ -1,0 +1,63 @@
+# ───────────────────────────────────────────────────────────────
+# 🌙 E2E Nightly - main 브랜치 전체 E2E 회귀 테스트
+#
+# 매일 KST 05:00 (UTC 20:00) main 브랜치 기준으로 전체 Playwright
+# E2E 스위트를 실행하여 회귀를 조기에 감지한다.
+# 실패 시 HTML 리포트를 아티팩트로 14일간 보관한다.
+# ───────────────────────────────────────────────────────────────
+
+name: E2E Nightly
+
+on:
+  schedule:
+    - cron: '0 20 * * *'   # KST 05:00 매일
+  workflow_dispatch:         # 수동 실행 (브랜치/태그 지정 가능)
+
+jobs:
+  e2e-full:
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      VITE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      VITE_API_URL: ${{ secrets.SUPABASE_URL }}/functions/v1
+      VITE_BASE_URL: http://localhost:3000
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Start Admin dev server
+        run: pnpm --filter admin dev &
+
+      - name: Wait for Admin server
+        run: npx wait-on http://localhost:5173 --timeout 120000
+
+      - name: Run full Playwright E2E suite
+        run: pnpm exec playwright test --reporter=html,github
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-nightly-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 14

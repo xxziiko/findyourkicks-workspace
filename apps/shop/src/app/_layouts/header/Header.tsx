@@ -25,6 +25,8 @@ export function Header() {
       </Link>
 
       <div className={styles.tabs}>
+        <Link href={PATH.product}>SHOP</Link>
+
         {userEmail && (
           <div className={styles.tabs}>
             <p className={styles.tabs__user}>{userEmail.split('@')[0]}님</p>

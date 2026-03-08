@@ -47,7 +47,7 @@ export default function ProductRegister() {
         </div>
 
         <RegisterActionButtons
-          onResetClick={handleReset}
+          onResetClick={() => navigate(PATH.products)}
           onDraftClick={handleDraftToLocal}
           savedTime={savedTime}
         />

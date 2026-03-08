@@ -1,33 +1,52 @@
-import type { ProductDetail } from '@/features/product/types';
+import type {
+  FilterOptions,
+  ProductDetail,
+  ProductFilters,
+} from '@/features/product/types';
 import { ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/utils/api';
-import { createClient } from '@/shared/utils/supabase/client';
 
-type Product = {
-  productid: string;
-  brand: string;
-  title: string;
-  price: number;
-  image: string;
-};
+const buildProductsQueryString = (
+  page: number,
+  filters?: ProductFilters,
+): string => {
+  const params = new URLSearchParams();
+  params.set('page', String(page));
 
-const supabase = createClient();
+  if (filters?.q) params.set('q', filters.q);
 
-export const fetchProducts = async (page = 1, brand?: string) => {
-  const { data, error } = await supabase.rpc('get_products', {
-    p_page: page,
-    p_brand: brand || null,
-  });
-
-  if (error) {
-    console.error('RPC Error:', error);
-    return [];
+  if (filters?.brand && filters.brand.length > 0) {
+    params.set('brand', filters.brand.join(','));
   }
 
-  return data.map(({ productid, ...rest }: Product) => ({
-    productId: productid,
-    ...rest,
-  }));
+  if (filters?.category && filters.category.length > 0) {
+    params.set('category', filters.category.join(','));
+  }
+
+  if (filters?.size && filters.size.length > 0) {
+    params.set('size', filters.size.join(','));
+  }
+
+  if (filters?.minPrice !== undefined) {
+    params.set('minPrice', String(filters.minPrice));
+  }
+
+  if (filters?.maxPrice !== undefined) {
+    params.set('maxPrice', String(filters.maxPrice));
+  }
+
+  if (filters?.sort) params.set('sort', filters.sort);
+
+  return params.toString();
+};
+
+export const fetchProducts = async (page = 1, filters?: ProductFilters) => {
+  const qs = buildProductsQueryString(page, filters);
+  return await api.get<ProductDetail[]>(`${ENDPOINTS.products}?${qs}`);
+};
+
+export const fetchFilterOptions = async () => {
+  return await api.get<FilterOptions>(`${ENDPOINTS.products}/filters`);
 };
 
 // detail
@@ -36,5 +55,5 @@ export const fetchProductById = async (productId: string) => {
 };
 
 export const fetchProductsByBrand = async (brand: string) => {
-  return await fetchProducts(1, brand);
+  return await fetchProducts(1, { brand: [brand] });
 };

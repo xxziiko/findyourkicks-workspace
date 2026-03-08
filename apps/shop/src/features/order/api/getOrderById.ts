@@ -1,6 +1,7 @@
 import { ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/utils/api';
 import { z } from 'zod';
+import type { OrderStatus } from '../types';
 
 const orderProductSchema = z.object({
   id: z.string(),
@@ -12,10 +13,28 @@ const orderProductSchema = z.object({
   price: z.number(),
 });
 
+const cancellationInfoSchema = z
+  .object({
+    reason: z.string(),
+    requestedAt: z.string(),
+    status: z.enum(['requested', 'completed', 'rejected']),
+  })
+  .nullable();
+
+const returnInfoSchema = z
+  .object({
+    returnType: z.enum(['return', 'exchange']),
+    reason: z.string(),
+    details: z.string().optional(),
+    requestedAt: z.string(),
+    status: z.enum(['requested', 'approved', 'rejected', 'completed']),
+  })
+  .nullable();
+
 const orderByIdSchema = z.object({
   orderId: z.string(),
   orderDate: z.string(),
-  status: z.string(),
+  status: z.string().transform((val) => val as OrderStatus),
   trackingNumber: z.string().nullable(),
   payment: z.object({
     paymentMethod: z.string(),
@@ -31,6 +50,8 @@ const orderByIdSchema = z.object({
     message: z.string(),
   }),
   products: z.array(orderProductSchema),
+  cancellationInfo: cancellationInfoSchema.optional(),
+  returnInfo: returnInfoSchema.optional(),
 });
 
 type OrderByIdResponse = z.infer<typeof orderByIdSchema>;

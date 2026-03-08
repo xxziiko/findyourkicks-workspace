@@ -40,7 +40,6 @@ export function ProductSectionList({ sections }: ProductSectionListProps) {
         onAllImageLoad={handleImageLoad}
       />
 
-      {/* TODO: 직접 구현 */}
       <ImpressionArea
         onImpressionStart={handleFetchNextPage}
         areaThreshold={0.2}
