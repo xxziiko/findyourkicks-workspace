@@ -1,3 +1,4 @@
+import { mapRpcError } from '@/shared/utils/rpcError';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
@@ -79,40 +80,25 @@ export async function POST(
     );
   }
 
-  // 주문 상태 업데이트
-  const { error: updateError } = await supabase
-    .from('orders')
-    .update({ status: 'cancelled' })
-    .eq('order_id', orderId);
+  const tossData = await tossRes.json();
 
-  if (updateError) {
-    return NextResponse.json(
-      { error: '주문 상태 업데이트 실패', details: updateError.message },
-      { status: 500 },
-    );
-  }
-
-  // 취소 기록 저장
-  await supabase.from('order_cancellations').insert({
-    order_id: orderId,
-    reason: reason ?? '고객 취소',
-    status: 'completed',
+  // 단일 RPC로 원자적 처리: 주문 상태 + 취소 기록 + 재고 복원
+  const { error: rpcError } = await supabase.rpc('cancel_order_after_toss', {
+    p_order_id: orderId,
+    p_reason: reason ?? '고객 취소',
+    p_cancel_request_id: crypto.randomUUID(),
+    p_toss_cancel_transaction_key: tossData.cancels?.[0]?.transactionKey ?? '',
+    p_toss_canceled_at:
+      tossData.cancels?.[0]?.canceledAt ?? new Date().toISOString(),
+    p_toss_raw: tossData,
   });
 
-  // 재고 복원
-  const { data: orderItems } = await supabase
-    .from('order_items')
-    .select('product_id, size, quantity')
-    .eq('order_id', orderId);
-
-  if (orderItems) {
-    for (const item of orderItems) {
-      await supabase.rpc('increase_stock', {
-        p_product_id: item.product_id,
-        p_size: item.size,
-        p_quantity: item.quantity,
-      });
-    }
+  if (rpcError) {
+    const mapped = mapRpcError(rpcError);
+    return NextResponse.json(
+      { error: mapped.error },
+      { status: mapped.status },
+    );
   }
 
   return NextResponse.json({ message: '주문이 취소되었습니다.' });

@@ -1,3 +1,4 @@
+import { mapRpcError } from '@/shared/utils/rpcError';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
@@ -26,62 +27,18 @@ export async function POST(
     return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 });
   }
 
-  const { data: returnRecord, error: returnError } = await supabase
-    .from('order_returns')
-    .select('return_id, order_id, return_type, status')
-    .eq('return_id', returnId)
-    .single();
-
-  if (returnError || !returnRecord) {
-    return NextResponse.json(
-      { error: '반품/교환 요청을 찾을 수 없습니다.' },
-      { status: 404 },
-    );
-  }
-
-  if (returnRecord.status !== 'requested') {
-    return NextResponse.json(
-      { error: '이미 처리된 요청입니다.' },
-      { status: 400 },
-    );
-  }
-
-  const { error: updateReturnError } = await supabase
-    .from('order_returns')
-    .update({ status: 'approved' })
-    .eq('return_id', returnId);
-
-  if (updateReturnError) {
-    return NextResponse.json(
-      {
-        error: '반품/교환 상태 업데이트 실패',
-        details: updateReturnError.message,
-      },
-      { status: 500 },
-    );
-  }
-
-  const newOrderStatus =
-    returnRecord.return_type === 'exchange'
-      ? 'exchange_approved'
-      : 'return_approved';
-
-  const { error: updateOrderError } = await supabase
-    .from('orders')
-    .update({ status: newOrderStatus })
-    .eq('order_id', returnRecord.order_id);
-
-  if (updateOrderError) {
-    return NextResponse.json(
-      { error: '주문 상태 업데이트 실패', details: updateOrderError.message },
-      { status: 500 },
-    );
-  }
-
-  return NextResponse.json({
-    message:
-      returnRecord.return_type === 'exchange'
-        ? '교환 요청이 승인되었습니다.'
-        : '반품 요청이 승인되었습니다.',
+  // 단일 RPC로 원자적 처리: 반품 상태 + 주문 상태 동시 업데이트
+  const { error: rpcError } = await supabase.rpc('approve_return_request', {
+    p_return_id: returnId,
   });
+
+  if (rpcError) {
+    const mapped = mapRpcError(rpcError);
+    return NextResponse.json(
+      { error: mapped.error },
+      { status: mapped.status },
+    );
+  }
+
+  return NextResponse.json({ message: '반품/교환 요청이 승인되었습니다.' });
 }
