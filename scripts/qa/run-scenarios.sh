@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────
 # agent-browser QA 시나리오 러너
-# Usage: ./scripts/qa/run-scenarios.sh [shop|admin|all]
+#
+# Usage:
+#   ./scripts/qa/run-scenarios.sh shop            # shop 전체
+#   ./scripts/qa/run-scenarios.sh admin           # admin 전체
+#   ./scripts/qa/run-scenarios.sh all             # 전체
+#   ./scripts/qa/run-scenarios.sh shop/review     # 특정 시나리오
+#   ./scripts/qa/run-scenarios.sh shop/review shop/cart admin/product
+#
 # Env:   SHOP_URL  (default: http://localhost:3000)
 #        ADMIN_URL (default: http://localhost:5173)
 #        TEST_ACCOUNT_PW
@@ -10,7 +17,6 @@
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TARGET="${1:-all}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -45,29 +51,50 @@ run_scenario() {
   sleep 2
 }
 
+# 인수가 없으면 all
+if [ $# -eq 0 ]; then
+  set -- "all"
+fi
+
+# 대상 레이블 (헤더 출력용)
+LABEL="$*"
+
 echo ""
 echo -e "${CYAN}═══════════════════════════════════════════${NC}"
 echo -e "${CYAN}  agent-browser QA 시나리오 러너${NC}"
-echo -e "${CYAN}  대상: ${TARGET}${NC}"
+echo -e "${CYAN}  대상: ${LABEL}${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════${NC}"
 
-# Shop 시나리오
-if [ "$TARGET" = "shop" ] || [ "$TARGET" = "all" ]; then
-  echo ""
-  echo -e "${CYAN}─── Shop 시나리오 ───${NC}"
-  for script in "${SCRIPT_DIR}/scenarios/shop/"*.sh; do
-    [ -f "$script" ] && run_scenario "$script"
-  done
-fi
+for TARGET in "$@"; do
+  if [[ "$TARGET" == *"/"* ]]; then
+    # ── 특정 시나리오 (e.g. shop/review, admin/product) ──
+    script="${SCRIPT_DIR}/scenarios/${TARGET}.sh"
+    if [ -f "$script" ]; then
+      group=$(dirname "$TARGET")
+      echo ""
+      echo -e "${CYAN}─── ${group} 시나리오 ───${NC}"
+      run_scenario "$script"
+    else
+      echo -e "${RED}시나리오를 찾을 수 없습니다: ${TARGET}${NC}"
+    fi
+  elif [ "$TARGET" = "shop" ] || [ "$TARGET" = "all" ]; then
+    # ── Shop 전체 ──
+    echo ""
+    echo -e "${CYAN}─── Shop 시나리오 ───${NC}"
+    for script in "${SCRIPT_DIR}/scenarios/shop/"*.sh; do
+      [ -f "$script" ] && run_scenario "$script"
+    done
+  fi
 
-# Admin 시나리오
-if [ "$TARGET" = "admin" ] || [ "$TARGET" = "all" ]; then
-  echo ""
-  echo -e "${CYAN}─── Admin 시나리오 ───${NC}"
-  for script in "${SCRIPT_DIR}/scenarios/admin/"*.sh; do
-    [ -f "$script" ] && run_scenario "$script"
-  done
-fi
+  if [ "$TARGET" = "admin" ] || [ "$TARGET" = "all" ]; then
+    # ── Admin 전체 ──
+    echo ""
+    echo -e "${CYAN}─── Admin 시나리오 ───${NC}"
+    for script in "${SCRIPT_DIR}/scenarios/admin/"*.sh; do
+      [ -f "$script" ] && run_scenario "$script"
+    done
+  fi
+done
 
 # 최종 요약
 echo ""
