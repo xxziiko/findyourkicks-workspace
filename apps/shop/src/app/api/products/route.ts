@@ -10,16 +10,23 @@ export async function GET(request: Request) {
   const brandParam = searchParams.get('brand');
 
   // 홈페이지 브랜드 섹션용: brand 단독 파라미터 (콤마 없음, 다른 검색 파라미터 없음)
+  const hasQuery = !!searchParams.get('q');
+  const hasCategoryFilter = !!searchParams.get('category');
+  const hasSizeFilter = !!searchParams.get('size');
+  const hasPriceFilter =
+    !!searchParams.get('minPrice') || !!searchParams.get('maxPrice');
+  const hasSort = searchParams.get('sort') !== null;
+  const hasPage = searchParams.get('page') !== null;
+  const isBrandFilterOnly = !!brandParam && !brandParam.includes(',');
+
   const isHomeBrandSection =
-    brandParam &&
-    !brandParam.includes(',') &&
-    !searchParams.get('q') &&
-    !searchParams.get('category') &&
-    !searchParams.get('size') &&
-    !searchParams.get('minPrice') &&
-    !searchParams.get('maxPrice') &&
-    searchParams.get('sort') === null &&
-    searchParams.get('page') === null;
+    isBrandFilterOnly &&
+    !hasQuery &&
+    !hasCategoryFilter &&
+    !hasSizeFilter &&
+    !hasPriceFilter &&
+    !hasSort &&
+    !hasPage;
 
   if (isHomeBrandSection) {
     const { data: products, error } = await supabase

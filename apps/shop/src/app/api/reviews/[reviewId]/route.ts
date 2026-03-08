@@ -1,3 +1,4 @@
+import { extractStoragePath } from '@/shared/utils/storageUtils';
 import { createClient } from '@/shared/utils/supabase/server';
 import { NextResponse } from 'next/server';
 
@@ -87,10 +88,7 @@ export async function DELETE(
   // Storage 이미지 삭제
   if (review.image_urls && review.image_urls.length > 0) {
     const paths = review.image_urls
-      .map((url: string) => {
-        const parts = url.split('/review-images/');
-        return parts[1] ?? null;
-      })
+      .map((url: string) => extractStoragePath(url, 'review-images'))
       .filter(Boolean);
 
     if (paths.length > 0) {
