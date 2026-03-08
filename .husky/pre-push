@@ -9,17 +9,29 @@ else
   exit 1
 fi
 
-# 2. E2E 테스트 (admin)
-echo "🔍 E2E 테스트 실행 중..."
-# 기존 dev 서버를 종료해 Playwright가 새 서버를 시작하도록 함
-lsof -ti:5173 | xargs kill -9 2>/dev/null || true
+# 2. agent-browser QA 시나리오 (shop)
+echo "🧪 agent-browser QA 시나리오 실행 중..."
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
 sleep 1
-if npx playwright test --project=setup --project=admin; then
-  echo "✅ E2E 테스트 완료."
+
+pnpm --filter shop dev &
+SHOP_PID=$!
+
+# shop 서버 준비 대기
+for i in $(seq 1 60); do
+  curl -s http://localhost:3000 > /dev/null 2>&1 && break
+  sleep 2
+done
+
+if bash scripts/qa/run-scenarios.sh shop; then
+  echo "✅ QA 시나리오 통과."
 else
-  echo "❌ E2E 테스트 실패."
+  echo "❌ QA 시나리오 실패."
+  kill $SHOP_PID 2>/dev/null || true
   exit 1
 fi
+
+kill $SHOP_PID 2>/dev/null || true
 
 echo "🎉 pre-push 검사 완료!"
 exit 0

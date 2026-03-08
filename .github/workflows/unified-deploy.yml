@@ -262,4 +262,28 @@ jobs:
             echo "🏥 서비스 헬스체크..."
             curl -f http://localhost/ping || echo "Nginx 헬스체크 실패"
             
-            echo "🎉 배포 완료!" 
+            echo "🎉 배포 완료!"
+
+  # 배포 후 스모크 테스트
+  smoke-test:
+    needs: [deploy]
+    if: always() && needs.deploy.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install agent-browser
+        run: npm install -g agent-browser && agent-browser install --with-deps
+
+      - name: Run post-deploy smoke tests
+        env:
+          SHOP_URL: ${{ secrets.SHOP_BASE_URL }}
+          ADMIN_URL: ${{ secrets.ADMIN_BASE_URL }}
+          TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
+        run: bash scripts/qa/run-scenarios.sh all
