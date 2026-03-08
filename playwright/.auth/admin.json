@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5173",
+      "localStorage": [
+        {
+          "name": "sb-jrigsmyeoxklbottbscz-auth-token",
+          "value": "{\"access_token\":\"eyJhbGciOiJIUzI1NiIsImtpZCI6IjFIY0RKV29VbU8rMGo2WVMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2pyaWdzbXllb3hrbGJvdHRic2N6LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJkOTgzM2MyZC1lMzRhLTQyYmYtYTIzMi0wOWI0OGFjYzNkMjUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyOTYxNzY0LCJpYXQiOjE3NzI5NTgxNjQsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6Iuq0gOumrOyekCIsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwicHJvdmlkZXIiOiJlbWFpbCIsInJvbGUiOiJhZG1pbiIsInN1YiI6ImQ5ODMzYzJkLWUzNGEtNDJiZi1hMjMyLTA5YjQ4YWNjM2QyNSJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzcyOTU4MTY0fV0sInNlc3Npb25faWQiOiI0ZDRjMDA0MS1hNmU1LTRmMTUtODZiYy1mNWM4ZjdkNzFiMTQiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.1YWNThEZxFwP8dkdsWYM_n_0PnRD4RPFhhf3ZVVtLUo\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1772961764,\"refresh_token\":\"tzyckpmnpxzg\",\"user\":{\"id\":\"d9833c2d-e34a-42bf-a232-09b48acc3d25\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"admin@example.com\",\"email_confirmed_at\":\"2025-05-16T12:48:39.764008Z\",\"phone\":\"\",\"confirmed_at\":\"2025-05-16T12:48:39.764008Z\",\"last_sign_in_at\":\"2026-03-08T08:22:44.551347828Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"email\":\"admin@example.com\",\"email_verified\":true,\"name\":\"관리자\",\"phone_verified\":false,\"provider\":\"email\",\"role\":\"admin\",\"sub\":\"d9833c2d-e34a-42bf-a232-09b48acc3d25\"},\"identities\":[{\"identity_id\":\"083c7a06-9c4b-4fac-9c1c-2e6012b9d2ab\",\"id\":\"d9833c2d-e34a-42bf-a232-09b48acc3d25\",\"user_id\":\"d9833c2d-e34a-42bf-a232-09b48acc3d25\",\"identity_data\":{\"email\":\"admin@example.com\",\"email_verified\":false,\"name\":\"관리자\",\"phone_verified\":false,\"provider\":\"email\",\"role\":\"admin\",\"sub\":\"d9833c2d-e34a-42bf-a232-09b48acc3d25\"},\"provider\":\"email\",\"last_sign_in_at\":\"2025-05-16T12:48:39.75591Z\",\"created_at\":\"2025-05-16T12:48:39.755962Z\",\"updated_at\":\"2025-05-16T12:48:39.755962Z\",\"email\":\"admin@example.com\"}],\"created_at\":\"2025-05-16T12:48:39.743348Z\",\"updated_at\":\"2026-03-08T08:22:44.557713Z\",\"is_anonymous\":false},\"weak_password\":null}"
+        }
+      ]
+    }
+  ]
+}
