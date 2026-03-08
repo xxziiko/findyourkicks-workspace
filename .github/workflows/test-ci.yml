@@ -158,10 +158,10 @@ jobs:
         run: pnpm install
 
       - name: Install agent-browser
-        run: npm install -g agent-browser && agent-browser install --with-deps
+        run: npm install -g agent-browser
 
-      - name: Install Playwright Chromium
-        run: npx playwright install chromium --with-deps
+      - name: Install Playwright Chromium (agent-browser bundled)
+        run: $(npm root -g)/agent-browser/node_modules/.bin/playwright install chromium --with-deps
 
       - name: Start Shop dev server
         run: pnpm --filter shop dev &
@@ -204,10 +204,10 @@ jobs:
         run: pnpm install
 
       - name: Install agent-browser
-        run: npm install -g agent-browser && agent-browser install --with-deps
+        run: npm install -g agent-browser
 
-      - name: Install Playwright Chromium
-        run: npx playwright install chromium --with-deps
+      - name: Install Playwright Chromium (agent-browser bundled)
+        run: $(npm root -g)/agent-browser/node_modules/.bin/playwright install chromium --with-deps
 
       - name: Start Admin dev server
         run: pnpm --filter admin dev &
