@@ -14,6 +14,8 @@ const statusLabelMap = {
   rejected: '거부',
 } as const;
 
+const PENDING_STATUS = 'requested' as const;
+
 const returnTypeLabelMap = {
   return: '반품',
   exchange: '교환',
@@ -89,7 +91,7 @@ export function ReturnsTable({
       header: '처리',
       cell: (info) => {
         const row = info.row.original;
-        if (row.status !== 'requested') {
+        if (row.status !== PENDING_STATUS) {
           return <span className={styles.processed}>처리 완료</span>;
         }
         return (
