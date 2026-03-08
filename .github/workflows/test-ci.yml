@@ -21,6 +21,8 @@ jobs:
     outputs:
       shop_changed: ${{ steps.filter.outputs.shop }}
       admin_changed: ${{ steps.filter.outputs.admin }}
+      shop_scenarios: ${{ steps.qa-scenarios.outputs.shop }}
+      admin_scenarios: ${{ steps.qa-scenarios.outputs.admin }}
       e2e_tags: ${{ steps.e2e-tags.outputs.tags }}
       e2e_all: ${{ steps.e2e-tags.outputs.all }}
     steps:
@@ -38,17 +40,73 @@ jobs:
             shared:
               - 'packages/shared/**'
               - 'apps/admin/src/shared/**'
+              - 'apps/shop/src/shared/**'
               - 'supabase/functions/_shared/**'
-            product:
+            # Admin QA 도메인
+            admin_product:
               - 'apps/admin/src/features/product/**'
               - 'apps/admin/src/pages/Product*.tsx'
               - 'supabase/functions/products/**'
-            returns:
+            admin_auth:
+              - 'apps/admin/src/pages/Login.tsx'
+            # Shop QA 도메인
+            shop_auth:
+              - 'apps/shop/src/app/(shop)/login/**'
+              - 'apps/shop/src/app/api/auth/**'
+            shop_cart:
+              - 'apps/shop/src/features/cart/**'
+              - 'apps/shop/src/app/api/cart/**'
+            shop_order:
+              - 'apps/shop/src/features/order/**'
+              - 'apps/shop/src/app/api/orders/**'
+            shop_review:
+              - 'apps/shop/src/features/review/**'
+              - 'apps/shop/src/app/api/reviews/**'
+            shop_search:
+              - 'apps/shop/src/features/product/**'
+              - 'apps/shop/src/app/api/products/**'
+            # Playwright E2E 도메인
+            e2e_product:
+              - 'apps/admin/src/features/product/**'
+              - 'apps/admin/src/pages/Product*.tsx'
+              - 'supabase/functions/products/**'
+            e2e_returns:
               - 'apps/admin/src/features/returns/**'
               - 'supabase/functions/admin/**'
-            dashboard:
+            e2e_dashboard:
               - 'apps/admin/src/pages/Dashboard.tsx'
               - 'supabase/functions/products-status/**'
+
+      - name: Determine QA scenarios
+        id: qa-scenarios
+        run: |
+          # Shop: shared 변경 시 전체, 아니면 변경된 도메인만
+          if [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+            echo "shop=shop" >> $GITHUB_OUTPUT
+          else
+            s=""
+            [ "${{ steps.filter.outputs.shop_auth }}"   = "true" ] && s="$s shop/auth"
+            [ "${{ steps.filter.outputs.shop_cart }}"   = "true" ] && s="$s shop/cart"
+            [ "${{ steps.filter.outputs.shop_order }}"  = "true" ] && s="$s shop/order"
+            [ "${{ steps.filter.outputs.shop_review }}" = "true" ] && s="$s shop/review"
+            [ "${{ steps.filter.outputs.shop_search }}" = "true" ] && s="$s shop/search"
+            s="${s# }"
+            # 특정 도메인 매칭 없으면 전체
+            [ -z "$s" ] && s="shop"
+            echo "shop=$s" >> $GITHUB_OUTPUT
+          fi
+
+          # Admin: shared 변경 시 전체, 아니면 변경된 도메인만
+          if [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+            echo "admin=admin" >> $GITHUB_OUTPUT
+          else
+            a=""
+            [ "${{ steps.filter.outputs.admin_auth }}"    = "true" ] && a="$a admin/auth"
+            [ "${{ steps.filter.outputs.admin_product }}" = "true" ] && a="$a admin/product"
+            a="${a# }"
+            [ -z "$a" ] && a="admin"
+            echo "admin=$a" >> $GITHUB_OUTPUT
+          fi
 
       - name: Determine Playwright E2E tags
         id: e2e-tags
@@ -58,9 +116,9 @@ jobs:
             echo "tags=" >> $GITHUB_OUTPUT
           else
             tags=""
-            [ "${{ steps.filter.outputs.product }}" = "true" ] && tags="${tags}@product|"
-            [ "${{ steps.filter.outputs.returns }}" = "true" ] && tags="${tags}@returns|"
-            [ "${{ steps.filter.outputs.dashboard }}" = "true" ] && tags="${tags}@dashboard|"
+            [ "${{ steps.filter.outputs.e2e_product }}"  = "true" ] && tags="${tags}@product|"
+            [ "${{ steps.filter.outputs.e2e_returns }}"  = "true" ] && tags="${tags}@returns|"
+            [ "${{ steps.filter.outputs.e2e_dashboard }}" = "true" ] && tags="${tags}@dashboard|"
             tags="${tags%|}"
             echo "all=false" >> $GITHUB_OUTPUT
             echo "tags=${tags}" >> $GITHUB_OUTPUT
@@ -112,7 +170,7 @@ jobs:
         run: npx wait-on http://localhost:3000 --timeout 120000
 
       - name: Run Shop QA scenarios
-        run: bash scripts/qa/run-scenarios.sh shop
+        run: bash scripts/qa/run-scenarios.sh ${{ needs.detect-changes.outputs.shop_scenarios }}
 
   # Admin QA 시나리오
   qa-admin:
@@ -158,7 +216,7 @@ jobs:
         run: npx wait-on http://localhost:5173 --timeout 120000
 
       - name: Run Admin QA scenarios
-        run: bash scripts/qa/run-scenarios.sh admin
+        run: bash scripts/qa/run-scenarios.sh ${{ needs.detect-changes.outputs.admin_scenarios }}
 
   # Playwright E2E - 도메인 태그 기반 선택적 실행
   e2e-admin:
