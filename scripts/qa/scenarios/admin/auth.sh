@@ -20,7 +20,7 @@ ab find role button click --name "로그인" 2>/dev/null || true
 
 wait_for_url_change "${ADMIN_URL}/?$" 15 || true
 assert_url "${ADMIN_URL}/?$" "로그인 성공 → 대시보드 리다이렉트"
-assert_visible "반갑습니다" "대시보드에 환영 메시지 표시"
+assert_visible "상품 통계" "대시보드에 상품 통계 표시"
 ab_close
 
 # ── 2. 잘못된 자격증명 → 에러 메시지 ──
