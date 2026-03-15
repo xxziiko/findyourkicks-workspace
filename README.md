@@ -19,10 +19,14 @@
 
 ### 기술 스택
 - **Frontend**: `TypeScript`, `SCSS`
-- **State Management**: `Tanstack Query`, `jotai`
-- **Backend**: `Supabase (Auth, DB, Storage)`
+- **State Management**: `Tanstack Query`, `Jotai`
+- **Backend**: `Supabase (Auth, DB, Storage, RPC)`
+- **Testing**: `Playwright (E2E)`, `Vitest (Unit)`
+- **CI/CD**: `GitHub Actions`, `Docker`, `Nginx`
 - **Monorepo**: `pnpm`, `Turborepo`
-- **Deployment**: `Vercel`
+- **Deployment**: `Vercel`, `Docker Compose`
+- **DX**: `Husky (pre-commit, pre-push)`, `Biome (lint/format)`
+- **AI**: `Claude Code` (SDD+TDD 자동화 파이프라인)
 
 
 <br/>
@@ -31,7 +35,7 @@
 ## findyourkicks (`apps/shop`)
 
 >신발 커머스의 실제 사용자 흐름을 구현한 토이 프로젝트입니다. <br/>
->Next.js App Router와 Supabase를 활용하여 **상품 탐색부터 주문까지**의 구매 흐름을 클라이언트 중심으로 설계했습니다. <br/>
+>Next.js App Router와 Supabase를 활용하여 **상품 탐색부터 주문, 리뷰까지**의 전체 구매 흐름을 클라이언트 중심으로 설계했습니다. <br/>
 >기존 서비스 개발 히스토리는 [findyourkicks 저장소](https://github.com/xxziiko/findyourkicks)에서 확인하실 수 있습니다.
 
 
@@ -49,15 +53,18 @@
 🔗 https://findyourkicks.shop
 
 #### 작업기간
-2025.02 ~ 2025.05
+2025.02 ~
 
 <br/>
 
 ## 주요 기능
 - 상품 목록/상세 페이지
+- **상품 검색/필터** (브랜드, 카테고리, 사이즈, 가격대, 정렬)
 - 장바구니 담기 / 주문하기
 - 배송지 입력 및 관리
-- 주문 내역 조회
+- 주문 내역 조회 / 상세 페이지
+- **주문 취소/반품 요청**
+- **상품 리뷰** (별점, 이미지 업로드, 작성/수정/삭제)
 
 
 <br/>
@@ -70,6 +77,7 @@
  ┃ ┣ 📂(auth)
  ┃ ┣ 📂(order-flow)
  ┃ ┣ 📂(shop)
+ ┃ ┃ ┗ 📂products          ← 검색/필터 페이지
  ┃ ┣ 📂api
  ┃ ┃ ┣ 📂auth
  ┃ ┃ ┣ 📂cart
@@ -77,16 +85,16 @@
  ┃ ┃ ┣ 📂orders
  ┃ ┃ ┣ 📂payments
  ┃ ┃ ┣ 📂products
+ ┃ ┃ ┣ 📂reviews            ← 리뷰 API
  ┃ ┃ ┗ 📂users
  ┣ 📂features
  ┃ ┣ 📂auth
- ┃ ┃ ┣ 📂components
- ┃ ┃ ┣ 📂hooks
  ┃ ┣ 📂cart
  ┃ ┣ 📂order
  ┃ ┣ 📂order-sheet
  ┃ ┣ 📂payment
  ┃ ┣ 📂product
+ ┃ ┣ 📂review               ← 리뷰 도메인
  ┃ ┗ 📂user
  ┃ ┃ ┣ 📂address
  ┗ 📂shared
@@ -135,7 +143,9 @@
 
 ## 주요 기능
 - 상품 등록/관리
+- **상품 검색** (제목, 상태, 카테고리, 브랜드, 등록일 기간)
 - 주문 관리
+- **반품/교환 관리** (승인/거절 처리)
 
 <br/>
 
@@ -154,12 +164,16 @@
  ┃ ┃ ┣ 📂api
  ┃ ┃ ┣ 📂components
  ┃ ┃ ┣ 📂hooks
- ┃ ┗ 📂product
+ ┃ ┣ 📂product
  ┃ ┃ ┣ 📂api
  ┃ ┃ ┣ 📂components
  ┃ ┃ ┣ 📂hooks
  ┃ ┃ ┃ ┣ 📂mutations
  ┃ ┃ ┃ ┣ 📂queries
+ ┃ ┗ 📂returns              ← 반품/교환 관리
+ ┃ ┃ ┣ 📂api
+ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┣ 📂hooks
  ┣ 📂pages
  ┣ 📂shared
  ┃ ┣ 📂components
@@ -167,7 +181,6 @@
  ┃ ┣ 📂constants
  ┃ ┣ 📂hooks
  ┃ ┣ 📂utils
- ┣ 📂test
 ```
 
 <br/>
@@ -196,9 +209,9 @@
 - `features/`, `shared/`, `app/` 3계층으로 디렉토리를 구조화했습니다.
 
 #### 2. 상태관리
-- Tanstack Query의 **쿼리 키 팩토리 패턴** 방식의 중복과 확장성을 개선하기 위해 **createQueries 커스텀 함수를 구현**했습니다. <br/>
-  각 API에 대해 **queryKey, queryFn, 공통 옵션을 선언적으로 정의**할 수 있도록 구성하고 이를 통해 타입 안정성과 쿼리 중복을 개선했습니다.
-  
+- 초기에는 Tanstack Query의 쿼리 키 팩토리 패턴 중복을 줄이기 위해 `createQueries` 커스텀 함수를 구현했으나, **네이티브 TanStack Query API(`queryOptions`)로 리팩토링**했습니다. <br/>
+  커스텀 추상화 대신 공식 API를 활용하여 라이브러리 업데이트에 대한 호환성을 확보하고, 러닝 커브를 줄여 코드의 유지보수성을 개선했습니다.
+
 - 로그인 인증과 같은 전역 상태를 **Jotai의 atom을 사용하여 Custom Hook으로 추상화**해 상태의 일관성과 코드 재사용성을 높였습니다.
 
 #### 3. 데이터 흐름 및 렌더링
@@ -222,7 +235,29 @@
 #### 5. 공통 컴포넌트 설계
 - Compound Component Pattern을 Dropdown, Tab UI에 적용하여 선언형 기반의 유연한 UI 인터페이스를 설계했습니다. <br/>
   Dropdown 내부 로직을 Context로 분리하여 토글/옵션/트리거 등 세부 컴포넌트를 개별 정의하여 다양한 화면에서 조합 형태로 재사용하기 용이했습니다.
-  
+
+#### 6. 테스트 전략
+- **Playwright E2E 테스트**를 도메인 단위로 분리 구성하여, PR 변경 범위에 따라 해당 도메인만 선택적으로 테스트가 실행되도록 CI를 설계했습니다. <br/>
+  `paths-filter`를 활용해 변경된 파일 경로 기반으로 도메인을 감지하고, `@tag` 기반으로 Playwright 테스트를 선택 실행합니다.
+- **Vitest 단위 테스트**를 도입하여 장바구니 훅, 타입 검증 등 핵심 비즈니스 로직의 안정성을 확보했습니다.
+- **Git Hook(pre-push)에서 E2E 테스트를 자동 실행**하여, 배포 전 회귀 테스트를 로컬에서 사전 검증합니다.
+
+#### 7. CI/CD 파이프라인
+- **Docker 기반 컨테이너화**를 통해 Shop(Next.js)과 Admin(Vite) 앱을 각각 독립적으로 빌드/배포할 수 있도록 구성했습니다.
+- GitHub Actions로 **통합 배포 워크플로우**를 구성하고, PR 단위 QA 테스트와 nightly E2E 테스트를 분리 운영합니다.
+- `pre-commit`(lint + typecheck) / `pre-push`(build + E2E) **2단계 Git Hook**으로 코드 품질 게이트를 자동화했습니다.
+
+#### 8. DB 설계 고도화
+- **Supabase RPC 기반 트랜잭션 처리**를 도입하여, 주문 취소 시 재고 복원 등 다중 테이블 변경이 필요한 작업의 원자성을 보장했습니다.
+- 상품 검색 성능 개선을 위해 **trigram 인덱스**를 적용하고, 인기순 정렬을 위한 **materialized view**를 설계했습니다.
+- 취소/반품 상태 플로우, 리뷰 테이블 등 **DB 마이그레이션 스크립트를 버전 관리**하여 스키마 변경 이력을 추적합니다.
+
+#### 9. AI 기반 개발 워크플로우 (Claude Code)
+- **SDD(Spec-Driven Development) + TDD 파이프라인**을 Claude Code 커스텀 커맨드로 구성했습니다. <br/>
+  `/tdd-run` 명령 하나로 `SPEC → RED → GREEN → REFACTOR → VERIFY → SHIP` 6단계 파이프라인이 반자동으로 실행됩니다.
+- 각 단계를 독립 커맨드(`/spec`, `/red`, `/green`, `/refactor`, `/verify`)로도 실행할 수 있어, 필요한 단계만 선택적으로 활용할 수 있습니다.
+- **AI가 코드를 생성하되, 검증은 결정적 도구(tsc, Biome, Playwright, Vitest)로 수행**하는 원칙을 적용하여 AI 환각에 의한 품질 저하를 방지했습니다.
+- 검색/필터, 취소/반품, 리뷰 등 Phase 2 기능 전체를 이 파이프라인으로 구현하여, **명세 작성부터 테스트, 구현, 검증까지의 전체 개발 사이클을 AI와 협업**했습니다.
 
 <br/>
 
@@ -247,8 +282,17 @@
 - **주문 전 단계(OrderSheet)와 실제 주문(Order) 분리**  
   사용자 UX 관점에서 검토/수정 가능한 주문 준비 단계 확보
 
-- **UserAddress 정규화 및 is_default 필드 도입**  
+- **UserAddress 정규화 및 is_default 필드 도입**
   여러 배송지를 저장하고, 기본 배송지 지정 가능
+
+- **취소/반품 상태 플로우**
+  `paid → cancelled`, `delivered → return_requested → return_approved → returned` 등 주문 상태 전이를 DB 레벨에서 관리
+
+- **상품 리뷰(ProductReview) 테이블**
+  별점, 텍스트, 이미지 URL을 저장하고 구매 확인된 사용자만 작성 가능하도록 자격 검증
+
+- **검색 인덱스 및 Materialized View**
+  trigram 인덱스 기반 상품 검색, 주문 수 기반 인기순 정렬용 materialized view
 
 <br/>
 
