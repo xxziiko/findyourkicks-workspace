@@ -10,13 +10,15 @@ async function get(req: Request): Promise<Response> {
   const url = new URL(req.url);
   const params = url.searchParams;
 
-  const search = params.get('search') ?? '';
-  const status = params.get('status') ?? '';
-  const category = params.get('category') ?? '';
-  const brand = params.get('brand') ?? '';
+  const search = params.get('search') || null;
+  const status = params.get('status') || null;
+  const category = params.get('category') || null;
+  const brand = params.get('brand') || null;
   const page = Number(params.get('page') ?? '1');
-  const startDate = new Date(params.get('startDate') ?? '2025-01-01');
-  const endDate = new Date(params.get('endDate') ?? new Date().toISOString());
+  const rawStart = params.get('startDate');
+  const rawEnd = params.get('endDate');
+  const startDate = rawStart ? rawStart.replace(/\./g, '-') : null;
+  const endDate = rawEnd ? rawEnd.replace(/\./g, '-') : null;
 
   return await supabase.rpc('get_filtered_products', {
     p_search: search,

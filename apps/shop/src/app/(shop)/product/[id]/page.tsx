@@ -1,5 +1,6 @@
 import { DetailContent, fetchProductById } from '@/features/product';
 import { ProductImage } from '@/features/product';
+import { ReviewSection } from '@/features/review/components';
 import { Suspense } from 'react';
 import Loading from './loading';
 import styles from './page.module.scss';
@@ -15,18 +16,22 @@ export default async function DetailPage({
   return (
     <Suspense fallback={<Loading />}>
       <article className={styles.detail}>
-        <figure className={styles.image__box}>
-          <ProductImage
-            src={productDetail.image}
-            alt="product"
-            width="24rem"
-            height="24rem"
-          />
-        </figure>
+        <div className={styles.detail__top}>
+          <figure className={styles.image__box}>
+            <ProductImage
+              src={productDetail.image}
+              alt="product"
+              width="24rem"
+              height="24rem"
+            />
+          </figure>
 
-        <div className={styles.detail__divider} />
+          <div className={styles.detail__divider} />
 
-        <DetailContent productDetail={productDetail} />
+          <DetailContent productDetail={productDetail} />
+        </div>
+
+        <ReviewSection productId={id} rating={productDetail.rating} />
       </article>
     </Suspense>
   );

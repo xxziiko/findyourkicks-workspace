@@ -55,3 +55,24 @@
   flex-direction: column;
   gap: 24px;
 }
+
+.actionBtn {
+  padding: 8px 16px;
+  border: 1px solid $primary;
+  border-radius: $radius-xs;
+  background-color: #fff;
+  color: $primary;
+  font-size: $font-s;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 8px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:hover {
+    background-color: $primary;
+    color: #fff;
+  }
+}

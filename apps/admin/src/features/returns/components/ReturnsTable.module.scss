@@ -1,0 +1,76 @@
+// Status colors
+$color-status-pending: #f59e0b;
+$color-status-approved: #10b981;
+$color-status-rejected: #ef4444;
+$color-status-processed: #9ca3af;
+$color-bg-subtle: #f5f5f5;
+
+.container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header {
+  background-color: $color-bg-subtle;
+  text-align: center;
+  padding: 12px;
+  white-space: nowrap;
+}
+
+.cell {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid $color-bg-subtle;
+  border-right: 1px solid $color-bg-subtle;
+  min-width: 80px;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.cellId {
+  font-size: 12px;
+  color: #666;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellText {
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status_requested {
+  color: $color-status-pending;
+  font-weight: 600;
+}
+
+.status_approved {
+  color: $color-status-approved;
+  font-weight: 600;
+}
+
+.status_rejected {
+  color: $color-status-rejected;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.processed {
+  color: $color-status-processed;
+  font-size: 13px;
+}

@@ -1,0 +1,45 @@
+.section {
+  padding: 32px 0;
+}
+
+.section__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid $primary;
+  margin-bottom: 0;
+}
+
+.section__title {
+  font-size: $font-lg;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section__writeBtn {
+  margin-left: auto;
+  padding: 8px 16px;
+  border: 1px solid $primary;
+  border-radius: $radius-base;
+  background: none;
+  cursor: pointer;
+  font-size: $font-sm;
+  font-weight: 500;
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover {
+    background-color: $primary;
+    color: $secondary;
+  }
+}
+
+.section__notice {
+  margin-left: auto;
+  font-size: $font-sm;
+  color: $gray-dark;
+}
+
+.section__form {
+  margin: 20px 0;
+}

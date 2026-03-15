@@ -12,6 +12,23 @@
     font-weight: 700;
   }
 
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+  }
+
+  &__ratingScore {
+    font-size: $font-sm;
+    font-weight: 600;
+  }
+
+  &__ratingCount {
+    font-size: $font-sm;
+    color: $gray-dark;
+  }
+
   &__subtitle {
     padding-bottom: 8px;
     font-size: $font-s;

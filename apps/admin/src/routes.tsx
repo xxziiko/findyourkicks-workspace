@@ -10,6 +10,7 @@ import { AuthGuard } from './features/auth/components/AuthGuard';
 const Login = lazy(() => import('./pages/Login'));
 const Products = lazy(() => import('./pages/Products'));
 const Orders = lazy(() => import('./pages/Orders'));
+const Returns = lazy(() => import('./pages/Returns'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const ProductRegister = lazy(() => import('./pages/ProductRegister'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: PATH.orders,
         element: <Orders />,
+      },
+      {
+        path: PATH.returns,
+        element: <Returns />,
       },
     ],
   },

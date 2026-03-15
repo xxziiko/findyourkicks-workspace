@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+# 1. 프로젝트 빌드
+echo "🔍 프로젝트 빌드 중..."
+if pnpm run build; then
+  echo "✅ 빌드 완료."
+else
+  echo "❌ 빌드 실패."
+  exit 1
+fi
+
+# 2. agent-browser QA 시나리오 (shop)
+echo "🧪 agent-browser QA 시나리오 실행 중..."
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+sleep 1
+
+pnpm --filter shop dev &
+SHOP_PID=$!
+
+# shop 서버 준비 대기
+for i in $(seq 1 60); do
+  curl -s http://localhost:3000 > /dev/null 2>&1 && break
+  sleep 2
+done
+
+if bash scripts/qa/run-scenarios.sh shop; then
+  echo "✅ QA 시나리오 통과."
+else
+  echo "❌ QA 시나리오 실패."
+  kill $SHOP_PID 2>/dev/null || true
+  exit 1
+fi
+
+kill $SHOP_PID 2>/dev/null || true
+
+echo "🎉 pre-push 검사 완료!"
+exit 0

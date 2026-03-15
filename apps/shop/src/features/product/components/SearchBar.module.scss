@@ -1,0 +1,17 @@
+.wrapper {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-xs;
+  font-size: $font-sm;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: $primary;
+  }
+}

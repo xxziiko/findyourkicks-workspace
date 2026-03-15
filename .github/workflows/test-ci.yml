@@ -1,25 +1,18 @@
 # ───────────────────────────────────────────────────────────────
-# 🧪 E2E Test CI - 변경된 앱만 선택적 테스트 실행
-# 
-# 이 워크플로우는 PR 생성 시 변경된 앱만을 감지하여
-# 해당 앱의 E2E 테스트를 실행함으로써, main 브랜치에 병합되기 전
-# 사용자 경험에 영향을 줄 수 있는 기능적 문제를 사전에 검증하는 역할을 합니다.
+# 🧪 QA Test CI - PR 변경 범위에 해당하는 도메인만 선택적으로 테스트
 #
-# 주요 목적:
-# 1. PR 생성 시 변경된 앱만 선택적으로 E2E 테스트 실행
-# 2. dorny/paths-filter를 활용한 정확한 변경사항 감지
-# 3. 병렬 실행으로 전체 CI 시간 최적화
-# 4. 추후 배포 단계에서 발생할 수 있는 기능적 문제를 사전에 탐지
-# 5. 기존 unified-deploy.yml과 일관된 변경사항 감지 패턴 유지
+# 1. agent-browser: 앱 단위 변경 감지 → 해당 앱 QA 시나리오 실행
+# 2. Playwright E2E: 도메인 단위 변경 감지 → @tag 기반 선택 실행
+#    - @product : apps/admin/src/features/product/**, supabase/functions/products/**
+#    - @returns : apps/admin/src/features/returns/**, supabase/functions/admin/**
+#    - @dashboard: apps/admin/src/pages/Dashboard.tsx, supabase/functions/products-status/**
+#    - shared 변경 시 전체 E2E 실행
 # ───────────────────────────────────────────────────────────────
 
-name: E2E Test CI
+name: QA Test CI
 
 on:
   pull_request:
-    branches:
-      - 'fix/ci'  
-
 
 jobs:
 
@@ -28,6 +21,10 @@ jobs:
     outputs:
       shop_changed: ${{ steps.filter.outputs.shop }}
       admin_changed: ${{ steps.filter.outputs.admin }}
+      shop_scenarios: ${{ steps.qa-scenarios.outputs.shop }}
+      admin_scenarios: ${{ steps.qa-scenarios.outputs.admin }}
+      e2e_tags: ${{ steps.e2e-tags.outputs.tags }}
+      e2e_all: ${{ steps.e2e-tags.outputs.all }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v2
@@ -40,9 +37,95 @@ jobs:
             admin:
               - 'apps/admin/**'
               - 'packages/shared/**'
+            shared:
+              - 'packages/shared/**'
+              - 'apps/admin/src/shared/**'
+              - 'apps/shop/src/shared/**'
+              - 'supabase/functions/_shared/**'
+            # Admin QA 도메인
+            admin_product:
+              - 'apps/admin/src/features/product/**'
+              - 'apps/admin/src/pages/Product*.tsx'
+              - 'supabase/functions/products/**'
+            admin_auth:
+              - 'apps/admin/src/pages/Login.tsx'
+            # Shop QA 도메인
+            shop_auth:
+              - 'apps/shop/src/app/(shop)/login/**'
+              - 'apps/shop/src/app/api/auth/**'
+            shop_cart:
+              - 'apps/shop/src/features/cart/**'
+              - 'apps/shop/src/app/api/cart/**'
+            shop_order:
+              - 'apps/shop/src/features/order/**'
+              - 'apps/shop/src/app/api/orders/**'
+            shop_review:
+              - 'apps/shop/src/features/review/**'
+              - 'apps/shop/src/app/api/reviews/**'
+            shop_search:
+              - 'apps/shop/src/features/product/**'
+              - 'apps/shop/src/app/api/products/**'
+            # Playwright E2E 도메인
+            e2e_product:
+              - 'apps/admin/src/features/product/**'
+              - 'apps/admin/src/pages/Product*.tsx'
+              - 'supabase/functions/products/**'
+            e2e_returns:
+              - 'apps/admin/src/features/returns/**'
+              - 'supabase/functions/admin/**'
+            e2e_dashboard:
+              - 'apps/admin/src/pages/Dashboard.tsx'
+              - 'supabase/functions/products-status/**'
 
-  # Shop 앱 E2E 테스트
-  e2e-test-shop:
+      - name: Determine QA scenarios
+        id: qa-scenarios
+        run: |
+          # Shop: shared 변경 시 전체, 아니면 변경된 도메인만
+          if [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+            echo "shop=shop" >> $GITHUB_OUTPUT
+          else
+            s=""
+            [ "${{ steps.filter.outputs.shop_auth }}"   = "true" ] && s="$s shop/auth"
+            [ "${{ steps.filter.outputs.shop_cart }}"   = "true" ] && s="$s shop/cart"
+            [ "${{ steps.filter.outputs.shop_order }}"  = "true" ] && s="$s shop/order"
+            [ "${{ steps.filter.outputs.shop_review }}" = "true" ] && s="$s shop/review"
+            [ "${{ steps.filter.outputs.shop_search }}" = "true" ] && s="$s shop/search"
+            s="${s# }"
+            # 특정 도메인 매칭 없으면 전체
+            [ -z "$s" ] && s="shop"
+            echo "shop=$s" >> $GITHUB_OUTPUT
+          fi
+
+          # Admin: shared 변경 시 전체, 아니면 변경된 도메인만
+          if [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+            echo "admin=admin" >> $GITHUB_OUTPUT
+          else
+            a=""
+            [ "${{ steps.filter.outputs.admin_auth }}"    = "true" ] && a="$a admin/auth"
+            [ "${{ steps.filter.outputs.admin_product }}" = "true" ] && a="$a admin/product"
+            a="${a# }"
+            [ -z "$a" ] && a="admin"
+            echo "admin=$a" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine Playwright E2E tags
+        id: e2e-tags
+        run: |
+          if [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
+            echo "all=true" >> $GITHUB_OUTPUT
+            echo "tags=" >> $GITHUB_OUTPUT
+          else
+            tags=""
+            [ "${{ steps.filter.outputs.e2e_product }}"  = "true" ] && tags="${tags}@product|"
+            [ "${{ steps.filter.outputs.e2e_returns }}"  = "true" ] && tags="${tags}@returns|"
+            [ "${{ steps.filter.outputs.e2e_dashboard }}" = "true" ] && tags="${tags}@dashboard|"
+            tags="${tags%|}"
+            echo "all=false" >> $GITHUB_OUTPUT
+            echo "tags=${tags}" >> $GITHUB_OUTPUT
+          fi
+
+  # Shop QA 시나리오
+  qa-shop:
     needs: detect-changes
     if: needs.detect-changes.outputs.shop_changed == 'true'
     runs-on: ubuntu-latest
@@ -55,9 +138,10 @@ jobs:
       NEXT_PUBLIC_API_URL: http://localhost:3000
       NEXT_PUBLIC_BASE_URL: http://localhost:3000
       TEST_ACCOUNT_PW: ${{ secrets.TEST_ACCOUNT_PW }}
+      SHOP_URL: http://localhost:3000
     steps:
-      - name: ⬇ Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -70,20 +154,26 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: pnpm install
 
-      - name: 🎭 Setup Playwright
-        run: pnpm exec playwright install --with-deps
+      - name: Install agent-browser
+        run: npm install -g agent-browser
 
-      - name: 🧪 Run Shop E2E tests
-        run: pnpm exec playwright test --project=shop-public --project=shop-setup --project=shop
-        env:
-          PLAYWRIGHT_WEBSERVER: shop
+      - name: Install Playwright browsers (agent-browser)
+        run: pnpm exec playwright install chromium --with-deps
 
+      - name: Start Shop dev server
+        run: pnpm --filter shop dev &
 
-  # Admin 앱 E2E 테스트
-  e2e-test-admin:
+      - name: Wait for Shop server
+        run: npx wait-on http://localhost:3000 --timeout 120000
+
+      - name: Run Shop QA scenarios
+        run: bash scripts/qa/run-scenarios.sh ${{ needs.detect-changes.outputs.shop_scenarios }}
+
+  # Admin QA 시나리오
+  qa-admin:
     needs: detect-changes
     if: needs.detect-changes.outputs.admin_changed == 'true'
     runs-on: ubuntu-latest
@@ -94,9 +184,10 @@ jobs:
       VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       VITE_API_URL: http://localhost:5173
+      ADMIN_URL: http://localhost:5173
     steps:
-      - name: ⬇ Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -109,13 +200,73 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: pnpm install
 
-      - name: 🎭 Setup Playwright
-        run: pnpm exec playwright install --with-deps
+      - name: Install agent-browser
+        run: npm install -g agent-browser
 
-      - name: 🧪 Run Admin E2E tests
-        run: pnpm exec playwright test --project=admin-setup --project=admin
-        env:
-          PLAYWRIGHT_WEBSERVER: admin
+      - name: Install Playwright browsers (agent-browser)
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Start Admin dev server
+        run: pnpm --filter admin dev &
+
+      - name: Wait for Admin server
+        run: npx wait-on http://localhost:5173 --timeout 120000
+
+      - name: Run Admin QA scenarios
+        run: bash scripts/qa/run-scenarios.sh ${{ needs.detect-changes.outputs.admin_scenarios }}
+
+  # Playwright E2E - 도메인 태그 기반 선택적 실행
+  e2e-admin:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.e2e_tags != '' || needs.detect-changes.outputs.e2e_all == 'true'
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      VITE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      VITE_API_URL: ${{ secrets.SUPABASE_URL }}/functions/v1
+      VITE_BASE_URL: http://localhost:3000
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Start Admin dev server
+        run: pnpm --filter admin dev &
+
+      - name: Wait for Admin server
+        run: npx wait-on http://localhost:5173 --timeout 120000
+
+      - name: Run Playwright E2E (domain-scoped)
+        run: |
+          if [ "${{ needs.detect-changes.outputs.e2e_all }}" = "true" ]; then
+            pnpm exec playwright test
+          else
+            pnpm exec playwright test --grep "${{ needs.detect-changes.outputs.e2e_tags }}"
+          fi
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-pr-${{ github.event.pull_request.number }}
+          path: playwright-report/
+          retention-days: 7

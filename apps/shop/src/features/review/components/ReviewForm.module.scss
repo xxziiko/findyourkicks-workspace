@@ -1,0 +1,148 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-base;
+  background: $secondary;
+}
+
+.form__label {
+  display: block;
+  font-size: $font-sm;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form__rating {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__textarea {
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-base;
+  font-size: $font-sm;
+  line-height: 1.6;
+  font-family: inherit;
+  outline: none;
+
+  &:focus {
+    border-color: $primary;
+  }
+}
+
+.form__images {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.form__imagePreview {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.form__imageThumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: $radius-base;
+  border: 1px solid $gray-light;
+}
+
+.form__imageRemove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $primary;
+  color: $secondary;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form__imageAdd {
+  width: 72px;
+  height: 72px;
+  border: 1px dashed $gray-light;
+  border-radius: $radius-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  color: $gray-dark;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: $primary;
+  }
+}
+
+.form__fileInput {
+  display: none;
+}
+
+.form__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.form__cancelBtn {
+  padding: 10px 20px;
+  border: 1px solid $gray-light;
+  border-radius: $radius-base;
+  background: none;
+  cursor: pointer;
+  font-size: $font-sm;
+  color: $primary;
+  transition: background-color 0.15s;
+
+  &:hover:not(:disabled) {
+    background-color: $gray-default;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: $disabled;
+  }
+}
+
+.form__submitBtn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: $radius-base;
+  background: $primary;
+  color: $secondary;
+  cursor: pointer;
+  font-size: $font-sm;
+  font-weight: 600;
+  transition: opacity 0.15s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+}

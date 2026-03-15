@@ -12,6 +12,7 @@ export function useActiveTabTitle() {
     '/products': '상품 조회/수정',
     '/products/new': '상품 등록',
     '/orders': '주문 내역',
+    '/returns': '반품/교환 관리',
   };
 
   return TAB_TITLE_MAP[currentPath as keyof typeof TAB_TITLE_MAP];
