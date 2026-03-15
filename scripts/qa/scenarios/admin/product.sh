@@ -18,7 +18,14 @@ ab_login_admin || { fail "Admin 로그인 실패"; summary; exit 1; }
 
 # 상품 등록 페이지로 이동
 ab_open "${ADMIN_URL}/products/new"
-sleep 2
+
+# React 폼 렌더링 대기 (CI 환경에서는 느림)
+retries=0
+while [ $retries -lt 15 ]; do
+  if ab snapshot 2>/dev/null | grep -q "등록하기"; then break; fi
+  sleep 2
+  retries=$((retries + 1))
+done
 
 # ── 1. 필수항목 미입력 → 에러 표시 ──
 scenario_header "상품 등록 - 필수항목 미입력 에러"
@@ -105,7 +112,14 @@ new_session "qa-admin-product-list"
 ab_login_admin || { fail "Admin 로그인 실패"; summary; exit 1; }
 
 ab_open "${ADMIN_URL}/products"
-sleep 2
+
+# React 렌더링 대기 (CI 환경)
+retries=0
+while [ $retries -lt 15 ]; do
+  if ab snapshot 2>/dev/null | grep -q "조회"; then break; fi
+  sleep 2
+  retries=$((retries + 1))
+done
 
 # 조회 버튼 클릭
 ab find role button click --name "조회" 2>/dev/null || true

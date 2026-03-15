@@ -20,6 +20,15 @@ ab find role button click --name "로그인" 2>/dev/null || true
 
 wait_for_url_change "${ADMIN_URL}/?$" 15 || true
 assert_url "${ADMIN_URL}/?$" "로그인 성공 → 대시보드 리다이렉트"
+
+# 대시보드 컴포넌트 렌더링 대기 (CI 환경에서는 Supabase 쿼리 느림)
+retries=0
+while [ $retries -lt 10 ]; do
+  if ab snapshot 2>/dev/null | grep -q "상품 통계"; then break; fi
+  sleep 2
+  retries=$((retries + 1))
+done
+
 assert_visible "상품 통계" "대시보드에 상품 통계 표시"
 ab_close
 
