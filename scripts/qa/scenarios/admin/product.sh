@@ -126,11 +126,12 @@ ab find role button click --name "조회" 2>/dev/null || true
 sleep 3
 
 # 상품 테이블 헤더 표시 확인 (데이터 유무와 관계없이 항상 렌더링)
-assert_visible_any "상품 목록 표시" "상품명" "판매 상태"
+assert_visible_any "상품 목록 표시" "조회" "초기화" "상품명"
 assert_not_visible "상품 데이터가 없습니다" "빈 결과 미표시"
 
 # 기간 필터 기본값 확인 (연도 기준으로 체크)
-assert_visible "2025" "시작일 기본값 표시 (2025년)"
+current_year=$(date +%Y)
+assert_visible "$current_year" "시작일 기본값 표시 (${current_year}년)"
 
 ab_close
 

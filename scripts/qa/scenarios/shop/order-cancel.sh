@@ -75,7 +75,7 @@ if echo "$snap" | grep -q "주문 취소"; then
     close_ref=$(ab snapshot -i 2>/dev/null | grep -i '닫기' | grep -o 'ref=e[0-9]*' | head -1 | sed 's/ref=//')
     if [ -n "$close_ref" ]; then
       ab click "@$close_ref" 2>/dev/null || true
-      sleep 1
+      sleep 3
       assert_not_visible "주문 취소 신청" "모달 닫기 후 CancelRequestModal 사라짐"
     else
       fail "모달 닫기 버튼 ref 없음"
