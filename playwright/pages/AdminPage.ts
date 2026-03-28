@@ -53,11 +53,14 @@ export class DashboardPage extends AdminPage {
  * ReturnsPage - 반품/교환 관리 페이지 POM
  */
 export class ReturnsPage extends AdminPage {
-  readonly filterBar = this.page.getByRole('button', { name: '전체' });
   readonly allFilterButton = this.page.getByRole('button', { name: '전체' });
   readonly pendingFilterButton = this.page.getByRole('button', { name: '처리 대기' });
   readonly approvedFilterButton = this.page.getByRole('button', { name: '승인' });
   readonly rejectedFilterButton = this.page.getByRole('button', { name: '거부' });
+
+  get approveButtons() { return this.page.locator('tbody').getByRole('button', { name: '승인' }); }
+  get rejectButtons() { return this.page.locator('tbody').getByRole('button', { name: '거부' }); }
+  get processedTexts() { return this.page.locator('tbody').getByText('처리 완료'); }
 
   async waitForPageReady() {
     await this.page.waitForURL('/returns');

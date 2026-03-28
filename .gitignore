@@ -38,5 +38,6 @@ storageState.json
 
 .vercel
 
-.omc/.context/
+.omc
 /qa/
+

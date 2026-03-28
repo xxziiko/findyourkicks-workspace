@@ -2,6 +2,7 @@ import type { Product } from '@/features/product';
 import { Loading } from '@/shared/components';
 import {
   Button,
+  Carousel,
   commaizeNumberWithUnit,
   formatDateDefault,
 } from '@findyourkicks/shared';
@@ -11,7 +12,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Link } from 'react-router-dom';
+import { overlay } from 'overlay-kit';
 import styles from './ProductListTable.module.scss';
 
 const statusMap = {
@@ -67,13 +68,26 @@ const columns: ColumnDef<Product>[] = [
   {
     accessorKey: 'image',
     header: '이미지',
-    cell: (info) => (
-      <Button variant="secondary" size="small">
-        <Link to={info.getValue() as string} target="_blank" rel="noreferrer">
+    cell: (info) => {
+      const imageUrl = info.getValue() as string;
+      return (
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={() => {
+            overlay.open(({ close, isOpen }) => (
+              <Carousel
+                images={[imageUrl]}
+                onClose={close}
+                isOpen={isOpen}
+              />
+            ));
+          }}
+        >
           미리보기
-        </Link>
-      </Button>
-    ),
+        </Button>
+      );
+    },
   },
   {
     accessorKey: 'created_at',
