@@ -14,12 +14,20 @@ scenario_header "Shop 리뷰 CRUD"
 # 공통: 상품 상세 URL 탐색 헬퍼
 # ─────────────────────────────────────────────────────────
 get_first_product_url() {
-  ab_open "${SHOP_URL}"
+  ab_open "${SHOP_URL}" >/dev/null 2>&1
   sleep 3
-  local url
-  url=$(ab eval "document.querySelector('a[href^=\"/product/\"]')?.href" 2>/dev/null || echo "")
-  url=$(echo "$url" | tr -d '"' | xargs)
-  echo "$url"
+  local raw url
+  raw=$(ab eval "document.querySelector('a[href^=\"/product/\"]')?.href" 2>/dev/null || echo "")
+  # ANSI 코드 제거 + 따옴표 제거 + 공백 제거
+  url=$(echo "$raw" | sed 's/\x1b\[[0-9;]*m//g' | tr -d '"' | tr -d "'" | xargs)
+  # 유효한 URL인지 확인
+  if echo "$url" | grep -q "^http"; then
+    echo "$url"
+  elif echo "$url" | grep -q "^/product/"; then
+    echo "${SHOP_URL}${url}"
+  else
+    echo ""
+  fi
 }
 
 # ─────────────────────────────────────────────────────────
