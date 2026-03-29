@@ -87,9 +87,9 @@ jobs:
             s=""
             [ "${{ steps.filter.outputs.shop_auth }}"   = "true" ] && s="$s shop/auth"
             [ "${{ steps.filter.outputs.shop_cart }}"   = "true" ] && s="$s shop/cart"
-            [ "${{ steps.filter.outputs.shop_order }}"  = "true" ] && s="$s shop/order"
-            [ "${{ steps.filter.outputs.shop_review }}" = "true" ] && s="$s shop/review"
-            [ "${{ steps.filter.outputs.shop_search }}" = "true" ] && s="$s shop/search"
+            [ "${{ steps.filter.outputs.shop_order }}"  = "true" ] && s="$s shop/order shop/order-cancel shop/order-return"
+            [ "${{ steps.filter.outputs.shop_review }}" = "true" ] && s="$s shop/review shop/review-crud"
+            [ "${{ steps.filter.outputs.shop_search }}" = "true" ] && s="$s shop/search shop/search-filter"
             s="${s# }"
             # 특정 도메인 매칭 없으면 전체
             [ -z "$s" ] && s="shop"
@@ -270,3 +270,21 @@ jobs:
           name: playwright-report-pr-${{ github.event.pull_request.number }}
           path: playwright-report/
           retention-days: 7
+
+  vitest:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shop_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run Vitest
+        run: pnpm --filter shop test -- --run

@@ -44,7 +44,7 @@ const getImageUrl = async (filePath: string): Promise<ImageUrl> => {
 };
 
 export function useImageUploader() {
-  const { mutate: uploadImage } = useImageMutation();
+  const { mutateAsync: uploadImage } = useImageMutation();
   const uuid = useId();
 
   const handleUpload = useCallback(
@@ -54,7 +54,7 @@ export function useImageUploader() {
           const webpFile = await covertImageToWebp(preview);
           const filePath = `${sanitizeFileName(uuid)}_${sanitizeFileName(webpFile.name)}`;
 
-          uploadImage({ filePath, webpFile });
+          await uploadImage({ filePath, webpFile });
 
           const { publicUrl } = await getImageUrl(filePath);
           return publicUrl;

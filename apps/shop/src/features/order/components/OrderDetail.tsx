@@ -6,6 +6,7 @@ import {
 } from '@findyourkicks/shared';
 import { useState } from 'react';
 import type { OrderByIdResponse } from '../api/getOrderById';
+import { STATUS_MAP, canCancel, canReturn } from '../utils/orderActions';
 import { CancelRequestModal } from './CancelRequestModal';
 import styles from './OrderDetail.module.scss';
 import OrderProduct from './OrderProduct';
@@ -14,21 +15,6 @@ import { ReturnRequestForm } from './ReturnRequestForm';
 interface OrderDetailProps {
   order: OrderByIdResponse;
 }
-
-const STATUS_MAP: Record<string, string> = {
-  paid: '결제완료',
-  preparing: '배송준비',
-  shipping: '배송중',
-  delivered: '배송완료',
-  cancelled: '주문취소',
-  cancel_requested: '취소신청',
-  return_requested: '반품신청',
-  return_approved: '반품승인',
-  returned: '반품완료',
-  exchange_requested: '교환신청',
-  exchange_approved: '교환승인',
-  shipped_again: '재발송',
-};
 
 export function OrderDetail({ order }: OrderDetailProps) {
   const { payment, address, products } = order;
@@ -55,11 +41,8 @@ function OrderInfo({ order }: { order: OrderByIdResponse }) {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showReturnForm, setShowReturnForm] = useState(false);
 
-  const canCancel = status === 'paid' || status === 'preparing';
-  const canReturn =
-    status === 'delivered' &&
-    new Date().getTime() - new Date(orderDate).getTime() <=
-      7 * 24 * 60 * 60 * 1000;
+  const isCancellable = canCancel(status);
+  const isReturnable = status === 'delivered' && canReturn(orderDate);
 
   return (
     <section className={styles.section}>
@@ -105,11 +88,11 @@ function OrderInfo({ order }: { order: OrderByIdResponse }) {
             )}
           </>
         )}
-        {(canCancel || canReturn) && (
+        {(isCancellable || isReturnable) && (
           <div className={styles.infoRow}>
             <span className={styles.label} />
             <span className={styles.value}>
-              {canCancel && (
+              {isCancellable && (
                 <button
                   type="button"
                   className={styles.actionBtn}
@@ -118,7 +101,7 @@ function OrderInfo({ order }: { order: OrderByIdResponse }) {
                   주문 취소
                 </button>
               )}
-              {canReturn && (
+              {isReturnable && (
                 <button
                   type="button"
                   className={styles.actionBtn}
