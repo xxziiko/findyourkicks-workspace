@@ -45,16 +45,6 @@
 <img width="973" height="517" alt="image" src="https://github.com/user-attachments/assets/7f8b5905-8773-4a60-b8fd-531f2e005c2a" />
 
 
-
-
-<br/>
-
-#### 보러가기
-🔗 https://findyourkicks.shop
-
-#### 작업기간
-2025.02 ~
-
 <br/>
 
 ## 주요 기능
@@ -131,13 +121,6 @@
 
 > 관리자 서비스는 상품 등록과 주문 관리를 위한 백오피스이며, React + Vite 기반으로 구축했습니다. <br/>
 > 사용자 서비스와 도메인을 공유하며 상품 운영 및 이미지 업로드 등 실제 운영 흐름을 반영한 기능을 구현했습니다.
-
-#### 보러가기
-🔗 https://findyourkicks-admin.site/
-
-### 작업기간
-2025.05 ~  
-
 
 <br/>
 
