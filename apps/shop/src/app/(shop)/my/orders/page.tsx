@@ -4,12 +4,16 @@ import {
   QueryClient,
   dehydrate,
 } from '@tanstack/react-query';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MyOrdersPage() {
+  const cookieStore = await cookies();
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(orderQueries.history(1));
+  await queryClient.prefetchQuery(
+    orderQueries.history(1, { headers: { cookie: cookieStore.toString() } }),
+  );
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
