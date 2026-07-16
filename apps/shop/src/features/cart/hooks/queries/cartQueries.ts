@@ -3,10 +3,10 @@ import { queryOptions } from '@tanstack/react-query';
 
 export const cartQueries = {
   all: () => ['cart'] as const,
-  list: () =>
+  list: (options?: { headers?: Record<string, string> }) =>
     queryOptions({
       queryKey: [...cartQueries.all(), 'list'] as const,
-      queryFn: fetchCartList,
+      queryFn: () => fetchCartList(options),
       refetchOnWindowFocus: false,
     }),
   count: () =>

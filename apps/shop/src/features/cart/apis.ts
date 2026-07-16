@@ -6,8 +6,10 @@ export const addToCart = async (body: CartListPayload) => {
   return await api.post<CartList, CartListPayload>(ENDPOINTS.cartItems, body);
 };
 
-export const fetchCartList = async () => {
-  return await api.get<CartList>(ENDPOINTS.cartItems);
+export const fetchCartList = async (options?: {
+  headers?: Record<string, string>;
+}) => {
+  return await api.get<CartList>(ENDPOINTS.cartItems, options);
 };
 
 export const updateCartQuantity = async ({
